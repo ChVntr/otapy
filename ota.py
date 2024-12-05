@@ -84,6 +84,7 @@ def setores():
         loops = -1
         setores()
 
+    print('')
 
     cnctvrf()
     page = requests.get(str(''.join([mallink, usnm, mallink2])))
