@@ -16,6 +16,7 @@
 
 def setores():
 
+    os.system('cls||clear')
 
     global onlyptw
     global loops
