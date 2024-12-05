@@ -499,7 +499,7 @@ if verifyos() == 1:
     upfile = open('mpv\\updater.bat', 'r')
     lastline = (upfile.readlines()[-1])
     print(lastline)
-    if lastline == 'timeout 5':
+    if str(lastline) == 'timeout 5':
         print('timeout = true')
     upfile.close()
     
