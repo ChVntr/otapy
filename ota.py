@@ -149,7 +149,7 @@ def proximo(sopa):
 
     #print(tlpuro, ep)
 
-    print(str(''.join(['\n\n\nBUSCANDO ANIME:\n', tlpuro, '\nEP:\n', ep, '\n\n'])))
+    print(str(''.join(['BUSCANDO ANIME:\n', tlpuro, '\nEP:\n', ep, '\n\n'])))
 
     # juntar tudo em uma string
 
