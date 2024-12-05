@@ -497,7 +497,7 @@ except:
     subprocess.run(''.join(['python -m pip install setproctitle']))
     import setproctitle
 
-print(''.join([str(8), '/', extotal, '\n']))
+print(''.join([str(8), '/', extotal]))
 import os
 
 try:
@@ -507,6 +507,8 @@ except:
     cnctvrf()
     subprocess.run(''.join(['python -m pip install concurrent.futures']))
     import concurrent.futures
+
+print('\n')
 
 subprocess.run('py -m pip install --upgrade pip')
 
