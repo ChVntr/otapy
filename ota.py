@@ -481,7 +481,7 @@ except:
     subprocess.run(''.join(['python -m pip install setproctitle']))
     import setproctitle
 
-print(''.join([str(8), '/', extotal]))
+print(''.join([str(8), '/', extotal, '\n']))
 import os
 
 subprocess.run('py -m pip install --upgrade pip')
