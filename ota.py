@@ -355,7 +355,7 @@ def temstream(link):
     start = time.perf_counter()
 
     try:
-        response = str(requests.get(url=link, timeout=5.0))
+        response = str(requests.get(url=link))
         #print(response)
         if response.find('Response [404]') == -1:
             finish = time.perf_counter()
