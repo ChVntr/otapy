@@ -442,7 +442,7 @@ print(
 )
 
 
-extotal = str(8)
+extotal = str(9)
 
 print(''.join([str(1), '/', extotal]))
 import subprocess, sys
@@ -483,6 +483,9 @@ except:
 
 print(''.join([str(8), '/', extotal, '\n']))
 import os
+
+print(''.join([str(9), '/', extotal, '\n']))
+import singal
 
 subprocess.run('py -m pip install --upgrade pip')
 
