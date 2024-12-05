@@ -497,7 +497,7 @@ if verifyos() == 1:
     )
 
     upfile = open('mpv\\updater.bat', 'r')
-    print(upfile.readline())
+    print(upfile.readlines())
     
     subprocess.run('mpv\\updater.bat')
     os.system('cls||clear')
