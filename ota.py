@@ -373,7 +373,7 @@ def temstream(link):
 
     
     if deubom:
-        print('\nCARREGANDO TRANSMISSÃO...')
+        print('CARREGANDO TRANSMISSÃO...')
 
     return deubom
 
