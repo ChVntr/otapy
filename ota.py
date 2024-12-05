@@ -506,7 +506,6 @@ except:
     import concurrent.futures
     from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
-print('\n')
 
 subprocess.run('py -m pip install --upgrade pip')
 
