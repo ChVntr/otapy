@@ -16,7 +16,7 @@
 
 def setores():
 
-    os.system('cls||clear')
+    
 
     global onlyptw
     global loops
@@ -204,7 +204,7 @@ def update(sopa):
             setores()
     
     
-    
+    os.system('cls||clear')
     proximo(novasopa)
 
 def animefire(titulo, ep):  
