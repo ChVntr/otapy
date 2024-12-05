@@ -1,13 +1,6 @@
 @echo off
 
 
-%userprofile:~0,2%
-
-cd %userprofile%\appdata\local\programs
-
-
-rd /q /s "otapy"
-
 set pylink=https://raw.githubusercontent.com/ChVntr/otapy/refs/heads/main/ota.py
 
 if exist otapy\ (
@@ -36,13 +29,3 @@ cls
 ota.py
 
 
-
-
-
-
-
-
-
-
-echo oh shit
-pause
