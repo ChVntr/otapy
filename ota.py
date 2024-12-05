@@ -356,12 +356,11 @@ def temstream(link):
 
     try:
         response = str(requests.get(url=link))
+        finish = time.perf_counter()
         #print(response)
         if response.find('Response [404]') == -1:
-            finish = time.perf_counter()
             qzq=False
         else:
-            finish = time.perf_counter()
             sys.stdout.write(' <404>')
             qzq=True
     except requests.exceptions.ConnectTimeout:
