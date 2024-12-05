@@ -362,7 +362,7 @@ def temstream(link):
         print(f' <TimeOut> 5s\n')
         qzq = False
     except:
-        print('deu merda')
+        print('oh shit')
     finally:
         executor.shutdown(wait=False)
 
@@ -451,9 +451,7 @@ def vaiounao(link):
 
 # importar os bgl tudo
 
-print(
-    'IMPORTANDO EXTENSÕES...'
-)
+print('IMPORTANDO EXTENSÕES...')
 
 
 extotal = str(9)
@@ -495,16 +493,20 @@ except:
     subprocess.run(''.join(['python -m pip install setproctitle']))
     import setproctitle
 
-print(''.join([str(8), '/', extotal, '\n']))
+print(''.join([str(8), '/', extotal]))
 import os
 
 try:
     print(''.join([str(9), '/', extotal]))
     import concurrent.futures
+    from concurrent.futures import ThreadPoolExecutor, TimeoutError
 except:
     cnctvrf()
     subprocess.run(''.join(['python -m pip install concurrent.futures']))
     import concurrent.futures
+    from concurrent.futures import ThreadPoolExecutor, TimeoutError
+
+print('\n')
 
 subprocess.run('py -m pip install --upgrade pip')
 
