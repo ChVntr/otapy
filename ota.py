@@ -485,7 +485,7 @@ print(''.join([str(8), '/', extotal, '\n']))
 import os
 
 print(''.join([str(9), '/', extotal, '\n']))
-import singal
+import signal
 
 subprocess.run('py -m pip install --upgrade pip')
 
