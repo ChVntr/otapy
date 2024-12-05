@@ -355,7 +355,7 @@ def temstream(link):
 
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-    future = concurrent.futures.Executor.submit(vaiounao, link)
+    future = executor.submit(vaiounao, link)
 
     try:
         qzq = future.result(timeout=5)
@@ -507,6 +507,7 @@ except:
     import concurrent.futures
     from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
+print('')
 
 subprocess.run('py -m pip install --upgrade pip')
 
