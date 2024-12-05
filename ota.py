@@ -257,8 +257,8 @@ def animefire(titulo, ep):
     for qual in ('fhd', 'hd'):
 
         if qual != prevqual:
-            print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (', qual.upper()]))
-            sys.stdout.write('\n\nSERVIDOR\n')
+            print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (', qual.upper(), ')']))
+            sys.stdout.write('\n\nSERVIDOR')
             prevqual = qual
             num+=1
             sv = 1
