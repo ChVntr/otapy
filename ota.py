@@ -321,7 +321,7 @@ def temstream(link):
     future = executor.submit(vaiounao, link)
 
     try:
-        qzq = future.result(timeout=5)
+        qzq = future.result(timeout=10)
     except TimeoutError:
         print(f' <TimeOut> 5s\n')
         qzq = False
@@ -396,7 +396,7 @@ def vaiounao(link):
 
 
     try:
-        response = str(requests.get(url=link))
+        response = str(requests.get(url=link, 6))
         finish = time.perf_counter()
         #print(response)
         if response.find('Response [404]') == -1:
