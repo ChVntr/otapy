@@ -54,8 +54,8 @@ set player=1
         echo VERIFICANDO VERSAO DO REPRODUTOR...
         echo.
         CALL otapy\mpv\updater.bat
-        dir
-        pause
+        cd..
+        cd..
     ) else (
         set player=0
     )
@@ -71,8 +71,8 @@ if %player% == 0 (
     del mpv.zip
     cd ..
     CALL otapy\mpv\updater.bat
-    dir
-    pause
+    cd..
+    cd..
 ) 
 cls
 
