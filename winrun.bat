@@ -47,7 +47,13 @@ cls
 
 set player=1
 
-(mpv -V) || (vlc -V) || (otapy\mpv\mpv.exe -V) || (set player=0)
+(mpv -V) || (vlc -V) || (
+    if exist otapy\mpv (
+        set player=1
+    ) else (
+        set player=0
+    )
+)
 cls
 
 if %player% == 0 (
@@ -58,6 +64,7 @@ if %player% == 0 (
     powershell Expand-Archive mpv.zip -DestinationPath mpv
     del mpv.zip
     cd ..
+    pause
 ) 
 cls
 
