@@ -396,7 +396,7 @@ def vaiounao(link):
 
 
     try:
-        response = str(requests.get(url=link, 6))
+        response = str(requests.get(url=link, timeout=6))
         finish = time.perf_counter()
         #print(response)
         if response.find('Response [404]') == -1:
