@@ -50,6 +50,9 @@ set player=1
 (mpv -V) || (vlc -V) || (
     if exist otapy\mpv (
         set player=1
+        cls
+        echo VERIFICANDO VERSAO DO REPRODUTOR...
+        otapy\mpv\updater.bat
     ) else (
         set player=0
     )
@@ -81,8 +84,5 @@ if %otapy% == 1 (
 
 powershell Invoke-WebRequest %pylink% -OutFile ota.py
 cls
-ota.py || (
-    echo oh shit
-    pause
-)
-exit
+ota.py
+

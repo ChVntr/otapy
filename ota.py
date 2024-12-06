@@ -513,25 +513,7 @@ print('')
 
 subprocess.run('py -m pip install --upgrade pip')
 
-
-
-
-
-
-if verifyos() == 1:
-    print(
-        '\nVERIFICANDO VERSÃO DO MPV...\n' 
-    )
-
-    upfile = open('mpv\\updater.bat', 'r')
-    lastline = (upfile.readlines()[-1])
-    print(lastline)
-    if str(lastline) == 'timeout 5':
-        print('timeout = true')
-    upfile.close()
-    
-    subprocess.run('mpv\\updater.bat')
-    os.system('cls||clear')
+os.system('cls||clear')
 
 
 
