@@ -52,6 +52,7 @@ set player=1
         set player=1
         cls
         echo VERIFICANDO VERSAO DO REPRODUTOR...
+        echo.
         otapy\mpv\updater.bat
     ) else (
         set player=0
@@ -84,5 +85,6 @@ if %otapy% == 1 (
 
 powershell Invoke-WebRequest %pylink% -OutFile ota.py
 cls
-ota.py
+ota.py || echo oh shit
+exit
 
