@@ -70,6 +70,9 @@ if %player% == 0 (
     powershell Expand-Archive mpv.zip -DestinationPath mpv
     del mpv.zip
     cd ..
+    CALL otapy\mpv\updater.bat
+    dir
+    pause
 ) 
 cls
 
