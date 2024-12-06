@@ -450,7 +450,8 @@ def provedores(tl, ep):
         comando = str(''.join(info))
 
 
-
+        print('PROVEDOR: ani-cli\n')
+        
         result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
         time.sleep(5)
 
