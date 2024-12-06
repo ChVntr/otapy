@@ -89,6 +89,9 @@ if %otapy% == 1 (
 
 powershell Invoke-WebRequest %pylink% -OutFile ota.py
 cls
-ota.py || echo oh shit
+ota.py || (
+    echo oh shit
+    pause
+)
 exit
 
