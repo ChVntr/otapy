@@ -138,47 +138,12 @@ def proximo(sopa):
     titulo = titulo.replace('    ', ' ')
     titulo = titulo.replace('   ', ' ')
     titulo = titulo.replace('  ', ' ')
-    tlpuro = titulo
-    titulo = titulo.replace('3rd Season', '3')
-    titulo = titulo.replace('3rd Season', '3')
-    titulo = titulo.replace('2nd Season', '2')
-    titulo = titulo.replace('Goumon', '')
-    titulo = titulo.replace('(', '')
-    titulo = titulo.replace(')', '')
-    titulo = titulo.replace('"', '')
-    titulo = titulo.replace('/', '')
 
-    #print(tlpuro, ep)
-
-    print(str(''.join(['BUSCANDO ANIME:\n', tlpuro, '\nEP:\n', ep, '\n\n'])))
-
-    # juntar tudo em uma string
-
-    info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
-    comando = str(''.join(info))
-
-
-    # um monte de comando em bash
-
-    # notificação show
-
-
+    print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
 
     cnctvrf()
-    if afonly == False:
 
-        result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
-        time.sleep(5)
-
-        if result.find('returncode=1') != -1 and loops < 2:
-            animefire(tlpuro, ep)
-    else:
-        animefire(tlpuro, ep)
-
-
-
-
-
+    provedores(titulo, ep)
 
     update(sopa)
 
@@ -273,8 +238,6 @@ def animefire(titulo, ep):
                 link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4?type=video/mp4&title=[AnimeFire.plus]')
 
                 link = (''.join(link))
-                comando = ('mpv ', link, ' --window-maximized --title-bar=no')
-                comando = (''.join(comando))
 
                 #print(link)
 
@@ -285,7 +248,7 @@ def animefire(titulo, ep):
                 deubom=temstream(link)
 
                 if deubom:
-                    subprocess.run(comando, capture_output= True, shell = shll, executable=exctb)
+                    playmedia(link)
                     brekaporra=True
                     break
 
@@ -312,8 +275,6 @@ def animefire(titulo, ep):
                 link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4?type=video/mp4&title=[AnimeFire.plus]')
 
                 link = (''.join(link))
-                comando = ('mpv ', link, ' --window-maximized --title-bar=no')
-                comando = (''.join(comando))
 
                 cnctvrf()
                 sys.stdout.write(''.join(['\n', str(sv), '/12']))
@@ -321,7 +282,7 @@ def animefire(titulo, ep):
                 deubom=temstream(link)
 
                 if deubom:
-                    subprocess.run(comando, capture_output= True, shell = shll, executable=exctb)
+                    playmedia(link)
                     brekaporra=True
                     break
 
@@ -382,26 +343,35 @@ def verifyos():
 
     # verificar OS
 
-    global exctb
-    global shll
-
     osname = platform.platform()
 
     if osname.find('Windows') != -1:    
         osv = 1
-        shll=False
-        exctb = 'mpv\\mpv.exe'
-
+        
     elif osname.find('Android') != -1: 
         osv = 2
 
     elif osname.find('Linux') != -1: 
-
         osv = 3
-        exctb = '/bin/bash'
-        shll = True
 
-    return osv
+
+
+    try:
+        subprocess.run('mpv -V')
+        player = 'mpv'
+
+    except:
+        try:
+            subprocess.run('vlc -V')
+            player = 'vlc'
+
+        except:
+            if osv == 1:
+                player = 'mpv\\mpv.exe'
+
+
+
+    return osv, player
 
 def getusername():
 
@@ -444,6 +414,51 @@ def vaiounao(link):
 
     return qzq
 
+def playmedia(link):
+
+    argmt=verifyos()
+
+    comando=' '.join([argmt[1], link])
+    
+    subprocess.run(comando)
+    
+def provedores(tl, ep):
+
+    epfound = False
+
+    try:
+        subprocess.run('ani-cli -V')
+        anicli=True
+    except:
+        anicli=False
+
+    if anicli:
+
+        titulo = tl
+
+        titulo = titulo.replace('3rd Season', '3')
+        titulo = titulo.replace('3rd Season', '3')
+        titulo = titulo.replace('2nd Season', '2')
+        titulo = titulo.replace('Goumon', '')
+        titulo = titulo.replace('(', '')
+        titulo = titulo.replace(')', '')
+        titulo = titulo.replace('"', '')
+        titulo = titulo.replace('/', '')
+
+
+        info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
+        comando = str(''.join(info))
+
+
+
+        result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
+        time.sleep(5)
+
+        if result.find('returncode=1') == -1:
+            epfound = True
+
+    if epfound == False:
+        animefire(tl, ep)
 
 
 
@@ -522,21 +537,6 @@ os.system('cls||clear')
 
 
 
-# definir as variaveis
-
-anicli = False
-
-if verifyos() == 1 or anicli == False:
-    afonly = True
-
-onlyptw = False
-loops = -1
-acabou = 3
-
-validusername = False
-
-
-
 
 
 
@@ -552,7 +552,11 @@ validusername = False
 
 getusername()
 
-while loops != acabou:
+loops=-1
+
+
+
+while True:
     
     setproctitle.setproctitle('anipy_prcs')
     setores()
