@@ -54,6 +54,8 @@ set player=1
         echo VERIFICANDO VERSAO DO REPRODUTOR...
         echo.
         CALL otapy\mpv\updater.bat
+        dir
+        pause
     ) else (
         set player=0
     )
