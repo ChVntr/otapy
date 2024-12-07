@@ -527,7 +527,7 @@ except:
 
 print('')
 
-subprocess.run('py -m pip install --upgrade pip')
+# subprocess.run('py -m pip install --upgrade pip')
 
 os.system('cls||clear')
 
