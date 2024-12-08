@@ -109,23 +109,28 @@ def proximo(sopa):
     # obs: CODIGO FEIO DA DESGRAÇA
     # por algum motivo desconhecido algumas listam tem sintase diferente
 
-    if sopa.find('watched_episodes&quot;:') == -1:
-        ep = str(int
-              (sopa     [int(sopa.find('"num_watched_episodes":'))+23    :   int(sopa.find(',"created_at":'))]      )
-              +1)
-
-        titulo = str(sopa[
-                int(sopa.find('"anime_title":"'))+15    :   int(sopa.find('","anime_title_eng":"'))])
+    if sopa.find('"num_watched_episodes":') != -1:
         
+        findep = (int(sopa.find('"num_watched_episodes":'))+23, int(sopa.find(',"created_at":')))
+        findtl = (int(sopa.find('"anime_title":"'))+15, int(sopa.find('","anime_title_eng":"')))
+        
+    elif sopa.find(',&quot;num_watched_episodes&quot;:'):
+
+        findep = (int(sopa.find(',&quot;num_watched_episodes&quot;:'))+34, int(sopa.find(',&quot;created_at')))
+        findtl = (int(sopa.find('anime_title&quot;:&quot;'))+24, int(sopa.find('&quot;,&quot;anime_title_eng')))
+        
+    elif sopa.find('&quot;,&quot;anime_title_eng') != -1:
+
+        findep = (int(sopa.find('"watched_episodes&quot;:'))+23, int(sopa.find(',&quot;created_at')))
+        findtl = (int(sopa.find('anime_title&quot;:&quot;'))+24, int(sopa.find('&quot;,&quot;anime_title_eng')))
+
     else:
+        print('oh shit')
+    
 
-        ep = str(
-            int(sopa[
-                int(sopa.find('watched_episodes&quot;:'))+23    :   int(sopa.find(',&quot;created_at'))])  +1)
-
-        titulo = str(sopa[
-                int(sopa.find('anime_title&quot;:&quot;'))+24    :   int(sopa.find('&quot;,&quot;anime_title_eng'))])
-
+    ep = int(sopa[findep[0] : (findep[1])])+1
+    titulo = str(sopa[findtl[0] : findtl[1]])
+    ep=str(ep)
 
 
     # filtrar os characteres especiais do titulo
