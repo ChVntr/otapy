@@ -114,7 +114,7 @@ def proximo(sopa):
         findep = (int(sopa.find('"num_watched_episodes":'))+23, int(sopa.find(',"created_at":')))
         findtl = (int(sopa.find('"anime_title":"'))+15, int(sopa.find('","anime_title_eng":"')))
         
-    elif sopa.find(',&quot;num_watched_episodes&quot;:'):
+    elif sopa.find(',&quot;num_watched_episodes&quot;:') != -1:
 
         findep = (int(sopa.find(',&quot;num_watched_episodes&quot;:'))+34, int(sopa.find(',&quot;created_at')))
         findtl = (int(sopa.find('anime_title&quot;:&quot;'))+24, int(sopa.find('&quot;,&quot;anime_title_eng')))
