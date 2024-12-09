@@ -16,11 +16,10 @@
 
 def setores():
 
-    
 
     global onlyptw
     global loops
-    loops+=1
+    
 
 
 
@@ -34,16 +33,14 @@ def setores():
 
 
     mallink = 'https://myanimelist.net/animelist/'
-
+    proceed = True
 
 
 
 
     # assistindo
     if loops == 0:
-        print(
-            '\nBUSCANDO LISTA "WATCHING"...'
-        )
+        print('BUSCANDO LISTA "WATCHING"...')
         mallink2 = '?order=11&order2=-5&status=1'
         onlyptw = False
     
@@ -80,29 +77,36 @@ def setores():
         onlyptw = True
 
     else:
-        print('\n\n\nULTIMA LISTA ALCANÇADA\nREINICIANDO...\n\n\n')
-        loops = -1
-        setores()
+        print('ULTIMA LISTA ALCANÇADA\nREINICIANDO...\n\n\n')
+        loops = 0
+        proceed = False
+
+
+    loops+=1
 
     print('')
 
     cnctvrf()
-    page = requests.get(str(''.join([mallink, usnm, mallink2])))
-    soup = BeautifulSoup(page.text, 'html.parser')
-    sopa = str(soup.find('table', class_='list-table'))
+
+    if proceed:
+        page = requests.get(str(''.join([mallink, usnm, mallink2])))
+        soup = BeautifulSoup(page.text, 'html.parser')
+        sopa = str(soup.find('table', class_='list-table'))
 
 
 
-    # se não tiver nenhum item PTW em lançamento passa pra proxima lista
+        # se não tiver nenhum item PTW em lançamento passa pra proxima lista
 
-    if onlyptw:
-        if  sopa.find('"status":6') == -1 and sopa.find('&quot;status&quot;:6') == -1:
-            setores()
+        if onlyptw:
+            if  sopa.find('"status":6') == -1 and sopa.find('&quot;status&quot;:6') == -1:
+                ''
+            else:
+                proximo(sopa)
+        else:
+            proximo(sopa)           
     
-
-    proximo(sopa)   
-
 def proximo(sopa):
+
 
     # pegar o numero do proximo ep e o titulo
     # nessa ordem mesmo porque é assim que o ani-cli funciona
@@ -155,28 +159,24 @@ def proximo(sopa):
 def update(sopa):
 
 
+
     # checa se ainda tem coisa pra assistir
     # se não tiver manda de volra pros setores
     # se tiver tira o que já assistiu e manda de volta
-
+    os.system('cls||clear')
     novasopa = sopa[int(sopa.find('anime_title_eng'))+5:]
 
 
-
     if (str(novasopa).find('"is_rewatching"')) == -1 and (str(novasopa).find(';is_rewatching&')) == -1:
-        setores()
+        ''
 
-
-
-    # aquele mesmo role de ver se o item em lançamento tá em PTW
-
-    if onlyptw:
+    elif onlyptw:
+        # aquele mesmo role de ver se o item em lançamento tá em PTW
         if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
-            setores()
+            ''
     
-    
-    os.system('cls||clear')
-    proximo(novasopa)
+    else:
+        proximo(novasopa)
 
 def animefire(titulo, ep):  
 
@@ -326,10 +326,13 @@ def temstream(link):
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
     future = executor.submit(vaiounao, link)
 
+    start = time.perf_counter()
+
     try:
         qzq = future.result(timeout=10)
     except TimeoutError:
-        print(f' <TimeOut> 5s\n')
+        finish = time.perf_counter()
+        print(f' <TimeOut> {round(finish-start, 2)}s\n')
         qzq = False
     except:
         print('oh shit')
@@ -360,7 +363,7 @@ def verifyos():
     elif osname.find('Linux') != -1: 
         osv = 3
 
-
+    noplayer = False
 
     try:
         subprocess.run('mpv -V')
@@ -372,8 +375,21 @@ def verifyos():
             player = 'vlc'
 
         except:
+
             if osv == 1:
-                player = 'mpv\\mpv.exe'
+                try:
+                    subprocess.run('mpv\\mpv.exe -V')
+                    player = 'mpv\\mpv.exe'
+                except:
+                    noplayer = True
+
+            else:
+                noplayer = True
+
+    if noplayer:
+        os.system('cls||clear')
+        print('REPRODUTOR DE VIDEO NÃO ENCONTRADO')
+        exit()
 
 
 
@@ -386,15 +402,16 @@ def getusername():
     validusername = False
 
     while validusername == False:
-        usnm = input('\nUSERNAME DO MYANIMELIST: ')
+        usnm = input('USERNAME DO MYANIMELIST: ')
         cnctvrf()
         response = str(requests.get(str(''.join(['https://myanimelist.net/profile/', usnm]))))
         if response.find('404') != -1:
             print(
-                'USUARIO NÃO ENCONTRADO'
+                'USUARIO NÃO ENCONTRADO\n\n'
             )
         else:
             validusername = True
+            print('\n')
 
 def vaiounao(link):
 
@@ -410,10 +427,19 @@ def vaiounao(link):
         else:
             sys.stdout.write(' <404>')
             qzq=True
+    except requests.exceptions.ConnectionError:
+        finish = time.perf_counter()
+        qzq=True
+        sys.stdout.write(' <Connection Error>')
+    except requests.exceptions.Timeout:
+        finish = time.perf_counter()
+        qzq=True
+        sys.stdout.write(' <Connection TimeOut>')
+
     except:
         finish = time.perf_counter()
         qzq=True
-        sys.stdout.write(' <Failed Request>')
+        sys.stdout.write(' <Erro Desconhecido>')
 
 
     sys.stdout.write(f' {round(finish-start, 2)}s')
@@ -559,13 +585,12 @@ os.system('cls||clear')
 
 getusername()
 
-loops=-1
+loops=0
 
 
+setproctitle.setproctitle('anipy_prcs')
 
 while True:
-    
-    setproctitle.setproctitle('anipy_prcs')
     setores()
 
 exit()
