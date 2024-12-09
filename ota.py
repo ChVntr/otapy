@@ -336,8 +336,8 @@ def temstream(link):
         qzq = False
     except:
         print('oh shit')
-    finally:
-        executor.shutdown(wait=False)
+    
+    executor.shutdown(wait=False)
 
 
     deubom = not qzq
