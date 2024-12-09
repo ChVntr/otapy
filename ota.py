@@ -190,18 +190,34 @@ def animefire(tl, ep):
     num=1
 
     if tl.find('dandadan') and tl.find('ranma') == -1:
-        qualnum=3
         temp=True
     else:
-
         temp=False
-        qualnum=2
 
+    if tl == ('one-piece'):
+        sd=True
+    else:
+        sd=False
 
-    for qual in ('fhd', 'hd'):
+    if sd:
+        qualidades = ('sd',)
+        #qualidades = qualidades[:1]
+    elif temp == False:
+        qualidades = ('fhd', 'hd')
+    else:
+        qualidades = ('fhd', 'hd', 'temp')
+    
+    qualnum = len(qualidades)
+
+    for qual in qualidades:
 
         if qual != prevqual:
-            print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (', qual.upper(), ')']))
+
+            if qual == 'temp':
+                print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (HD - LEGENDA TEMPORARIA)']))
+            else:
+                print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (', qual.upper(), ')']))
+
             sys.stdout.write('\n\nSERVIDOR:')
             prevqual = qual
             num+=1
@@ -214,7 +230,10 @@ def animefire(tl, ep):
                 s2+=1
                 s2=str(s2)
 
-                link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4?type=video/mp4&title=[AnimeFire.plus]')
+                if qual != 'temp':
+                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4?type=video/mp4&title=[AnimeFire.plus]')
+                else:
+                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4?type=video/mp4&title=[AnimeFire.plus]')
 
                 link = (''.join(link))
 
@@ -239,38 +258,6 @@ def animefire(tl, ep):
         if brekaporra:
             break
     
-    if brekaporra == False and temp == True:
-
-        sv=1
-        print('\n\nQUALIDADE:\n3/3 (HD - LEGENDA TEMPORARIA)')
-        sys.stdout.write('\n\nSERVIDOR:')
-
-        for s1 in ('s2.', 's1.', ''):
-            s1=str(s1)
-
-            for s2 in range (4):
-                s2+=1
-                s2=str(s2)
-
-                link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4?type=video/mp4&title=[AnimeFire.plus]')
-
-                link = (''.join(link))
-
-                cnctvrf()
-                sys.stdout.write(''.join(['\n', str(sv), '/12']))
-
-                deubom=temstream(link)
-
-                if deubom:
-                    playmedia(link)
-                    brekaporra=True
-                    break
-
-                sv=sv+1
-
-            if brekaporra:
-                break
-
     if sv == 13:
         print('\n\nEPISODIO NÃO ENCONTRADO!\n')
 
