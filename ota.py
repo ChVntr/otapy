@@ -61,7 +61,7 @@ def setores():
         onlyptw = False
     
     # em espera
-    elif loops == -2:
+    elif loops == 2:
         print(
             '\nBUSCANDO LISTA "ON HOLD"...'
         )
@@ -89,11 +89,10 @@ def setores():
     cnctvrf()
 
     if proceed:
-        page = requests.get(str(''.join([mallink, usnm, mallink2])))
-        soup = BeautifulSoup(page.text, 'html.parser')
-        sopa = str(soup.find('table', class_='list-table'))
 
+        link = ''.join([mallink, usnm, mallink2])
 
+        sopa = sopapranois(link)
 
         # se não tiver nenhum item PTW em lançamento passa pra proxima lista
 
@@ -178,35 +177,10 @@ def update(sopa):
     else:
         proximo(novasopa)
 
-def animefire(titulo, ep):  
+def animefire(tl, ep):  
 
-    print('PROVEDOR: animefire.plus')
     sv = 1
 
-    titulo = titulo.replace('(', '')
-    titulo = titulo.replace(')', '')
-    titulo = titulo.replace('"', '')
-    titulo = titulo.replace('/', '')
-
-    tl = titulo
-
-    #Shinkakusha Kouho Senbatsu Shiken-hen
-    tl = tl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
-    tl = tl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
-    tl = tl.replace(';', '-')
-    tl = tl.replace('.', '-')
-    tl = tl.replace(' ', '-')
-    tl = tl.replace(':', '-')
-    tl = tl.replace(',', '')
-    tl = tl.replace('!', '')
-    tl = tl.replace('?', '')
-    tl = tl.replace('---', '-')
-    tl = tl.replace('--', '-')
-
-    tl = tl.lower() 
-
-    if tl[-1] == '-':
-        tl = tl[0 : (len(tl))-1]
 
     #um monte de variavel pro bagulho funcionar
 
@@ -458,11 +432,14 @@ def provedores(tl, ep):
 
     epfound = False
 
+    print('PROVEDOR: "ani-cli"')
+
     try:
         subprocess.run('ani-cli -V')
         anicli=True
     except:
         anicli=False
+        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)\n\n')
 
     if anicli:
 
@@ -490,11 +467,60 @@ def provedores(tl, ep):
         if result.find('returncode=1') == -1:
             epfound = True
 
+    # animefire
     if epfound == False:
-        animefire(tl, ep)
+
+        print('PROVEDOR: "animefire.plus"')
 
 
+        ntl = tl
 
+        ntl = ntl.replace('(', '')
+        ntl = ntl.replace(')', '')
+        ntl = ntl.replace('"', '')
+        ntl = ntl.replace('/', '')
+
+        ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
+        ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
+        ntl = ntl.replace(';', '-')
+        ntl = ntl.replace('.', '-')
+        ntl = ntl.replace(' ', '-')
+        ntl = ntl.replace(':', '-')
+        ntl = ntl.replace(',', '')
+        ntl = ntl.replace('!', '')
+        ntl = ntl.replace('?', '')
+        ntl = ntl.replace('---', '-')
+        ntl = ntl.replace('--', '-')
+
+        ntl = ntl.lower() 
+
+        if ntl[-1] == '-':
+            ntl = ntl[0 : (len(tl))-1]
+
+        link = ''.join(['https://animefire.plus/animes/', ntl, '-todos-os-episodios'])
+        response = requests.get(url=link)
+        
+        try:
+            if str(response) == '<Response [500]>':
+                animeexiste = False
+            else:
+                animeexiste = True
+        except:
+            animeexiste = False
+
+        if animeexiste:
+            animefire(ntl, ep)
+        else:
+            print('\nANIME NÃO ENCONTRADO!\n')
+            time.sleep(1)
+
+def sopapranois(link):
+
+    page = requests.get(str(link))
+    soup = BeautifulSoup(page.text, 'html.parser')
+    sopa = str(soup.find('table', class_='list-table'))
+
+    return sopa
 
 
 
