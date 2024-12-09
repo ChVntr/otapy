@@ -268,7 +268,7 @@ def animefire(titulo, ep):
     if brekaporra == False and temp == True:
 
         sv=1
-        print('\n\nQUALIDADE:\n3/3 (HD - LEGENDA TEMPORARIA)\n\n')
+        print('\n\nQUALIDADE:\n3/3 (HD - LEGENDA TEMPORARIA)')
         sys.stdout.write('\n\nSERVIDOR:')
 
         for s1 in ('s2.', 's1.', ''):
