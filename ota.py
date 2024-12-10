@@ -431,9 +431,9 @@ def playmedia(link):
     
     for player in players:
         try:
-            print(subprocess.run(' '.join([player, link])))
-            time.sleep(10)
+            subprocess.run(' '.join([player, link]))
             foi=True
+            break
         except:
             foi=False
 
