@@ -534,7 +534,7 @@ def provedores(tl, ep):
                 temdub = False
             
             while temdub:
-                dub = input('\nDUBLAGEM PT-BR ENCONTRADA!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
+                dub = input('\nDUB PT-BR ENCONTRADA!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
 
                 if dub == 's':
                     ntl = ''.join([ntl, '-dublado'])
