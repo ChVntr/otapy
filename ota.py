@@ -323,7 +323,7 @@ def temstream(link):
 
     
     if deubom:
-        print('CARREGANDO TRANSMISSÃO...')
+        print('\nCARREGANDO TRANSMISSÃO...')
 
     return deubom
 
@@ -399,8 +399,8 @@ def vaiounao(link):
     try:
         response = str(requests.get(url=link, timeout=6))
         finish = time.perf_counter()
-        #print(response)
         if response.find('Response [404]') == -1:
+            sys.stdout.write(' <200>')
             qzq=False
         else:
             sys.stdout.write(' <404>')
@@ -431,7 +431,8 @@ def playmedia(link):
     
     for player in players:
         try:
-            subprocess.run(' '.join([player, link]))
+            comando = ' '.join([player, link])
+            subprocess.run(comando)
             foi=True
             break
         except:
