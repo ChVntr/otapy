@@ -197,6 +197,7 @@ def animefire(tl, ep):
     sdlist = (
         'one-piece',
         'ike-ina-chuu-takkyuubu',
+        'gintama',
         )
 
     for title in notemplist:
