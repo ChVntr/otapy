@@ -189,15 +189,30 @@ def animefire(tl, ep):
     prevqual='none'
     num=1
 
-    if tl.find('dandadan') and tl.find('ranma') == -1:
-        temp=True
-    else:
-        temp=False
+    notemplist = (
+        'dandadan',
+        'ranma-2024',
+        )
 
-    if tl == ('one-piece'):
-        sd=True
-    else:
-        sd=False
+    sdlist = (
+        'one-piece',
+        'ike-ina-chuu-takkyuubu',
+        )
+
+    for title in notemplist:
+        if tl == title:
+            temp=False
+            break
+        else:
+            temp=True
+
+
+    for title in sdlist:
+        if tl == title:
+            sd=True
+            break
+        else:
+            sd=False
 
     if sd:
         qualidades = ('sd',)
