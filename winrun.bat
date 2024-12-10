@@ -45,12 +45,7 @@ cls
 
 :: instalando player se não tiver um instalado
 
-set player=0
 
-if exist "C:\Program Files\VideoLAN\VLC\vlc.exe" (
-    SET PATH=%PATH%;"C:\Program Files\VideoLAN\VLC"
-    set player=1
-) else (
     if exist otapy\mpv (
         set player=1
         cls
@@ -59,8 +54,10 @@ if exist "C:\Program Files\VideoLAN\VLC\vlc.exe" (
         CALL otapy\mpv\updater.bat
         cd..
         cd..
+    ) else (
+        set player=0
     )
-)
+
 cls
 
 if %player% == 0 (
