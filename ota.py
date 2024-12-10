@@ -39,7 +39,7 @@ def setores():
 
 
     # assistindo
-    if loops == 0:
+    if loops == 3:
         print('BUSCANDO LISTA "WATCHING"...')
         mallink2 = '?order=11&order2=-5&status=1'
         onlyptw = False
@@ -61,7 +61,7 @@ def setores():
         onlyptw = False
     
     # em espera
-    elif loops == 2:
+    elif loops == 0:
         print(
             '\nBUSCANDO LISTA "ON HOLD"...'
         )
@@ -247,9 +247,9 @@ def animefire(tl, ep):
                 s2=str(s2)
 
                 if qual != 'temp':
-                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4?type=video/mp4&title=[AnimeFire.plus]')
+                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4')
                 else:
-                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4?type=video/mp4&title=[AnimeFire.plus]')
+                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4')
 
                 link = (''.join(link))
 
@@ -327,7 +327,6 @@ def temstream(link):
 
     return deubom
 
-def verifyos():
 
     # verificar OS
 
@@ -426,13 +425,23 @@ def vaiounao(link):
     return qzq
 
 def playmedia(link):
-
-    argmt=verifyos()
-
-    comando=' '.join([argmt[1], link])
     
-    subprocess.run(comando)
+    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\Program Files\VideoLAN\VLC\\vlc.exe')
+
     
+    for player in players:
+        try:
+            print(subprocess.run(' '.join([player, link])))
+            time.sleep(10)
+            foi=True
+        except:
+            foi=False
+
+    if foi == False:
+        os.system('cls||clear')
+        print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO')
+        exit()
+
 def provedores(tl, ep):
 
     epfound = False
