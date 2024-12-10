@@ -48,18 +48,21 @@ cls
 set player=1
 
 (mpv -V) || (vlc -V) || (
-    if exist otapy\mpv (
-        set player=1
-        cls
-        echo VERIFICANDO VERSAO DO REPRODUTOR...
-        echo.
-        CALL otapy\mpv\updater.bat
-        cd..
-        cd..
+    if exist "C:\Program Files\VideoLAN\VLC\vlc.exe" (
+        SET PATH=%PATH%;"C:\Program Files\VideoLAN\VLC"
     ) else (
-        set player=0
-    )
-)
+        if exist otapy\mpv (
+            set player=1
+            cls
+            echo VERIFICANDO VERSAO DO REPRODUTOR...
+            echo.
+            CALL otapy\mpv\updater.bat
+            cd..
+            cd..
+        ) else (
+            set player=0
+        )
+))
 cls
 
 if %player% == 0 (
