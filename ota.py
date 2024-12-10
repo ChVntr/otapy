@@ -510,7 +510,45 @@ def provedores(tl, ep):
         except:
             animeexiste = False
 
+
+
+
+
+
+
+
+
+
         if animeexiste:
+
+            # verificar se tem dub
+            link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
+            response = requests.get(url=link)
+
+            try:
+                if str(response) == '<Response [500]>':
+                    temdub = False
+                else:
+                    temdub = True
+            except:
+                temdub = False
+            
+            while temdub:
+                dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
+
+                if dub == 's':
+                    ntl = ''.join([ntl, '-dublado'])
+                    temdub = False
+                elif dub == 'n':
+                    temdub = False
+                else:
+                    print('COMANDO INVALIDO!')
+
+
+
+
+
+
             animefire(ntl, ep)
         else:
             print('\nANIME NÃO ENCONTRADO!\n')
