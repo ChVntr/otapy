@@ -276,6 +276,8 @@ def animefire(tl, ep):
     if sv == 13:
         print('\n\nEPISODIO NÃO ENCONTRADO!\n')
 
+    return deubom
+
 def cnctvrf():
 
     try:
@@ -521,6 +523,8 @@ def provedores(tl, ep):
 
         if animeexiste:
 
+            deubom = False
+
             # verificar se tem dub
             link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
             response = requests.get(url=link)
@@ -534,22 +538,23 @@ def provedores(tl, ep):
                 temdub = False
             
             while temdub:
-                dub = input('\nDUB PT-BR ENCONTRADA!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
+                dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
 
                 if dub == 's':
-                    ntl = ''.join([ntl, '-dublado'])
+                    dubtl = ''.join([ntl, '-dublado'])
+                    deubom = animefire(dubtl, ep)
                     temdub = False
                 elif dub == 'n':
                     temdub = False
                 else:
                     print('COMANDO INVALIDO!')
 
+                
 
 
 
-
-
-            animefire(ntl, ep)
+            if deubom == False:
+                animefire(ntl, ep)
         else:
             print('\nANIME NÃO ENCONTRADO!\n')
             time.sleep(1)
