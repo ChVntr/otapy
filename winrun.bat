@@ -67,6 +67,7 @@ if %player% == 0 (
     powershell Invoke-WebRequest https://github.com/ChVntr/otapy/releases/download/depend/mpv.zip -OutFile mpv.zip
     powershell Expand-Archive mpv.zip -DestinationPath mpv
     del mpv.zip
+    echo fs=yes >> mpv\mpv.conf
     cd ..
     CALL otapy\mpv\updater.bat
     cd..
