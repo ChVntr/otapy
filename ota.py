@@ -567,6 +567,7 @@ def provedores(tl, ep):
 
 
             if deubom == False:
+                print('BUSCANDO EPISODIO LEGENDADO!')
                 animefire(ntl, ep)
         else:
             print('\nANIME NÃO ENCONTRADO!\n')
