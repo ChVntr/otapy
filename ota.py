@@ -184,6 +184,7 @@ def animefire(tl, ep):
 
     #um monte de variavel pro bagulho funcionar
 
+    tocou=False
     deubom=False
     brekaporra = False
     prevqual='none'
@@ -262,22 +263,25 @@ def animefire(tl, ep):
                 deubom=temstream(link)
 
                 if deubom:
-                    playmedia(link)
-                    brekaporra=True
+                    tocou = playmedia(link)
+                    if tocou:
+                        ''
+                    else:
+                        print('FALHA NA REPRODUÇÃO!')
                     break
 
                 sv=sv+1
                     
-            if brekaporra:
+            if deubom:
                 break
         
-        if brekaporra:
+        if tocou:
             break
     
-    if sv == 13:
+    if tocou == False:
         print('\n\nEPISODIO NÃO ENCONTRADO!\n')
 
-    return deubom
+    return tocou
 
 def cnctvrf():
 
@@ -432,8 +436,12 @@ def playmedia(link):
     for player in players:
         try:
             comando = ' '.join([player, link])
-            subprocess.run(comando)
+            result = subprocess.run(comando).returncode
             foi=True
+            if int(result) == 0:
+                return True
+            else:
+                return False
             break
         except:
             foi=False
@@ -522,12 +530,6 @@ def provedores(tl, ep):
                 animeexiste = True
         except:
             animeexiste = False
-
-
-
-
-
-
 
 
 
