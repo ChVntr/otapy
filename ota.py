@@ -684,9 +684,6 @@ getusername()
 
 loops=0
 
-
-setproctitle.setproctitle('anipy_prcs')
-
 while True:
     setores()
 
