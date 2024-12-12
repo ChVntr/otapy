@@ -604,6 +604,9 @@ from datetime import datetime
 print(''.join([str(4), '/', extotal]))
 import time
 
+print('', platform.platform(), '')
+time.sleep(3)
+
 try:
     print(''.join([str(5), '/', extotal]))
     import requests
