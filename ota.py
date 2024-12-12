@@ -315,7 +315,7 @@ def temstream(link):
         qzq = future.result(timeout=10)
     except TimeoutError:
         finish = time.perf_counter()
-        print(f' <TimeOut> {round(finish-start, 2)}s\n')
+        print(f' <Request TimeOut> {round(finish-start, 2)}s\n')
         qzq = False
     except:
         print('oh shit')
