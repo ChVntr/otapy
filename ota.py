@@ -430,7 +430,7 @@ def vaiounao(link):
 
 def playmedia(link):
     
-    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\Program Files\VideoLAN\VLC\\vlc.exe')
+    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
 
     
     for player in players:
@@ -581,6 +581,22 @@ def sopapranois(link):
 
     return sopa
 
+def verifyos():
+
+    os = -1
+
+    ptf = platform.platform()
+    #print(ptf)
+
+    if ptf.find('Emscripten') != -1:
+        os = 0
+
+    return os
+
+
+
+
+
 
 
 
@@ -590,7 +606,7 @@ def sopapranois(link):
 print('IMPORTANDO EXTENSÕES...')
 
 
-extotal = str(9)
+extotal = str(8)
 
 print(''.join([str(1), '/', extotal]))
 import subprocess, sys
@@ -604,51 +620,44 @@ from datetime import datetime
 print(''.join([str(4), '/', extotal]))
 import time
 
-print('', platform.platform(), '')
-time.sleep(3)
-
-try:
-    print(''.join([str(5), '/', extotal]))
-    import requests
-except:
-    subprocess.run(''.join(['python -m pip install requests']))
-    import requests
-
-try:
-    print(''.join([str(6), '/', extotal]))
-    import bs4
-    from bs4 import BeautifulSoup
-except:
-    cnctvrf()
-    subprocess.run(''.join(['python -m pip install bs4']))
-    import bs4
-    from bs4 import BeautifulSoup
-
-try:
-    print(''.join([str(7), '/', extotal]))
-    import setproctitle
-except:
-    cnctvrf()
-    subprocess.run(''.join(['python -m pip install setproctitle']))
-    import setproctitle
-
-print(''.join([str(8), '/', extotal]))
+print(''.join([str(5), '/', extotal]))
 import os
 
-try:
-    print(''.join([str(9), '/', extotal]))
-    import concurrent.futures
-    from concurrent.futures import ThreadPoolExecutor, TimeoutError
-except:
-    cnctvrf()
-    subprocess.run(''.join(['python -m pip install concurrent.futures']))
-    import concurrent.futures
-    from concurrent.futures import ThreadPoolExecutor, TimeoutError
+sisop = verifyos()
+#print(sisop)
+
+if sisop != 0:
+
+    try:
+        print(''.join([str(6), '/', extotal]))
+        import requests
+    except:
+        subprocess.run(''.join(['python -m pip install requests']))
+        import requests
+
+    try:
+        print(''.join([str(7), '/', extotal]))
+        import bs4
+        from bs4 import BeautifulSoup
+    except:
+        cnctvrf()
+        subprocess.run(''.join(['python -m pip install bs4']))
+        import bs4
+        from bs4 import BeautifulSoup
+
+    try:
+        print(''.join([str(8), '/', extotal]))
+        import concurrent.futures
+        from concurrent.futures import ThreadPoolExecutor, TimeoutError
+    except:
+        cnctvrf()
+        subprocess.run(''.join(['python -m pip install concurrent.futures']))
+        import concurrent.futures
+        from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 print('')
 
 # subprocess.run('py -m pip install --upgrade pip')
-
 os.system('cls||clear')
 
 
