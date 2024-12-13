@@ -496,6 +496,7 @@ def provedores(tl, ep):
 
         #print('PROVEDOR: "nyaa.land"')
 
+        nep = ep
         if int(ep) > 10:
             nep = ''.join(['0', ep])
 
