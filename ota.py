@@ -312,7 +312,7 @@ def temstream(link):
     start = time.perf_counter()
 
     try:
-        qzq = future.result(timeout=10)
+        qzq = future.result(timeout=12)
     except TimeoutError:
         finish = time.perf_counter()
         print(f' <Request TimeOut> {round(finish-start, 2)}s\n')
