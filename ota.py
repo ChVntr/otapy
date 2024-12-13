@@ -454,7 +454,26 @@ def playmedia(link):
 def provedores(tl, ep):
 
     epfound = False
+    naoescolhi = True
 
+
+
+
+    dubs = ('one piece',)
+    if tl.lower() in dubs:    
+        dub = True
+    else:
+        dub = False
+
+    if usnm.lower() == 'gahvius':
+        naoescolhi = False
+
+
+
+
+
+
+    # ani-cli
     print('PROVEDOR: "ani-cli"')
 
     try:
@@ -490,7 +509,6 @@ def provedores(tl, ep):
         if result.find('returncode=1') == -1:
             epfound = True
 
-
     # nyaa
     if epfound == False:
 
@@ -509,7 +527,6 @@ def provedores(tl, ep):
         sopa = sopa[sopa.find('<a href="magnet') + 9:]
         magnet = sopa[:sopa.find('"><i class=')]
         
-
     # animefire
     if epfound == False:
 
@@ -559,44 +576,23 @@ def provedores(tl, ep):
 
             deubom = False
 
+            if naoescolhi:
+                dub = vaiumadub()
+                naoescolhi = False
+
             # verificar se tem dub
             link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
             response = requests.get(url=link)
 
             try:
                 if str(response) == '<Response [500]>':
-                    temdub = False
+                    ''
                 else:
-                    temdub = True
+                    if dub:
+                        print('\nBUSCANDO EPISODIO DUBLADO!')
+                        deubom = animefire(dubtl, ep)
             except:
-                temdub = False
-            
-            while temdub:
-
-                dubs = ('one-piece',)
-
-                if usnm.lower() == 'gahvius':
-                    if ntl in dubs:    
-                        dub = 's'
-                        temdub = False
-                    else:
-                        dub = 'n'
-
-                else:
-                    dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
-
-                if dub == 's':            
-                    print('\nBUSCANDO EPISODIO DUBLADO!')  
-                    deubom = animefire(dubtl, ep)
-                    temdub = False
-                elif dub == 'n':
-                    temdub = False
-                else:
-                    print('COMANDO INVALIDO!')
-
-                
-
-
+                ''
 
             if deubom == False:
                 print('\nBUSCANDO EPISODIO LEGENDADO!')
@@ -625,6 +621,25 @@ def verifyos():
 
     return os
 
+def vaiumadub():
+
+    questions = [
+        inquirer.List(
+            "dub",
+            message="BUSCAR POR EPISÓDIO DUBLADO?",
+            choices=['SIM', 'NÃO'],
+        ),
+    ]
+
+    dub = str(inquirer.prompt(questions))
+    if dub == "{'dub': 'SIM'}":
+        dub = True
+    else:
+        dub = False
+
+    return dub
+
+
 
 
 
@@ -638,7 +653,7 @@ def verifyos():
 print('IMPORTANDO EXTENSÕES...')
 
 
-extotal = str(8)
+extotal = str(10)
 
 print(''.join([str(1), '/', extotal]))
 import subprocess, sys
@@ -686,6 +701,21 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install concurrent.futures']))
         import concurrent.futures
         from concurrent.futures import ThreadPoolExecutor, TimeoutError
+
+    try:
+        print(''.join([str(9), '/', extotal]))
+        from pprint import pprint
+    except:
+        subprocess.run(''.join(['python -m pip install pprint']))
+        from pprint import pprint
+
+    try:
+        print(''.join([str(10), '/', extotal]))
+        import inquirer
+    except:
+        subprocess.run(''.join(['python -m pip install inquirer']))
+        import inquirer
+
 
 print('')
 
