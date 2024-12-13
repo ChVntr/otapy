@@ -459,8 +459,14 @@ def provedores(tl, ep):
 
 
 
-    dubs = ('one piece',)
-    if tl.lower() in dubs:    
+    dubsraw = ('one piece', 'dragon ball', 'one punch man', 'yu yu Hakusho')
+    dubs = list()
+    for title in dubsraw:
+        if (tl.lower()).find(title) != -1:
+            dubs.append(tl)
+    dubs = tuple(dubs)
+
+    if tl in dubs:    
         dub = True
     else:
         dub = False
