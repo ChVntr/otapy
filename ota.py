@@ -430,7 +430,7 @@ def vaiounao(link):
 
 def playmedia(link):
     
-    players = ('mpv', 'vlc', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe', 'mpv\\mpv.exe')
+    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
 
     
     for player in players:
