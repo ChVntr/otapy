@@ -516,6 +516,7 @@ def provedores(tl, ep):
         ntl = ntl.replace('--', '-')
 
         ntl = ntl.lower() 
+        dubtl = ''.join([ntl, '-dublado'])
 
         if ntl[-1] == '-':
             ntl = ntl[0 : (len(tl))-1]
@@ -551,10 +552,18 @@ def provedores(tl, ep):
                 temdub = False
             
             while temdub:
-                dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
 
-                if dub == 's':
-                    dubtl = ''.join([ntl, '-dublado'])
+                dubs = ('one-piece',)
+
+                if usnm.lower() == 'gahvius' and ntl in dubs:    
+                    dub = 's'
+                    temdub = False
+
+                else:
+                    dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
+
+                if dub == 's':            
+                    print('\nBUSCANDO EPISODIO DUBLADO!')  
                     deubom = animefire(dubtl, ep)
                     temdub = False
                 elif dub == 'n':
