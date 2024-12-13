@@ -51,7 +51,10 @@ cls
         cls
         echo VERIFICANDO VERSAO DO REPRODUTOR...
         echo.
-        CALL otapy\mpv\updater.bat
+        cd otapy\mpv
+        del updater.bat
+        powershell Invoke-WebRequest https://github.com/ChVntr/otapy/releases/download/depend/updater.bat -OutFile updater.bat
+        CALL updater.bat
         cd..
         cd..
     ) else (
