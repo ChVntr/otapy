@@ -555,9 +555,12 @@ def provedores(tl, ep):
 
                 dubs = ('one-piece',)
 
-                if usnm.lower() == 'gahvius' and ntl in dubs:    
-                    dub = 's'
-                    temdub = False
+                if usnm.lower() == 'gahvius':
+                    if ntl in dubs:    
+                        dub = 's'
+                        temdub = False
+                    else:
+                        dub = 'n'
 
                 else:
                     dub = input('\nDUB ENCONTRADO!\nPROCURAR POR EPISÓDIOS DUBLADOS? (s,n): ').lower()
