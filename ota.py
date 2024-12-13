@@ -92,7 +92,7 @@ def setores():
 
         link = ''.join([mallink, usnm, mallink2])
 
-        sopa = sopapranois(link)
+        sopa = sopapranois(link)[0]
 
         # se não tiver nenhum item PTW em lançamento passa pra proxima lista
 
@@ -490,6 +490,25 @@ def provedores(tl, ep):
         if result.find('returncode=1') == -1:
             epfound = True
 
+
+    # nyaa
+    if epfound == False:
+
+        #print('PROVEDOR: "nyaa.land"')
+
+        if int(ep) > 10:
+            nep = ''.join(['0', ep])
+
+        ntl = tl.replace(' ', '+')
+        link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', tl, '+', nep, '&s=seeders&o=desc'])
+        sopa = str(sopapranois(link)[1])
+        sopa = sopa[sopa.find('<tr class="success">'):]
+        sopa = sopa[sopa.find(tl):]
+        sopa = sopa[sopa.find(nep):]
+        sopa = sopa[sopa.find('<a href="magnet') + 9:]
+        magnet = sopa[:sopa.find('"><i class=')]
+        
+
     # animefire
     if epfound == False:
 
@@ -591,7 +610,7 @@ def sopapranois(link):
     soup = BeautifulSoup(page.text, 'html.parser')
     sopa = str(soup.find('table', class_='list-table'))
 
-    return sopa
+    return sopa, soup
 
 def verifyos():
 
