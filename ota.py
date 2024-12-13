@@ -240,7 +240,7 @@ def animefire(tl, ep):
             num+=1
             sv = 1
 
-        for s1 in ('s2.', 's1.', ''):
+        for s1 in ('s2.', ''):
             s1=str(s1)
 
             for s2 in range (4):
@@ -257,7 +257,7 @@ def animefire(tl, ep):
                 #print(link)
 
                 cnctvrf()
-                sys.stdout.write(''.join(['\n', str(sv), '/12']))
+                sys.stdout.write(''.join(['\n', str(sv), '/8']))
 
 
                 deubom=temstream(link)
