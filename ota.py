@@ -527,7 +527,10 @@ def provedores(tl, ep):
     if epfound == False:
 
         print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
-        if debugin: epfound = nyaa(tl, ep) 
+        #epfound = nyaa(tl, ep)
+        if debugin: 
+            nyaa(tl, ep) 
+            epfound = True
         
         
     # animefire
@@ -645,7 +648,7 @@ def vaiumadub():
 def streammagnet(link):
     
     print(link)
-
+    exit()
     return True
 
 def nyaa(tl, ep):
@@ -701,7 +704,7 @@ def nyaa(tl, ep):
         print('EPISODIO NÃO ENCONTRADO!\n')
 
     if achei:
-        result = streammagnet
+        result = streammagnet(magnet)
 
 
 
