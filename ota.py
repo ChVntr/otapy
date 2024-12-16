@@ -605,7 +605,10 @@ def provedores(tl, ep):
                 animefire(ntl, ep)
         else:
             print('\nANIME NÃO ENCONTRADO!\n')
-            time.sleep(1)
+
+
+
+    time.sleep(1)
 
 def sopapranois(link):
 
