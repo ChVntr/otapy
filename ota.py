@@ -383,7 +383,7 @@ def getusername():
 
     validusername = False
 
-    while validusername == False:
+    while validusername == False and debugin == False:
         usnm = input('USERNAME DO MYANIMELIST: ')
         cnctvrf()
         response = str(requests.get(str(''.join(['https://myanimelist.net/profile/', usnm]))))
@@ -394,6 +394,8 @@ def getusername():
         else:
             validusername = True
             print('\n')
+
+    if debugin: usnm = 'gahvius'
 
 def vaiounao(link):
 
@@ -527,17 +529,26 @@ def provedores(tl, ep):
         print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
 
         nep = ep
-        if int(ep) > 10:
+        if int(ep) < 10:
             nep = ''.join(['0', ep])
 
         ntl = tl.replace(' ', '+')
-        link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', tl, '+', nep, '&s=seeders&o=desc'])
-        sopa = str(sopapranois(link)[1])
+        link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', ntl.lower(), '+', nep, '&s=seeders&o=desc'])
+        ogsopa = str(sopapranois(link)[1])
+        sopa=ogsopa
         sopa = sopa[sopa.find('<tr class="success">'):]
         sopa = sopa[sopa.find(tl):]
-        sopa = sopa[sopa.find(nep):]
-        sopa = sopa[sopa.find('<a href="magnet') + 9:]
-        magnet = sopa[:sopa.find('"><i class=')]
+
+        if (sopa.find(nep) - len(tl)) > 5 or ogsopa.find('<h3>No results found</h3>') != -1:
+            #print('EPISODIO NÃO ENCONTRADO!\n')
+            ''
+        else:
+            sopa = sopa[sopa.find(nep):]
+            sopa = sopa[sopa.find('<a href="magnet') + 9:]
+            magnet = sopa[:sopa.find('"><i class=')]
+            #epfound = True
+        
+        
         
     # animefire
     if epfound == False:
@@ -612,6 +623,8 @@ def provedores(tl, ep):
         else:
             print('\nANIME NÃO ENCONTRADO!\n')
             time.sleep(1)
+
+    time.sleep(1)
 
 def sopapranois(link):
 
@@ -751,7 +764,7 @@ os.system('cls||clear')
 # loop que faz a parada funcionar
 
 
-
+debugin = False
 
 getusername()
 
