@@ -459,7 +459,13 @@ def provedores(tl, ep):
 
 
 
-    dubsraw = ('one piece', 'dragon ball', 'one punch man', 'yu yu Hakusho')
+    dubsraw = (
+        'one piece', 
+        'dragon ball', 
+        'one punch man', 
+        'yu yu hakusho', 'yuy yyu hakusho',
+    )
+
     dubs = list()
     for title in dubsraw:
         if (tl.lower()).find(title) != -1:
@@ -518,7 +524,7 @@ def provedores(tl, ep):
     # nyaa
     if epfound == False:
 
-        #print('PROVEDOR: "nyaa.land"')
+        print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
 
         nep = ep
         if int(ep) > 10:
@@ -659,37 +665,40 @@ def vaiumadub():
 print('IMPORTANDO EXTENSÕES...')
 
 
-extotal = str(10)
+extotal = str(8)
+exnow = 1
 
-print(''.join([str(1), '/', extotal]))
+print(''.join([str(exnow), '/', extotal]))
 import subprocess, sys
+exnow+=1
 
-print(''.join([str(2), '/', extotal]))
+print(''.join([str(exnow), '/', extotal]))
 import platform
+exnow+=1
 
-print(''.join([str(3), '/', extotal]))
-from datetime import datetime
-
-print(''.join([str(4), '/', extotal]))
+print(''.join([str(exnow), '/', extotal]))
 import time
+exnow+=1
 
-print(''.join([str(5), '/', extotal]))
+print(''.join([str(exnow), '/', extotal]))
 import os
+exnow+=1
 
 sisop = verifyos()
 #print(sisop)
 
 if sisop != 0:
 
+    print(''.join([str(exnow), '/', extotal]))
     try:
-        print(''.join([str(6), '/', extotal]))
         import requests
     except:
         subprocess.run(''.join(['python -m pip install requests']))
         import requests
+    exnow+=1
 
+    print(''.join([str(exnow), '/', extotal]))
     try:
-        print(''.join([str(7), '/', extotal]))
         import bs4
         from bs4 import BeautifulSoup
     except:
@@ -697,9 +706,10 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install bs4']))
         import bs4
         from bs4 import BeautifulSoup
+    exnow+=1
 
+    print(''.join([str(exnow), '/', extotal]))
     try:
-        print(''.join([str(8), '/', extotal]))
         import concurrent.futures
         from concurrent.futures import ThreadPoolExecutor, TimeoutError
     except:
@@ -707,20 +717,15 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install concurrent.futures']))
         import concurrent.futures
         from concurrent.futures import ThreadPoolExecutor, TimeoutError
+    exnow+=1
 
+    print(''.join([str(exnow), '/', extotal]))
     try:
-        print(''.join([str(9), '/', extotal]))
-        from pprint import pprint
-    except:
-        subprocess.run(''.join(['python -m pip install pprint']))
-        from pprint import pprint
-
-    try:
-        print(''.join([str(10), '/', extotal]))
         import inquirer
     except:
         subprocess.run(''.join(['python -m pip install inquirer']))
         import inquirer
+    exnow+=1
 
 
 print('')
