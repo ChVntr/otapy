@@ -527,27 +527,7 @@ def provedores(tl, ep):
     if epfound == False:
 
         print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
-
-        nep = ep
-        if int(ep) < 10:
-            nep = ''.join(['0', ep])
-
-        ntl = tl.replace(' ', '+')
-        link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', ntl.lower(), '+', nep, '&s=seeders&o=desc'])
-        ogsopa = str(sopapranois(link)[1])
-        sopa=ogsopa
-        sopa = sopa[sopa.find('<tr class="success">'):]
-        sopa = sopa[sopa.find(tl):]
-
-        if (sopa.find(nep) - len(tl)) > 5 or ogsopa.find('<h3>No results found</h3>') != -1:
-            #print('EPISODIO NÃO ENCONTRADO!\n')
-            ''
-        else:
-            sopa = sopa[sopa.find(nep):]
-            sopa = sopa[sopa.find('<a href="magnet') + 9:]
-            magnet = sopa[:sopa.find('"><i class=')]
-            #epfound = True
-        
+        if debugin: epfound = nyaa(tl, ep) 
         
         
     # animefire
@@ -624,8 +604,6 @@ def provedores(tl, ep):
             print('\nANIME NÃO ENCONTRADO!\n')
             time.sleep(1)
 
-    time.sleep(1)
-
 def sopapranois(link):
 
     page = requests.get(str(link))
@@ -663,6 +641,71 @@ def vaiumadub():
         dub = False
 
     return dub
+
+def streammagnet(link):
+    
+    print(link)
+
+    return True
+
+def nyaa(tl, ep):
+
+    result = False
+
+    if int(ep) < 10:
+        ep = ''.join(['0', ep])
+
+
+
+    link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', (tl.replace(' ', '+')).lower(), '+', ep, '&s=seeders&o=desc'])
+    sopa = str(sopapranois(link)[1])
+
+
+
+    trclasloc = sopa.find('<tr class="')
+    if trclasloc != -1:
+        temep = True
+    else:
+        temep = False
+
+
+    achei = False
+    while temep and achei == False:
+
+        sopa = sopa[sopa.find('<tr class="'):]
+
+        tlloc = (sopa.lower()).find(tl.lower())
+        if tlloc != -1:
+
+            eploc = sopa.find(''.join([' - ', ep, ' ']))
+            diff = eploc - tlloc
+            if eploc != -1 and diff < 200 and diff > -200:
+                sopa = sopa[sopa.find(''.join([' - ', ep, ' '])):]
+            else:
+                temep = False
+                
+        else:
+            temep = False
+
+        if temep:
+            if sopa.find('<a href="magnet:') != -1:
+                magnet = sopa[sopa.find('<a href="magnet:') + 9 : sopa.find('"><i class="fa fa-fw fa-magnet"></i></a>')]
+                achei = True
+
+            if achei == False:
+                if sopa.find('<tr class="') == -1:
+                    temep = False
+
+    if temep == False:
+        achei = False
+        print('EPISODIO NÃO ENCONTRADO!\n')
+
+    if achei:
+        result = streammagnet
+
+
+
+    return result
 
 
 
