@@ -185,20 +185,15 @@ def animefire(tl, ep):
     #um monte de variavel pro bagulho funcionar
 
     tocou=False
-    deubom=False
-    brekaporra = False
-    prevqual='none'
-    num=1
+
+    if afsearchep(tl, ep) == False:
+        print('\n\nEPISODIO NÃO ENCONTRADO!\n')
+        return False
+
 
     notemplist = (
         'dandadan',
         'ranma-2024',
-        )
-
-    sdlist = (
-        'one-piece',
-        'ike-ina-chuu-takkyuubu',
-        'gintama',
         )
 
     for title in notemplist:
@@ -209,79 +204,25 @@ def animefire(tl, ep):
             temp=True
 
 
-    for title in sdlist:
-        if tl == title:
-            sd=True
-            break
-        else:
-            sd=False
+    result = (True, 0, 'none')
+    while result[0]:
 
-    if sd:
-        qualidades = ('sd',)
-        #qualidades = qualidades[:1]
-    elif temp == False:
-        qualidades = ('fhd', 'hd')
-    else:
-        qualidades = ('fhd', 'hd', 'temp')
-    
-    qualnum = len(qualidades)
+        result = afgetqual(tl, ep, result)
+        eplink = result[2]
 
-    for qual in qualidades:
-
-        if qual != prevqual:
-
-            if qual == 'temp':
-                print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (HD - LEGENDA TEMPORARIA)']))
+        if eplink != 'none':
+            if eplink.find('/mp4_temp/') and temp == False:
+                ''
             else:
-                print(''.join(['\n\nQUALIDADE:\n', str(num), '/', str(qualnum), ' (', qual.upper(), ')']))
-
-            sys.stdout.write('\n\nSERVIDOR:')
-            prevqual = qual
-            num+=1
-            sv = 1
-
-        for s1 in ('s2.', ''):
-            s1=str(s1)
-
-            for s2 in range (4):
-                s2+=1
-                s2=str(s2)
-
-                if qual != 'temp':
-                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4/', tl, '/', qual, '/', str(ep), '.mp4')
+                print(' '.join(['\nREPRODUZINDO:', result[3]]))
+                tocou = playmedia(eplink)
+                if tocou:
+                    return True
                 else:
-                    link = ('https://', s1, 'lightspeedst.net/s', s2, '/mp4_temp/', tl, '/', str(ep), '/720p.mp4')
+                    print('FALHA NA REPRODUÇÃO\n')
 
-                link = (''.join(link))
-
-                #print(link)
-
-                cnctvrf()
-                sys.stdout.write(''.join(['\n', str(sv), '/8']))
-
-
-                deubom=temstream(link)
-
-                if deubom:
-                    tocou = playmedia(link)
-                    if tocou:
-                        ''
-                    else:
-                        print('FALHA NA REPRODUÇÃO!')
-                    break
-
-                sv=sv+1
-                    
-            if deubom:
-                break
-        
-        if tocou:
-            break
-    
-    if tocou == False:
-        print('\n\nEPISODIO NÃO ENCONTRADO!\n')
-
-    return tocou
+    print('\n\nEPISODIO NÃO ENCONTRADO!\n')
+    return False
 
 def cnctvrf():
 
@@ -455,8 +396,10 @@ def playmedia(link):
 
 def provedores(tl, ep):
 
+    global dubinfo
+
     epfound = False
-    naoescolhi = True
+    dubinfo = (False, False)
 
 
 
@@ -475,12 +418,12 @@ def provedores(tl, ep):
     dubs = tuple(dubs)
 
     if tl in dubs:    
-        dub = True
+        dubinfo = (dubinfo[0], True)
     else:
-        dub = False
+        dubinfo = (dubinfo[0], False)
 
     if usnm.lower() == 'gahvius':
-        naoescolhi = False
+        dubinfo = (True, dubinfo[1])
 
 
 
@@ -518,7 +461,6 @@ def provedores(tl, ep):
         print('PROVEDOR: ani-cli\n')
         
         result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
-        time.sleep(5)
 
         if result.find('returncode=1') == -1:
             epfound = True
@@ -535,77 +477,7 @@ def provedores(tl, ep):
         
     # animefire
     if epfound == False:
-
-        print('PROVEDOR: "animefire.plus"')
-
-
-        ntl = tl
-
-        ntl = ntl.replace('(', '')
-        ntl = ntl.replace(')', '')
-        ntl = ntl.replace('"', '')
-        ntl = ntl.replace('/', '')
-
-        ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
-        ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
-        ntl = ntl.replace(';', '-')
-        ntl = ntl.replace('.', '-')
-        ntl = ntl.replace(' ', '-')
-        ntl = ntl.replace(':', '-')
-        ntl = ntl.replace(',', '')
-        ntl = ntl.replace('!', '')
-        ntl = ntl.replace('?', '')
-        ntl = ntl.replace('---', '-')
-        ntl = ntl.replace('--', '-')
-
-        ntl = ntl.lower() 
-        dubtl = ''.join([ntl, '-dublado'])
-
-        if ntl[-1] == '-':
-            ntl = ntl[0 : (len(tl))-1]
-
-        link = ''.join(['https://animefire.plus/animes/', ntl, '-todos-os-episodios'])
-        response = requests.get(url=link)
-        
-        try:
-            if str(response) == '<Response [500]>':
-                animeexiste = False
-            else:
-                animeexiste = True
-        except:
-            animeexiste = False
-
-
-
-
-        if animeexiste:
-
-            deubom = False
-
-            if naoescolhi:
-                dub = vaiumadub()
-                naoescolhi = False
-
-            # verificar se tem dub
-            link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
-            response = requests.get(url=link)
-
-            try:
-                if str(response) == '<Response [500]>':
-                    ''
-                else:
-                    if dub:
-                        print('\nBUSCANDO EPISODIO DUBLADO!')
-                        deubom = animefire(dubtl, ep)
-            except:
-                ''
-
-            if deubom == False:
-                print('\nBUSCANDO EPISODIO LEGENDADO!')
-                animefire(ntl, ep)
-        else:
-            print('\nANIME NÃO ENCONTRADO!\n')
-
+        afsearch(tl, ep)
 
 
     time.sleep(1)
@@ -631,6 +503,8 @@ def verifyos():
     return os
 
 def vaiumadub():
+
+    print('')
 
     questions = [
         inquirer.List(
@@ -712,6 +586,120 @@ def nyaa(tl, ep):
 
 
     return result
+
+def afsearch(tl, ep):
+
+    global dubinfo
+
+    print('PROVEDOR: "animefire.plus"')
+
+
+    ntl = tl
+
+    ntl = ntl.replace('(', '')
+    ntl = ntl.replace(')', '')
+    ntl = ntl.replace('"', '')
+    ntl = ntl.replace('/', '')
+
+    ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
+    ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
+    ntl = ntl.replace(';', '-')
+    ntl = ntl.replace('.', '-')
+    ntl = ntl.replace(' ', '-')
+    ntl = ntl.replace(':', '-')
+    ntl = ntl.replace(',', '')
+    ntl = ntl.replace('!', '')
+    ntl = ntl.replace('?', '')
+    ntl = ntl.replace('---', '-')
+    ntl = ntl.replace('--', '-')
+
+    ntl = ntl.lower() 
+    dubtl = ''.join([ntl, '-dublado'])
+
+    if ntl[-1] == '-':
+        ntl = ntl[0 : (len(tl))-1]
+
+    link = ''.join(['https://animefire.plus/animes/', ntl, '-todos-os-episodios'])
+    response = requests.get(url=link)
+    
+    try:
+        if str(response) == '<Response [500]>':
+            animeexiste = False
+        else:
+            animeexiste = True
+    except:
+        animeexiste = False
+
+
+
+
+    if animeexiste:
+
+        deubom = False
+
+
+        # verificar se tem dub
+        link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
+        response = requests.get(url=link)
+
+        try:
+            if str(response) == '<Response [500]>':
+                ''
+            else:
+                if dubinfo[0] == False:
+                    dubinfo = (True, vaiumadub()) 
+                if dubinfo[1]:
+                    print('\nBUSCANDO EPISODIO DUBLADO!')
+                    deubom = animefire(dubtl, ep)
+        except:
+            ''
+
+        if deubom == False:
+            print('\nBUSCANDO EPISODIO LEGENDADO!')
+            animefire(ntl, ep)
+    else:
+        print('\nANIME NÃO ENCONTRADO!\n')
+
+def afsearchep(tl, ep):
+
+    link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
+
+    sopa = (sopapranois(link))[1]
+
+    if str(sopa).find('<h6 class="text-white quicksand300 mx-3">Download indisponível</h6>') != -1:
+        return False
+    else:
+        return True
+
+def afgetqual(tl, ep, args):
+
+    args = (args[0], args[1]+1, args[2])
+
+    link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
+
+    sopa = str((sopapranois(link))[1])
+
+
+    if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
+        sopa = sopa[sopa.find('(F-HD)" href="') + 14 : ]
+    elif sopa.find(';opacity: 0.3;">HD</span>') == -1 and args[1] == 2:
+        sopa = sopa[sopa.find('(HD)" href="') + 12 : ]
+    elif sopa.find(';opacity: 0.3;">SD</span>') == -1 and args[1] == 3:
+        sopa = sopa[sopa.find('(SD)" href="') + 12 : ]
+    else:
+        if args[1] > 3:
+            return (False, args[1], 'none')
+        else:
+            return (True, args[1], 'none')
+
+
+    eplink = sopa[:sopa.find('.mp4?type')+4]
+    filename = sopa[sopa.find('[AnimeFire.plus] ')+17 : sopa.find('" style="cursor')]
+
+    return (args[0], args[1], eplink, filename)
+
+
+
 
 
 
