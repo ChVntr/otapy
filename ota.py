@@ -39,13 +39,13 @@ def setores():
 
 
     # assistindo
-    if loops == 0:
+    if loops == 1:
         print('BUSCANDO LISTA "WATCHING"...')
         mallink2 = '?order=11&order2=-5&status=1'
         onlyptw = False
     
     # PTW em lançamento
-    elif loops == 1:
+    elif loops == 0:
         print(
             '\nBUSCANDO LISTA "PLAN TO WATCH (AIRING)"...'
         )
@@ -138,16 +138,20 @@ def proximo(sopa):
 
     # filtrar os characteres especiais do titulo
     
+    titulo = titulo.replace('\\u00bd', '½')
     titulo = titulo.replace('&quot;', '')
+
+    print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
+
     titulo = titulo.replace('u2606', ' ')
     titulo = titulo.replace('u2605', ' ')
-    titulo = titulo.replace('u00bd', ' ')
+    titulo = titulo.replace('½', '')
     titulo = titulo.replace('\\', '')
     titulo = titulo.replace('    ', ' ')
     titulo = titulo.replace('   ', ' ')
     titulo = titulo.replace('  ', ' ')
 
-    print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
+    
 
     cnctvrf()
 
@@ -373,8 +377,9 @@ def vaiounao(link):
 
 def playmedia(link):
     
-    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
+    if debugin: return True
 
+    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
     
     for player in players:
         try:
@@ -718,8 +723,11 @@ def afgetqual(tl, ep, args):
             qual = '(SD)'      
 
         eplink = sopa[sopa.find('download="')+10 : sopa.find('.mp4?type')+4]
-        filename = ' '.join([tl, '- episódio', ep, '-', qual])
+        filename = ' '.join([tl.replace('-', ' '), '- Episódio', ep, qual])
             
+    if eplink.find('/mp4_temp/') != -1:
+        filename = filename.replace('(HD)', '(HD - LEGENDA TEMPORÁRIA)')
+
     return (args[0], args[1], eplink, filename)
 
 
