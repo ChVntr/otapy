@@ -39,13 +39,13 @@ def setores():
 
 
     # assistindo
-    if loops == 1:
+    if loops == 0:
         print('BUSCANDO LISTA "WATCHING"...')
         mallink2 = '?order=11&order2=-5&status=1'
         onlyptw = False
     
     # PTW em lançamento
-    elif loops == 0:
+    elif loops == 1:
         print(
             '\nBUSCANDO LISTA "PLAN TO WATCH (AIRING)"...'
         )
