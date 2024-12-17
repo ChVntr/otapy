@@ -470,9 +470,7 @@ def provedores(tl, ep):
 
         print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
         #epfound = nyaa(tl, ep)
-        if debugin: 
-            nyaa(tl, ep) 
-            epfound = True
+        #epfound = True
         
         
     # animefire
@@ -673,29 +671,55 @@ def afsearchep(tl, ep):
 
 def afgetqual(tl, ep, args):
 
+    wtf = False
     args = (args[0], args[1]+1, args[2])
 
     link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
-
     sopa = str((sopapranois(link))[1])
-
+    ogsopa = sopa
+    
 
     if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
-        sopa = sopa[sopa.find('(F-HD)" href="') + 14 : ]
+        if sopa.find('(F-HD)" href="') == -1:
+            wtf= True
+        else:
+            sopa = sopa[sopa.find('(F-HD)" href="') + 14 : ]
     elif sopa.find(';opacity: 0.3;">HD</span>') == -1 and args[1] == 2:
-        sopa = sopa[sopa.find('(HD)" href="') + 12 : ]
+        if sopa.find('(HD)" href="') == -1:
+            wtf= True
+        else:
+            sopa = sopa[sopa.find('(HD)" href="') + 12 : ]
     elif sopa.find(';opacity: 0.3;">SD</span>') == -1 and args[1] == 3:
-        sopa = sopa[sopa.find('(SD)" href="') + 12 : ]
+        if sopa.find('(SD)" href="') == -1:
+            wtf= True
+        else:
+            sopa = sopa[sopa.find('(SD)" href="') + 12 : ]
     else:
-        if args[1] > 3:
+        if args[1] == 4:
             return (False, args[1], 'none')
         else:
             return (True, args[1], 'none')
 
-
     eplink = sopa[:sopa.find('.mp4?type')+4]
     filename = sopa[sopa.find('[AnimeFire.plus] ')+17 : sopa.find('" style="cursor')]
 
+    if wtf:
+
+        sopa = ogsopa
+
+        if args[1] == 1:
+            sopa = sopa[sopa.find('<a (f-hd)'):]
+            qual = '(F-HD)'            
+        if args[1] == 2:
+            sopa = sopa[sopa.find('<a (hd)'):]
+            qual = '(HD)' 
+        if args[1] == 3:
+            sopa = sopa[sopa.find('<a (sd)'):]       
+            qual = '(SD)'      
+
+        eplink = sopa[sopa.find('download="')+10 : sopa.find('.mp4?type')+4]
+        filename = ' '.join([tl, '- episódio', ep, '-', qual])
+            
     return (args[0], args[1], eplink, filename)
 
 
