@@ -141,6 +141,9 @@ def proximo(sopa):
     titulo = titulo.replace('\\u00bd', '½')
     titulo = titulo.replace('&quot;', '')
     titulo = titulo.replace('\\', '')
+    titulo = titulo.replace('    ', ' ')
+    titulo = titulo.replace('   ', ' ')
+    titulo = titulo.replace('  ', ' ')
 
     print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
 
@@ -148,9 +151,7 @@ def proximo(sopa):
     titulo = titulo.replace('u2605', ' ')
     titulo = titulo.replace('½', '')
 
-    titulo = titulo.replace('    ', ' ')
-    titulo = titulo.replace('   ', ' ')
-    titulo = titulo.replace('  ', ' ')
+
 
     
 
