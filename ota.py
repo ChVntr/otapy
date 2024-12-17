@@ -69,7 +69,7 @@ def setores():
         onlyptw = False
 
     # PTW
-    elif loops == -4:
+    elif loops == 3:
         print(
             '\nBUSCANDO LISTA "PLAN TO WATCH (FINISHED AIRING)"...'
         )
