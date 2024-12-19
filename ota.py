@@ -106,48 +106,42 @@ def proximo(sopa):
     # obs: CODIGO FEIO DA DESGRAÇA
     # por algum motivo desconhecido algumas listam tem sintase diferente
 
+    animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
+    link = ''.join(['https://myanimelist.net/anime/', animeid])
+    tl_sopa = sopapranois(link)[1]
+    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content="') +31 : tl_sopa.find('" property="og:title"')])
+
     if sopa.find('"num_watched_episodes":') != -1:
         
         findep = (int(sopa.find('"num_watched_episodes":'))+23, int(sopa.find(',"created_at":')))
-        findtl = (int(sopa.find('"anime_title":"'))+15, int(sopa.find('","anime_title_eng":"')))
         
     elif sopa.find(',&quot;num_watched_episodes&quot;:') != -1:
 
         findep = (int(sopa.find(',&quot;num_watched_episodes&quot;:'))+34, int(sopa.find(',&quot;created_at')))
-        findtl = (int(sopa.find('anime_title&quot;:&quot;'))+24, int(sopa.find('&quot;,&quot;anime_title_eng')))
         
     elif sopa.find('&quot;,&quot;anime_title_eng') != -1:
 
         findep = (int(sopa.find('"watched_episodes&quot;:'))+23, int(sopa.find(',&quot;created_at')))
-        findtl = (int(sopa.find('anime_title&quot;:&quot;'))+24, int(sopa.find('&quot;,&quot;anime_title_eng')))
 
     else:
         print('oh shit')
-    
 
     ep = int(sopa[findep[0] : (findep[1])])+1
-    titulo = str(sopa[findtl[0] : findtl[1]])
     ep=str(ep)
-
-
-    # filtrar os characteres especiais do titulo
-    
-
-    titulo = symblehandler(titulo, 0)
-
-
 
     print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
 
-    titulo = symblehandler(titulo, 1)
+    if len(titulo) + len(ep) > 500:
+        print("OH SHIT")
+        exit()
 
+    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', titulo) 
 
-
+    titulo = titulo.replace('      ', ' ')
+    titulo = titulo.replace('     ', ' ')
     titulo = titulo.replace('    ', ' ')
     titulo = titulo.replace('   ', ' ')
     titulo = titulo.replace('  ', ' ')
-
-    
 
     cnctvrf()
 
@@ -156,7 +150,7 @@ def proximo(sopa):
     update(sopa)
 
 def update(sopa):
-    if debugin: print('UPDATE\n'), time.sleep(dbfldrt), exit()
+    if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
     
 
 
@@ -164,7 +158,7 @@ def update(sopa):
     # se não tiver manda de volra pros setores
     # se tiver tira o que já assistiu e manda de volta
     os.system('cls||clear')
-    novasopa = sopa[int(sopa.find('anime_title_eng'))+5:]
+    novasopa = sopa[int(sopa.find(',&quot;anime_studios&'))+5:]
 
     if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
         temptw = False
@@ -603,24 +597,11 @@ def afsearch(tl, ep):
 
     ntl = tl
 
-    ntl = ntl.replace('(', '')
-    ntl = ntl.replace(')', '')
-    ntl = ntl.replace('"', '')
-    ntl = ntl.replace('/', '')
-
     ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
     ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
     ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
 
-    ntl = ntl.replace(';', '-')
-    ntl = ntl.replace('.', '-')
     ntl = ntl.replace(' ', '-')
-    ntl = ntl.replace(':', '-')
-    ntl = ntl.replace(',', '')
-    ntl = ntl.replace('!', '')
-    ntl = ntl.replace('?', '')
-    ntl = ntl.replace('---', '-')
-    ntl = ntl.replace('--', '-')
 
     ntl = ntl.lower() 
     dubtl = ''.join([ntl, '-dublado'])
@@ -736,32 +717,28 @@ def afgetqual(tl, ep, args):
 
     return (args[0], args[1], eplink, filename)
 
-def symblehandler(tx, procedimento):
 
     global symbs
 
     if procedimento == 0:
-        while tx.find('u26') != -1:
-            fsymbcode = tx[tx.find('u26') : tx.find('u26')+5]
+
+        while tx.find('\\u') != -1:
+            fsymbcode = tx[tx.find('\\u')+1 : tx.find('\\u')+6]
             symbcode = fsymbcode[1:]
 
             try:
-                int(symbcode)
+                int(symbcode[:1])
             except:
-                return tx
+                break
             
-            link = ''.join(['https://www.compart.com/en/unicode/U+', symbcode])
+            link = ''.join(['https://www.htmlsymbols.xyz/unicode/U+', symbcode.upper()])
             sopa = sopapranois(link)[1]
-            symb = sopa[sopa.find('<title xml:space="preserve">“')+29 : sopa.find('<title xml:space="preserve">“')+30]
-
+            symb = sopa[sopa.find('<title>')+7 : sopa.find('<title>')+8]
+            
             symbsl = list(symbs)
             symbsl.append(symb)
             symbs = tuple(symbsl)
-
             tx = tx.replace(fsymbcode, symb)
-
-
-        
 
     elif procedimento == 1:
         for symb in symbs:
@@ -794,7 +771,7 @@ def symblehandler(tx, procedimento):
 print('IMPORTANDO EXTENSÕES...')
 
 
-extotal = str(8)
+extotal = str(9)
 exnow = 1
 
 print(''.join([str(exnow), '/', extotal]))
@@ -811,6 +788,10 @@ exnow+=1
 
 print(''.join([str(exnow), '/', extotal]))
 import os
+exnow+=1
+
+print(''.join([str(exnow), '/', extotal]))
+import re
 exnow+=1
 
 sisop = verifyos()
@@ -882,7 +863,6 @@ os.system('cls||clear')
 
 debugin = False
 dbfldrt = 0
-symbs = ()
 
 
 getusername()
