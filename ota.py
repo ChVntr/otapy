@@ -430,7 +430,7 @@ def provedores(tl, ep):
 
     if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1])
-        if dubinfo[1]: print('DUB = TRUE/n')
+        if dubinfo[1]: print('DUB = TRUE\n')
         
 
 
