@@ -415,6 +415,7 @@ def provedores(tl, ep):
         'one punch man', 
         'yu yu hakusho', 'yuy yyu hakusho',
         'saint seiya',
+        'naruto',
     )
 
     dubs = list()
