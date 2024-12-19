@@ -15,7 +15,7 @@
 
 
 def setores():
-
+    if debugin: print('SETORES\n'), time.sleep(dbfldrt)
 
     global onlyptw
     global loops
@@ -46,33 +46,25 @@ def setores():
     
     # PTW em lançamento
     elif loops == 1:
-        print(
-            '\nBUSCANDO LISTA "PLAN TO WATCH (AIRING)"...'
-        )
+        print('BUSCANDO LISTA "PLAN TO WATCH (AIRING)"...')
         mallink2 = '?airing_status=1&order=-16&order2=14'
         onlyptw = True
     
     # PTW ainda não lançado
     elif loops == -3:
-        print(
-            '\nBUSCANDO LISTA "PLAN TO WATCH (NOT YET AIRED)"...'
-        )
+        print('BUSCANDO LISTA "PLAN TO WATCH (NOT YET AIRED)"...')
         mallink2 = '?airing_status=3&order=-14'
         onlyptw = False
     
     # em espera
     elif loops == 2:
-        print(
-            '\nBUSCANDO LISTA "ON HOLD"...'
-        )
+        print('BUSCANDO LISTA "ON HOLD"...')
         mallink2 = '?order=12&order2=5&status=3'
         onlyptw = False
 
     # PTW
     elif loops == 3:
-        print(
-            '\nBUSCANDO LISTA "PLAN TO WATCH (FINISHED AIRING)"...'
-        )
+        print('BUSCANDO LISTA "PLAN TO WATCH (FINISHED AIRING)"...')
         mallink2 = '?airing_status=2&order=-16&order2=-15'
         onlyptw = True
 
@@ -98,6 +90,7 @@ def setores():
 
         if onlyptw:
             if  sopa.find('"status":6') == -1 and sopa.find('&quot;status&quot;:6') == -1:
+                print('nao achei mais')
                 ''
             else:
                 proximo(sopa)
@@ -105,6 +98,7 @@ def setores():
             proximo(sopa)           
     
 def proximo(sopa):
+    if debugin: print('PROXIMO\n'), time.sleep(dbfldrt)
 
 
     # pegar o numero do proximo ep e o titulo
@@ -162,6 +156,7 @@ def proximo(sopa):
     update(sopa)
 
 def update(sopa):
+    if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
 
 
 
@@ -171,14 +166,16 @@ def update(sopa):
     os.system('cls||clear')
     novasopa = sopa[int(sopa.find('anime_title_eng'))+5:]
 
+    if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
+        temptw = False
+    else:
+        temptw = True
 
     if (str(novasopa).find('"is_rewatching"')) == -1 and (str(novasopa).find(';is_rewatching&')) == -1:
         ''
 
-    elif onlyptw:
-        # aquele mesmo role de ver se o item em lançamento tá em PTW
-        if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
-            ''
+    elif onlyptw and temptw == False:
+        ''
     
     else:
         proximo(novasopa)
@@ -402,6 +399,7 @@ def playmedia(link):
         exit()
 
 def provedores(tl, ep):
+    if debugin: print('PROVEDORES\n'), time.sleep(dbfldrt)
 
     global dubinfo
 
@@ -416,6 +414,7 @@ def provedores(tl, ep):
         'dragon ball', 
         'one punch man', 
         'yu yu hakusho', 'yuy yyu hakusho',
+        'saint seiya',
     )
 
     dubs = list()
@@ -431,6 +430,7 @@ def provedores(tl, ep):
 
     if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1])
+        print('AUTO-DUB')
 
 
 
@@ -608,6 +608,8 @@ def afsearch(tl, ep):
 
     ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
     ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
+    ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daiou')
+
     ntl = ntl.replace(';', '-')
     ntl = ntl.replace('.', '-')
     ntl = ntl.replace(' ', '-')
@@ -836,12 +838,14 @@ os.system('cls||clear')
 
 
 debugin = False
+dbfldrt = 0
 
 getusername()
 
 loops=0
 
 while True:
+    if debugin: print('LOOP START\n'), time.sleep(dbfldrt)
     setores()
 
 exit()
