@@ -132,20 +132,20 @@ def proximo(sopa):
 
     # filtrar os characteres especiais do titulo
     
-    titulo = titulo.replace('\\u00bd', '½')
-    titulo = titulo.replace('&quot;', '')
-    titulo = titulo.replace('\\', '')
-    titulo = titulo.replace('    ', ' ')
-    titulo = titulo.replace('   ', ' ')
-    titulo = titulo.replace('  ', ' ')
+
+    titulo = symblehandler(titulo, 0)
+
+
 
     print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
 
-    titulo = titulo.replace('u2606', ' ')
-    titulo = titulo.replace('u2605', ' ')
-    titulo = titulo.replace('½', '')
+    titulo = symblehandler(titulo, 1)
 
 
+
+    titulo = titulo.replace('    ', ' ')
+    titulo = titulo.replace('   ', ' ')
+    titulo = titulo.replace('  ', ' ')
 
     
 
@@ -156,8 +156,8 @@ def proximo(sopa):
     update(sopa)
 
 def update(sopa):
-    if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
-
+    if debugin: print('UPDATE\n'), time.sleep(dbfldrt), exit()
+    
 
 
     # checa se ainda tem coisa pra assistir
@@ -495,7 +495,7 @@ def sopapranois(link):
     soup = BeautifulSoup(page.text, 'html.parser')
     sopa = str(soup.find('table', class_='list-table'))
 
-    return sopa, soup
+    return sopa, str(soup)
 
 def verifyos():
 
@@ -610,7 +610,7 @@ def afsearch(tl, ep):
 
     ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
     ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
-    ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daiou')
+    ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
 
     ntl = ntl.replace(';', '-')
     ntl = ntl.replace('.', '-')
@@ -639,7 +639,7 @@ def afsearch(tl, ep):
     except:
         animeexiste = False
 
-
+    if debugin: print(link)
 
 
     if animeexiste:
@@ -736,8 +736,49 @@ def afgetqual(tl, ep, args):
 
     return (args[0], args[1], eplink, filename)
 
+def symblehandler(tx, procedimento):
+
+    global symbs
+
+    if procedimento == 0:
+        while tx.find('u26') != -1:
+            fsymbcode = tx[tx.find('u26') : tx.find('u26')+5]
+            symbcode = fsymbcode[1:]
+
+            try:
+                int(symbcode)
+            except:
+                return tx
+            
+            link = ''.join(['https://www.compart.com/en/unicode/U+', symbcode])
+            sopa = sopapranois(link)[1]
+            symb = sopa[sopa.find('<title xml:space="preserve">“')+29 : sopa.find('<title xml:space="preserve">“')+30]
+
+            symbsl = list(symbs)
+            symbsl.append(symb)
+            symbs = tuple(symbsl)
+
+            tx = tx.replace(fsymbcode, symb)
 
 
+        
+
+    elif procedimento == 1:
+        for symb in symbs:
+            tx = tx.replace(symb, ' ')
+
+    else:
+        return tx
+
+
+    tx = tx.replace('&quot;', '')
+    tx = tx.replace('\\', '')
+
+    tx = tx.replace('    ', ' ')
+    tx = tx.replace('   ', ' ')
+    tx = tx.replace('  ', ' ')
+    
+    return tx
 
 
 
@@ -841,6 +882,8 @@ os.system('cls||clear')
 
 debugin = False
 dbfldrt = 0
+symbs = ()
+
 
 getusername()
 
