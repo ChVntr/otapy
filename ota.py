@@ -100,16 +100,23 @@ def setores():
 def proximo(sopa):
     if debugin: print('PROXIMO\n'), time.sleep(dbfldrt)
 
+    print('BUSCANDO ANIME:')
 
     # pegar o numero do proximo ep e o titulo
     # nessa ordem mesmo porque é assim que o ani-cli funciona
     # obs: CODIGO FEIO DA DESGRAÇA
     # por algum motivo desconhecido algumas listam tem sintase diferente
-
+    #                      &quot;anime_id&quot;:
     animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
     link = ''.join(['https://myanimelist.net/anime/', animeid])
     tl_sopa = sopapranois(link)[1]
-    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content="') +31 : tl_sopa.find('" property="og:title"')])
+    #                          name="twitter:site"/><meta content='Himesama "Goumon" no Jikan desu' property="og:title"
+    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
+    if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
+
+
+
+    print(titulo)
 
     if sopa.find('"num_watched_episodes":') != -1:
         
@@ -129,10 +136,11 @@ def proximo(sopa):
     ep = int(sopa[findep[0] : (findep[1])])+1
     ep=str(ep)
 
-    print(str(''.join(['BUSCANDO ANIME:\n', titulo, '\nEP:\n', ep, '\n\n'])))
+    print(str(''.join(['EP:\n', ep, '\n\n'])))
 
     if len(titulo) + len(ep) > 500:
-        print("OH SHIT")
+        os.system('cls||clear')
+        print(tl_sopa[:2000], "\n\nOH SHIT")
         exit()
 
     titulo = re.sub(r'[^a-zA-Z0-9]', ' ', titulo) 
@@ -150,6 +158,7 @@ def proximo(sopa):
     update(sopa)
 
 def update(sopa):
+    os.system('cls||clear')
     if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
     
 
@@ -172,10 +181,7 @@ def update(sopa):
         ''
     
     else:
-        os.system('cls||clear')
         proximo(novasopa)
-
-    os.system('cls||clear')
 
 def animefire(tl, ep):  
 
@@ -214,8 +220,8 @@ def animefire(tl, ep):
             if eplink.find('/mp4_temp/') and temp == False:
                 ''
             else:
-                print(' '.join(['\nREPRODUZINDO:', result[3]]))
-                tocou = playmedia(eplink)
+                
+                tocou = playmedia(eplink, result[3])
                 if tocou:
                     return True
                 else:
@@ -371,8 +377,12 @@ def vaiounao(link):
 
     return qzq
 
-def playmedia(link):
+def playmedia(link, filename=None):
     
+    if filename == None: filename = 'ARQIUVO DE MEDIA'
+
+    print(' '.join(['\nREPRODUZINDO:', filename, '\n']))
+
     if debugin: return True
 
     players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
@@ -431,58 +441,17 @@ def provedores(tl, ep):
         if dubinfo[1]: print('DUB = TRUE\n')
         
 
+    funcs = (afsearch, ani_cli, nyaa)
 
+    funcsl = list(funcs)
+    if debugin:
+        funcsl.append(nyaa)
+        funcs = tuple(funcsl)
 
-
-
-
-    # ani-cli
-    print('PROVEDOR: "ani-cli"')
-
-    try:
-        subprocess.run('ani-cli -V')
-        anicli=True
-    except:
-        anicli=False
-        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)\n\n')
-
-    if anicli:
-
-        titulo = tl
-
-        titulo = titulo.replace('3rd Season', '3')
-        titulo = titulo.replace('3rd Season', '3')
-        titulo = titulo.replace('2nd Season', '2')
-        titulo = titulo.replace('Goumon', '')
-        titulo = titulo.replace('(', '')
-        titulo = titulo.replace(')', '')
-        titulo = titulo.replace('"', '')
-        titulo = titulo.replace('/', '')
-
-
-        info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
-        comando = str(''.join(info))
-
-
-        print('PROVEDOR: ani-cli\n')
-        
-        result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
-
-        if result.find('returncode=1') == -1:
-            epfound = True
-
-    # nyaa
-    if epfound == False:
-
-        print('PROVEDOR: "nyaa.land"\n(EM BREVE!)\n\n')
-        #epfound = nyaa(tl, ep)
-        #epfound = True
-        
-        
-    # animefire
-    if epfound == False:
-        afsearch(tl, ep)
-
+    for func in funcs:
+        epfound = func(tl, ep)
+        if epfound: 
+            break
 
     time.sleep(1)
 
@@ -533,6 +502,8 @@ def streammagnet(link):
     return True
 
 def nyaa(tl, ep):
+
+    print('PROVEDOR: "nyaa.land"\n\n')
 
     result = False
 
@@ -649,9 +620,12 @@ def afsearch(tl, ep):
 
         if deubom == False:
             print('\nBUSCANDO EPISODIO LEGENDADO!')
-            animefire(ntl, ep)
+            deubom = animefire(ntl, ep)
     else:
         print('\nANIME NÃO ENCONTRADO!\n')
+        deubom = False
+
+    return deubom
 
 def afsearchep(tl, ep):
 
@@ -760,7 +734,35 @@ def afgetqual(tl, ep, args):
     
     return tx
 
+def ani_cli(tl, ep):
 
+    print('PROVEDOR: "ani-cli"')
+
+    tocou = False
+
+    try:
+        subprocess.run('ani-cli -V')
+    except:
+        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)\n\n')
+        return False
+
+
+    titulo = tl
+
+    titulo = titulo.replace('3rd Season', '3')
+    titulo = titulo.replace('3rd Season', '3')
+    titulo = titulo.replace('2nd Season', '2')
+    titulo = titulo.replace('Goumon', '')
+
+    info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
+    comando = str(''.join(info))
+    
+    result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
+
+    if result.find('returncode=1') == -1:
+        tocou = True
+
+    return tocou
 
 
 
