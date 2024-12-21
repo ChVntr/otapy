@@ -157,7 +157,7 @@ def update(sopa):
     # checa se ainda tem coisa pra assistir
     # se não tiver manda de volra pros setores
     # se tiver tira o que já assistiu e manda de volta
-    os.system('cls||clear')
+    
     novasopa = sopa[int(sopa.find(',&quot;anime_studios&'))+5:]
 
     if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
@@ -172,7 +172,10 @@ def update(sopa):
         ''
     
     else:
+        os.system('cls||clear')
         proximo(novasopa)
+
+    os.system('cls||clear')
 
 def animefire(tl, ep):  
 
