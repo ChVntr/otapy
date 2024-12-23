@@ -143,14 +143,6 @@ def proximo(sopa):
         print(tl_sopa[:2000], "\n\nOH SHIT")
         exit()
 
-    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', titulo) 
-
-    titulo = titulo.replace('      ', ' ')
-    titulo = titulo.replace('     ', ' ')
-    titulo = titulo.replace('    ', ' ')
-    titulo = titulo.replace('   ', ' ')
-    titulo = titulo.replace('  ', ' ')
-
     cnctvrf()
 
     provedores(titulo, ep)
@@ -441,15 +433,23 @@ def provedores(tl, ep):
         if dubinfo[1]: print('DUB = TRUE\n')
         
 
-    funcs = (afsearch, ani_cli)
+    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
+
+    titulo = titulo.replace('      ', ' ')
+    titulo = titulo.replace('     ', ' ')
+    titulo = titulo.replace('    ', ' ')
+    titulo = titulo.replace('   ', ' ')
+    titulo = titulo.replace('  ', ' ')
+
+    funcs = (afsearch(titulo, ep), ani_cli(titulo, ep))
 
     funcsl = list(funcs)
     if debugin:
-        funcsl.append(nyaa)
+        funcsl.append(nyaa(tl, ep))
         funcs = tuple(funcsl)
 
     for func in funcs:
-        epfound = func(tl, ep)
+        epfound = func
         if epfound: 
             break
 
@@ -513,6 +513,7 @@ def nyaa(tl, ep):
 
 
     link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', (tl.replace(' ', '+')).lower(), '+', ep, '&s=seeders&o=desc'])
+    if debugin: print(link)
     sopa = str(sopapranois(link)[1])
 
 
