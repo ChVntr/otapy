@@ -441,17 +441,21 @@ def provedores(tl, ep):
     titulo = titulo.replace('   ', ' ')
     titulo = titulo.replace('  ', ' ')
 
-    funcs = (afsearch(titulo, ep), ani_cli(titulo, ep))
+    funcs = (afsearch, ani_cli)
 
     funcsl = list(funcs)
     if debugin:
-        funcsl.append(nyaa(tl, ep))
+        funcsl.append(nyaa)
         funcs = tuple(funcsl)
 
     for func in funcs:
-        epfound = func
+        epfound = func(titulo, ep)
+        #if debugin: print('epfound =',epfound)
         if epfound: 
             break
+
+    if debugin and epfound == False:
+        nyaa(tl, ep)
 
     time.sleep(1)
 
