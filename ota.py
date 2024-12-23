@@ -443,11 +443,6 @@ def provedores(tl, ep):
 
     funcs = (afsearch, ani_cli)
 
-    funcsl = list(funcs)
-    if debugin:
-        funcsl.append(nyaa)
-        funcs = tuple(funcsl)
-
     for func in funcs:
         epfound = func(titulo, ep)
         #if debugin: print('epfound =',epfound)
@@ -501,13 +496,14 @@ def vaiumadub():
 
 def streammagnet(link):
     
-    print(link)
+    print('\n\n', link, '\n')
+    
     exit()
     return True
 
 def nyaa(tl, ep):
 
-    print('PROVEDOR: "nyaa.land"\n\n')
+    print('PROVEDOR: "nyaa.si"\n\n')
 
     result = False
 
@@ -516,7 +512,7 @@ def nyaa(tl, ep):
 
 
 
-    link = ''.join(['https://nyaa.land/?f=0&c=0_0&q=', (tl.replace(' ', '+')).lower(), '+', ep, '&s=seeders&o=desc'])
+    link = ''.join(['https://nyaa.si/?f=0&c=0_0&q=', (tl.replace(' ', '+')).lower(), '+', ep, '&s=seeders&o=desc'])
     if debugin: print(link)
     sopa = str(sopapranois(link)[1])
 
@@ -846,7 +842,6 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install inquirer']))
         import inquirer
     exnow+=1
-
 
 print('')
 
