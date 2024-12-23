@@ -441,7 +441,7 @@ def provedores(tl, ep):
         if dubinfo[1]: print('DUB = TRUE\n')
         
 
-    funcs = (afsearch, ani_cli, nyaa)
+    funcs = (afsearch, ani_cli)
 
     funcsl = list(funcs)
     if debugin:
