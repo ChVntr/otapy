@@ -14,14 +14,11 @@
 
 
 
-def setores():
+def setores(lista, listname):
     if debugin: print('SETORES\n'), time.sleep(dbfldrt)
 
     global onlyptw
-    global loops
     
-
-
 
 
     #listas:
@@ -35,43 +32,31 @@ def setores():
     mallink = 'https://myanimelist.net/animelist/'
     proceed = True
 
-    if debugin: 
-        while True:
-            try:
-                loops = int(input('numero da lista: '))
-                break
-            except:
-                ''
 
 
 
     # assistindo
-    if loops == 0:
-        print('BUSCANDO LISTA "WATCHING"...')
+    if lista == 0:
         mallink2 = '?order=11&order2=-5&status=1'
         onlyptw = False
     
     # PTW em lançamento
-    elif loops == 1:
-        print('BUSCANDO LISTA "PLAN TO WATCH (AIRING)"...')
+    elif lista == 1:
         mallink2 = '?airing_status=1&order=-16&order2=14'
         onlyptw = True
     
     # PTW ainda não lançado
-    elif loops == -3:
-        print('BUSCANDO LISTA "PLAN TO WATCH (NOT YET AIRED)"...')
+    elif lista == -3:
         mallink2 = '?airing_status=3&order=-14'
         onlyptw = False
     
     # em espera
-    elif loops == 2:
-        print('BUSCANDO LISTA "ON HOLD"...')
+    elif lista == 2:
         mallink2 = '?order=12&order2=5&status=3'
         onlyptw = False
 
     # PTW
-    elif loops == 3:
-        print('BUSCANDO LISTA "PLAN TO WATCH (FINISHED AIRING)"...')
+    elif lista == 3:
         mallink2 = '?airing_status=2&order=-16&order2=-15'
         onlyptw = True
 
@@ -81,15 +66,13 @@ def setores():
         proceed = False
 
 
-    loops+=1
-
-    
-
-    print('')
-
     cnctvrf()
 
+
+
     if proceed:
+
+        print(''.join(['BUSCANDO LISTA "', listname, '"...\n' ]))
 
         link = ''.join([mallink, usnm, mallink2])
 
@@ -445,7 +428,7 @@ def provedores(tl, ep):
     else:
         dubinfo = (dubinfo[0], False)
 
-    if usnm.lower() == 'gaahvius':
+    if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1])
         if dubinfo[1]: print('DUB = TRUE\n')
         
@@ -792,6 +775,21 @@ def inqlist(string, opts):
         if escolha == ''.join(["{'opções': '", opts[opt], "'}"]):
             return opt
         
+def selectlist():
+
+    listnames = (
+        'WATCHING',
+        'PLAN TO WATCH (AIRING)',
+        'ON HOLD',
+        'PLAN TO WATCH (FINISHED AIRING)',
+        )    
+
+    seleção = inqlist('SELECIONE A LISTA DESEJADA', listnames)
+
+    setores(seleção, listnames[seleção])
+
+
+
 
 
 
@@ -903,6 +901,6 @@ loops=0
 
 while True:
     if debugin: print('LOOP START\n'), time.sleep(dbfldrt)
-    setores()
+    selectlist()
 
 exit()
