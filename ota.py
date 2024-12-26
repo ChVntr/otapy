@@ -35,6 +35,13 @@ def setores():
     mallink = 'https://myanimelist.net/animelist/'
     proceed = True
 
+    if debugin: 
+        while True:
+            try:
+                loops = int(input('numero da lista: '))
+                break
+            except:
+                ''
 
 
 
@@ -69,12 +76,14 @@ def setores():
         onlyptw = True
 
     else:
-        print('ULTIMA LISTA ALCANÇADA\nREINICIANDO...\n\n\n')
+        #print('ULTIMA LISTA ALCANÇADA\nREINICIANDO...\n\n\n')
         loops = 0
         proceed = False
 
 
     loops+=1
+
+    
 
     print('')
 
@@ -85,6 +94,7 @@ def setores():
         link = ''.join([mallink, usnm, mallink2])
 
         sopa = sopapranois(link)[0]
+
 
         # se não tiver nenhum item PTW em lançamento passa pra proxima lista
 
@@ -108,6 +118,18 @@ def proximo(sopa):
     # por algum motivo desconhecido algumas listam tem sintase diferente
     #                      &quot;anime_id&quot;:
     animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
+
+    try:
+        int(animeid)
+    except:
+        animeid = (sopa[sopa.find(',"anime_id":')+12 : sopa.find(',"anime_studios"')])
+        try:
+            int(animeid)
+        except:
+            print('\n\nOH SHIT\n"animeid" não retornou como integral')
+            exit()
+
+
     link = ''.join(['https://myanimelist.net/anime/', animeid])
     tl_sopa = sopapranois(link)[1]
     #                          name="twitter:site"/><meta content='Himesama "Goumon" no Jikan desu' property="og:title"
@@ -131,17 +153,13 @@ def proximo(sopa):
         findep = (int(sopa.find('"watched_episodes&quot;:'))+23, int(sopa.find(',&quot;created_at')))
 
     else:
-        print('oh shit')
+        print('\n\nOH SHIT\ntitulo e ep não encontrados')
+        exit()
 
     ep = int(sopa[findep[0] : (findep[1])])+1
     ep=str(ep)
 
     print(str(''.join(['EP:\n', ep, '\n\n'])))
-
-    if len(titulo) + len(ep) > 500:
-        os.system('cls||clear')
-        print(tl_sopa[:2000], "\n\nOH SHIT")
-        exit()
 
     cnctvrf()
 
@@ -159,7 +177,7 @@ def update(sopa):
     # se não tiver manda de volra pros setores
     # se tiver tira o que já assistiu e manda de volta
     
-    novasopa = sopa[int(sopa.find(',&quot;anime_studios&'))+5:]
+    novasopa = sopa[int(sopa.find('anime_studios'))+5:]
 
     if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
         temptw = False
@@ -319,7 +337,6 @@ def temstream(link):
 def getusername():
 
     global usnm
-
     validusername = False
 
     while validusername == False and debugin == False:
@@ -498,7 +515,7 @@ def streammagnet(link):
     
     print('\n\n', link, '\n')
     
-    exit()
+    #exit()
     return True
 
 def nyaa(tl, ep):
@@ -868,7 +885,6 @@ os.system('cls||clear')
 
 debugin = False
 dbfldrt = 0
-
 
 getusername()
 
