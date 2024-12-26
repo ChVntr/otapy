@@ -445,7 +445,7 @@ def provedores(tl, ep):
     else:
         dubinfo = (dubinfo[0], False)
 
-    if usnm.lower() == 'gahvius':
+    if usnm.lower() == 'gaahvius':
         dubinfo = (True, dubinfo[1])
         if dubinfo[1]: print('DUB = TRUE\n')
         
@@ -493,18 +493,10 @@ def verifyos():
 
 def vaiumadub():
 
-    print('')
+    opts = ['SIM', 'NÃO']
+    choice = inqlist('BUSCAR POR EPISÓDIO DUBLADO?', opts)
 
-    questions = [
-        inquirer.List(
-            "dub",
-            message="BUSCAR POR EPISÓDIO DUBLADO?",
-            choices=['SIM', 'NÃO'],
-        ),
-    ]
-
-    dub = str(inquirer.prompt(questions))
-    if dub == "{'dub': 'SIM'}":
+    if choice == 0:
         dub = True
     else:
         dub = False
@@ -781,6 +773,25 @@ def ani_cli(tl, ep):
         tocou = True
 
     return tocou
+
+def inqlist(string, opts):
+
+    print('')
+
+    questions = [
+        inquirer.List(
+            "opções",
+            message=string,
+            choices=opts,
+        ),
+    ]
+
+    escolha = str(inquirer.prompt(questions))
+
+    for opt in range(len(opts)):
+        if escolha == ''.join(["{'opções': '", opts[opt], "'}"]):
+            return opt
+        
 
 
 
