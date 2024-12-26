@@ -377,8 +377,22 @@ def playmedia(link, filename=None):
 
     if debugin: return True
 
-    players = ('mpv', 'vlc', 'mpv\\mpv.exe', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
+    choice = -1
+
+    try: subprocess.run('mpv -clr')
+    except:
+        try: subprocess.run('mpv\\mpv.exe -clr')
+        except: choice = 1
     
+    #if choice > -1: 
+    choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', ('MPV', 'VLC'))
+
+    mpv = ('mpv', 'mpv\\mpv.exe')
+    vlc = ('vlc', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
+   
+    if choice == 0: players = mpv
+    else: players = vlc
+
     for player in players:
         try:
             comando = ' '.join([player, link])
