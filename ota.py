@@ -90,7 +90,7 @@ def setores(lista, listname):
             id = ideep[0]
             ep = ideep[1]
             tl = processid(id)
-            print('BUSCANDO ANIME\n', tl, '\nEPISÓDIO\n', ep, '')
+            print('BUSCANDO ANIME:', tl, '\nEPISÓDIO:', ep, '')
             provedores(tl, ep)
             sopa = update(sopa)
 
@@ -455,6 +455,8 @@ def playmedia(link, filename=None):
 def provedores(tl, ep):
     if debugin: print('PROVEDORES\n'), time.sleep(dbfldrt)
 
+    print('\n')
+    
     global dubinfo
 
     epfound = False
