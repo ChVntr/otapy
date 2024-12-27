@@ -61,8 +61,6 @@ def setores(lista, listname):
         onlyptw = True
 
     else:
-        #print('ULTIMA LISTA ALCANÇADA\nREINICIANDO...\n\n\n')
-        loops = 0
         proceed = False
 
 
@@ -1006,7 +1004,7 @@ dbfldrt = 0
 
 getusername()
 
-loops=0
+
 
 while True:
     os.system('cls||clear')
