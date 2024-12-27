@@ -343,7 +343,8 @@ def temstream(link):
     return osv, player
 
 def getusername():
-
+    os.system('cls||clear')
+    
     global usnm
     validusername = False
 
@@ -977,7 +978,7 @@ if sisop != 0:
 print('')
 
 # subprocess.run('py -m pip install --upgrade pip')
-os.system('cls||clear')
+
 
 
 
@@ -1005,6 +1006,7 @@ getusername()
 loops=0
 
 while True:
+    os.system('cls||clear')
     if debugin: print('LOOP START\n'), time.sleep(dbfldrt)
     selectlist()
 
