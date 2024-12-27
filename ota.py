@@ -77,6 +77,26 @@ def setores(lista, listname):
         link = ''.join([mallink, usnm, mallink2])
 
         sopa = sopapranois(link)[0]
+
+        opts = ('REPRODUZIR LISTA COMPLETA', 'ESCOLHER ANIME', 'RETORNAR AO MENU ANTERIOR')
+        erabe = inqlist('', opts)
+
+        if erabe == len(opts)-1:
+            return
+
+        while erabe == 0:
+            ideep = proximo(sopa)
+            if ideep == False: return
+            id = ideep[0]
+            ep = ideep[1]
+            tl = processid(id)
+            print('BUSCANDO ANIME\n', tl, '\nEPISÓDIO\n', ep)
+            provedores(tl, ep)
+            sopa = update(sopa)
+
+
+
+
         ogsopa = sopa
 
 
@@ -100,7 +120,7 @@ def setores(lista, listname):
             entradas2+=1
             print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS']))
 
-        tllist.append('RETORNAR AO MENU ANTERIOR')
+        tllist.append('RETORNAR ÀS LISTAS')
 
 
         while True:
@@ -410,7 +430,7 @@ def playmedia(link, filename=None):
         for item in vlc:
             players.append(item)
     elif escolhas[choice] == 'CANCELAR':
-        return True
+        return False
 
     for player in players:
         try:
@@ -791,7 +811,6 @@ def ani_cli(tl, ep):
     return tocou
 
 def inqlist(string, opts, dft=None):
-    
 
     newlist = list()
     for item in opts:
