@@ -90,7 +90,7 @@ def setores(lista, listname):
             id = ideep[0]
             ep = ideep[1]
             tl = processid(id)
-            print('BUSCANDO ANIME\n', tl, '\nEPISÓDIO\n', ep)
+            print('BUSCANDO ANIME\n', tl, '\nEPISÓDIO\n', ep, '')
             provedores(tl, ep)
             sopa = update(sopa)
 
