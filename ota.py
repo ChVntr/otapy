@@ -88,7 +88,7 @@ def setores(lista, listname):
             id = ideep[0]
             ep = ideep[1]
             tl = processid(id)
-            print('BUSCANDO ANIME:', tl, '\nEPISÓDIO:', ep, '')
+            print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
             provedores(tl, ep)
             sopa = update(sopa)
 
@@ -116,7 +116,7 @@ def setores(lista, listname):
         for id in idlist:
             tllist.append(processid(id))
             entradas2+=1
-            print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS']))
+            print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS'.lower()]))
 
         print('')
         tllist.append('RETORNAR ÀS LISTAS')
@@ -210,7 +210,7 @@ def animefire(tl, ep):
     tocou=False
 
     if afsearchep(tl, ep) == False:
-        print('\n\nEPISODIO NÃO ENCONTRADO!\n')
+        print('EPISODIO NÃO ENCONTRADO!'.lower())
         return False
 
 
@@ -242,9 +242,9 @@ def animefire(tl, ep):
                 if tocou:
                     return True
                 else:
-                    print('FALHA NA REPRODUÇÃO\n')
+                    print('FALHA NA REPRODUÇÃO'.lower())
 
-    print('\n\nEPISODIO NÃO ENCONTRADO!\n')
+    print('EPISODIO NÃO ENCONTRADO!'.lower())
     return False
 
 def cnctvrf():
@@ -254,92 +254,16 @@ def cnctvrf():
         nocom=False
     except:
         nocom = True
-        print('\n\n\nFALHA DE CONECÇÃO!\nAGUARDANDO RESPOSTA DE "myanimelist.net"...')
+        print('\n\n\nFALHA DE CONECÇÃO!\nAGUARDANDO RESPOSTA DE "myanimelist.net"...'.lower())
 
     while nocom:
         time.sleep(10)
 
         try:
-            response = str(requests.get('https://myanimelist.net'))
+            requests.get('https://myanimelist.net')
             nocom = False
-            #print('com net')
         except:
             nocom = True
-            #print('FAZ O L')
-
-def temstream(link):
-
-
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-    future = executor.submit(vaiounao, link)
-
-    start = time.perf_counter()
-
-    try:
-        qzq = future.result(timeout=12)
-    except TimeoutError:
-        finish = time.perf_counter()
-        print(f' <Request TimeOut> {round(finish-start, 2)}s\n')
-        qzq = False
-    except:
-        print('oh shit')
-    
-    executor.shutdown(wait=False)
-
-
-    deubom = not qzq
-
-    
-    if deubom:
-        print('\nCARREGANDO TRANSMISSÃO...')
-
-    return deubom
-
-
-    # verificar OS
-
-    osname = platform.platform()
-
-    if osname.find('Windows') != -1:    
-        osv = 1
-        
-    elif osname.find('Android') != -1: 
-        osv = 2
-
-    elif osname.find('Linux') != -1: 
-        osv = 3
-
-    noplayer = False
-
-    try:
-        subprocess.run('mpv -V')
-        player = 'mpv'
-
-    except:
-        try:
-            subprocess.run('vlc -V')
-            player = 'vlc'
-
-        except:
-
-            if osv == 1:
-                try:
-                    subprocess.run('mpv\\mpv.exe -V')
-                    player = 'mpv\\mpv.exe'
-                except:
-                    noplayer = True
-
-            else:
-                noplayer = True
-
-    if noplayer:
-        os.system('cls||clear')
-        print('REPRODUTOR DE VIDEO NÃO ENCONTRADO')
-        exit()
-
-
-
-    return osv, player
 
 def getusername():
     os.system('cls||clear')
@@ -353,7 +277,7 @@ def getusername():
         response = str(requests.get(str(''.join(['https://myanimelist.net/profile/', usnm]))))
         if response.find('404') != -1:
             print(
-                'USUARIO NÃO ENCONTRADO\n\n'
+                'USUARIO NÃO ENCONTRADO\n\n'.lower()
             )
         else:
             validusername = True
@@ -398,7 +322,7 @@ def playmedia(link, filename=None):
     
     if filename == None: filename = 'ARQIUVO DE MEDIA'
 
-    print(' '.join(['\nREPRODUZIR:', filename, '\n']))
+    print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
     if debugin: return True
 
@@ -447,14 +371,14 @@ def playmedia(link, filename=None):
 
     if foi == False:
         os.system('cls||clear')
-        print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO')
+        print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO'.lower())
         exit()
 
 def provedores(tl, ep):
     if debugin: print('PROVEDORES\n'), time.sleep(dbfldrt)
-
-    print('\n')
     
+    print('\n')
+
     global dubinfo
 
     epfound = False
@@ -485,7 +409,7 @@ def provedores(tl, ep):
 
     if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1])
-        if dubinfo[1]: print('DUB = TRUE\n')
+        if dubinfo[1]: print('DUB = TRUE\n'.lower())
         
 
     titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
@@ -500,12 +424,14 @@ def provedores(tl, ep):
 
     for func in funcs:
         epfound = func(titulo, ep)
-        #if debugin: print('epfound =',epfound)
+        print('')
         if epfound: 
             break
 
     if debugin and epfound == False:
         nyaa(tl, ep)
+
+    print('\n')
 
     time.sleep(1)
 
@@ -522,7 +448,6 @@ def verifyos():
     os = -1
 
     ptf = platform.platform()
-    #print(ptf)
 
     if ptf.find('Emscripten') != -1:
         os = 0
@@ -550,7 +475,7 @@ def streammagnet(link):
 
 def nyaa(tl, ep):
 
-    print('PROVEDOR: "nyaa.si"\n\n')
+    print('PROVEDOR: "nyaa.si"\n\n'.lower())
 
     result = False
 
@@ -601,7 +526,7 @@ def nyaa(tl, ep):
 
     if temep == False:
         achei = False
-        print('EPISODIO NÃO ENCONTRADO!\n')
+        print('EPISODIO NÃO ENCONTRADO!\n'.lower())
 
     if achei:
         result = streammagnet(magnet)
@@ -614,7 +539,7 @@ def afsearch(tl, ep):
 
     global dubinfo
 
-    print('PROVEDOR: "animefire.plus"')
+    print('PROVEDOR: "animefire.plus"'.lower())
 
 
     ntl = tl
@@ -661,16 +586,16 @@ def afsearch(tl, ep):
                 if dubinfo[0] == False:
                     dubinfo = (True, vaiumadub()) 
                 if dubinfo[1]:
-                    print('\nBUSCANDO EPISODIO DUBLADO!')
+                    print('BUSCANDO EPISODIO DUBLADO!'.lower())
                     deubom = animefire(dubtl, ep)
         except:
             ''
 
         if deubom == False:
-            print('\nBUSCANDO EPISODIO LEGENDADO!')
+            print('BUSCANDO EPISODIO LEGENDADO!'.lower())
             deubom = animefire(ntl, ep)
     else:
-        print('\nANIME NÃO ENCONTRADO!\n')
+        print('ANIME NÃO ENCONTRADO!\n'.lower())
         deubom = False
 
     return deubom
@@ -784,14 +709,14 @@ def afgetqual(tl, ep, args):
 
 def ani_cli(tl, ep):
 
-    print('PROVEDOR: "ani-cli"')
+    print('PROVEDOR: "ani-cli"'.lower())
 
     tocou = False
 
     try:
         subprocess.run('ani-cli -V')
     except:
-        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)\n\n')
+        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)'.lower())
         return False
 
 
