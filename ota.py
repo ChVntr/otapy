@@ -72,34 +72,55 @@ def setores(lista, listname):
 
     if proceed:
 
-        print(''.join(['BUSCANDO LISTA "', listname, '"...\n' ]))
+        print(''.join(['BUSCANDO DA LISTA "', listname, '"...\n' ]))
 
         link = ''.join([mallink, usnm, mallink2])
 
         sopa = sopapranois(link)[0]
+        ogsopa = sopa
 
 
-        # se não tiver nenhum item PTW em lançamento passa pra proxima lista
+        idlist = list()
+        epslist = list()
+        entradas = 0
+        while True:
+            result = proximo(sopa)
+            if result == False: break
+            idlist.append(result[0])
+            epslist.append(result[1])
+            sopa = update(sopa)
+            entradas+=1
 
-        if onlyptw:
-            if  sopa.find('"status":6') == -1 and sopa.find('&quot;status&quot;:6') == -1:
-                print('nao achei mais')
-                ''
-            else:
-                proximo(sopa)
-        else:
-            proximo(sopa)           
-    
+        idlist = tuple(idlist)
+
+        tllist = list()
+        entradas2=0
+        for id in idlist:
+            tllist.append(processid(id))
+            entradas2+=1
+            print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS']))
+
+        tllist.append('RETORNAR AO MENU ANTERIOR')
+
+
+        while True:
+
+            
+            choice = inqlist('SELECIONE O ANIME DESEJADO', tllist)
+            if choice == len(tllist)-1:
+                return
+
+            while True:
+                ep = geteps(idlist[choice], epslist[choice], ogsopa)
+                if ep == False:
+                    break
+                else:
+                    provedores(tllist[choice], ep)
+                       
 def proximo(sopa):
+
     if debugin: print('PROXIMO\n'), time.sleep(dbfldrt)
 
-    print('BUSCANDO ANIME:')
-
-    # pegar o numero do proximo ep e o titulo
-    # nessa ordem mesmo porque é assim que o ani-cli funciona
-    # obs: CODIGO FEIO DA DESGRAÇA
-    # por algum motivo desconhecido algumas listam tem sintase diferente
-    #                      &quot;anime_id&quot;:
     animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
 
     try:
@@ -109,19 +130,7 @@ def proximo(sopa):
         try:
             int(animeid)
         except:
-            print('\n\nOH SHIT\n"animeid" não retornou como integral')
-            exit()
-
-
-    link = ''.join(['https://myanimelist.net/anime/', animeid])
-    tl_sopa = sopapranois(link)[1]
-    #                          name="twitter:site"/><meta content='Himesama "Goumon" no Jikan desu' property="og:title"
-    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
-    if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
-
-
-
-    print(titulo)
+            return False
 
     if sopa.find('"num_watched_episodes":') != -1:
         
@@ -140,18 +149,14 @@ def proximo(sopa):
         exit()
 
     ep = int(sopa[findep[0] : (findep[1])])+1
-    ep=str(ep)
+    nextep=str(ep)
 
-    print(str(''.join(['EP:\n', ep, '\n\n'])))
 
-    cnctvrf()
 
-    provedores(titulo, ep)
-
-    update(sopa)
+    return str(animeid), nextep
 
 def update(sopa):
-    os.system('cls||clear')
+    #os.system('cls||clear')
     if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
     
 
@@ -168,13 +173,13 @@ def update(sopa):
         temptw = True
 
     if (str(novasopa).find('"is_rewatching"')) == -1 and (str(novasopa).find(';is_rewatching&')) == -1:
-        ''
+        return ''
 
     elif onlyptw and temptw == False:
-        ''
+        return ''
     
     else:
-        proximo(novasopa)
+        return novasopa
 
 def animefire(tl, ep):  
 
@@ -373,25 +378,39 @@ def playmedia(link, filename=None):
     
     if filename == None: filename = 'ARQIUVO DE MEDIA'
 
-    print(' '.join(['\nREPRODUZINDO:', filename, '\n']))
+    print(' '.join(['\nREPRODUZIR:', filename, '\n']))
 
     if debugin: return True
 
-    choice = -1
+    escolhas = list()
 
-    try: subprocess.run('mpv -clr')
+    try: 
+        subprocess.run('mpv -clr')
+        escolhas.append('MPV')
     except:
-        try: subprocess.run('mpv\\mpv.exe -clr')
-        except: choice = 1
+        try: 
+            subprocess.run('mpv\\mpv.exe -clr')
+            escolhas.append('MPV')
+        except:
+            ''
     
-    #if choice > -1: 
-    choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', ('MPV', 'VLC'))
+    escolhas.append('VLC')
+    escolhas.append('CANCELAR')
+
+    choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
 
     mpv = ('mpv', 'mpv\\mpv.exe')
     vlc = ('vlc', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
    
-    if choice == 0: players = mpv
-    else: players = vlc
+    players = list()
+    if escolhas[choice] == 'MPV':
+        for item in mpv:
+            players.append(item)
+    elif escolhas[choice] == 'VLC':
+        for item in vlc:
+            players.append(item)
+    elif escolhas[choice] == 'CANCELAR':
+        return False
 
     for player in players:
         try:
@@ -771,22 +790,29 @@ def ani_cli(tl, ep):
 
     return tocou
 
-def inqlist(string, opts):
+def inqlist(string, opts, dft=None):
+    os.system('cls||clear')
 
-    print('')
+    newlist = list()
+    for item in opts:
+        newlist.append(str(item))
+    opts = tuple(newlist)
+        
+    if dft != None: dft = str(dft)
 
     questions = [
         inquirer.List(
             "opções",
             message=string,
             choices=opts,
+            default=dft,
         ),
     ]
 
     escolha = str(inquirer.prompt(questions))
 
     for opt in range(len(opts)):
-        if escolha == ''.join(["{'opções': '", opts[opt], "'}"]):
+        if escolha == ''.join(["{'opções': '", str(opts[opt]), "'}"]):
             return opt
         
 def selectlist():
@@ -796,11 +822,57 @@ def selectlist():
         'PLAN TO WATCH (AIRING)',
         'ON HOLD',
         'PLAN TO WATCH (FINISHED AIRING)',
+        'ALTERAR USERNAME',
         )    
 
     seleção = inqlist('SELECIONE A LISTA DESEJADA', listnames)
 
+    if seleção == len(listnames)-1:
+        getusername()
+        return
+
     setores(seleção, listnames[seleção])
+
+def processid(id):
+    if debugin: print('PROCESSANDO ID\n'), time.sleep(dbfldrt)
+
+
+    link = ''.join(['https://myanimelist.net/anime/', id])
+    tl_sopa = sopapranois(link)[1]
+    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
+    if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
+        
+    return titulo
+
+def geteps(id, proximoep, sopa):
+
+    id=str(id)
+    proximoep=str(proximoep)
+
+    sopa = sopa[sopa.find(id):]
+    epstotal = sopa[sopa.find("anime_num_episodes")+20 : sopa.find(',"anime_airing_status"')]
+    try:
+        epstotal = int(epstotal)+1
+    except:
+        sopa2 = sopapranois(''.join(['https://myanimelist.net/anime/', id]))[1]
+        sopa2 = sopa2[sopa2.find('>Episodes:</span>')+17:]
+        epstotal = sopa2[ : sopa2.find('</div>')]
+        try:
+            epstotal = int(epstotal)+1
+        except:
+            if epstotal.find('Unknown') != -1 : epstotal = int(proximoep)+10
+            else:
+                print(epstotal, '\noh shit')
+                exit()
+
+
+    opts = list(range(1, epstotal))
+    opts.append('RETORNAR AO MENU ANTERIOR')
+
+    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', opts, str(proximoep))
+    if ep == len(opts)-1: return False
+    
+    return str(int(ep)+1)
 
 
 
