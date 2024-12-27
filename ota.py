@@ -791,7 +791,7 @@ def ani_cli(tl, ep):
     return tocou
 
 def inqlist(string, opts, dft=None):
-    os.system('cls||clear')
+    
 
     newlist = list()
     for item in opts:
