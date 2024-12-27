@@ -120,6 +120,7 @@ def setores(lista, listname):
             entradas2+=1
             print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS']))
 
+        print('')
         tllist.append('RETORNAR ÀS LISTAS')
 
 
