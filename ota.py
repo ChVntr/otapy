@@ -89,7 +89,9 @@ def setores(lista, listname):
             ep = ideep[1]
             tl = processid(id)
             print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
-            provedores(tl, ep)
+            while provedores(tl, ep):
+                ep = geteps(id, ep, sopa)
+                if ep == False: break
             sopa = update(sopa)
 
 
@@ -434,6 +436,7 @@ def provedores(tl, ep):
     print('\n')
 
     time.sleep(1)
+    return epfound
 
 def sopapranois(link):
 
