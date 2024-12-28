@@ -427,7 +427,8 @@ def provedores(tl, ep):
     for func in funcs:
         epfound = func(titulo, ep)
         print('')
-        if epfound: 
+        if epfound:
+            os.system('cls||clear')
             break
 
     if debugin and epfound == False:
