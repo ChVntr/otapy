@@ -88,6 +88,7 @@ def setores(lista, listname):
             id = ideep[0]
             ep = ideep[1]
             tl = processid(id)
+            os.system('cls||clear')
             print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
             while provedores(tl, ep):
                 ep = geteps(id, ep, sopa)
@@ -177,7 +178,7 @@ def proximo(sopa):
     return str(animeid), nextep
 
 def update(sopa):
-    #os.system('cls||clear')
+    
     if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
     
 
@@ -439,7 +440,7 @@ def provedores(tl, ep):
     print('\n')
 
     time.sleep(1)
-    os.system('cls||clear')
+    
     return epfound
 
 def sopapranois(link):
