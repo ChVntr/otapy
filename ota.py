@@ -437,6 +437,7 @@ def provedores(tl, ep):
     print('\n')
 
     time.sleep(1)
+    os.system('cls||clear')
     return epfound
 
 def sopapranois(link):
