@@ -396,6 +396,8 @@ def provedores(tl, ep):
         'yu yu hakusho', 'yuy yyu hakusho',
         'saint seiya',
         'naruto',
+        'sailor moon',
+        'pokemon',
     )
 
     dubs = list()
