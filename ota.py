@@ -357,7 +357,7 @@ def playmedia(link, filename=None):
         for item in vlc:
             players.append(item)
     elif escolhas[choice] == 'CANCELAR':
-        return False
+        return True
 
     for player in players:
         try:
