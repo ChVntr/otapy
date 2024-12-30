@@ -399,11 +399,12 @@ def provedores(tl, ep):
         'naruto',
         'sailor moon',
         'pokemon',
+        'InuYasha',
     )
 
     dubs = list()
     for title in dubsraw:
-        if (tl.lower()).find(title) != -1:
+        if (tl.lower()).find(title.lower()) != -1:
             dubs.append(tl)
     dubs = tuple(dubs)
 
