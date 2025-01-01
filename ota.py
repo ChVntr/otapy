@@ -250,7 +250,7 @@ def animefire(tl, ep):
     print('EPISODIO NÃO ENCONTRADO!'.lower())
     return False
 
-def cnctvrf():
+def cnctvrf(url=None):
 
     try:
         requests.get('https://myanimelist.net')
@@ -267,6 +267,13 @@ def cnctvrf():
             nocom = False
         except:
             nocom = True
+
+    if url != None:
+        try:
+            requests.get(url)
+            return True
+        except:
+            return False
 
 def getusername():
     os.system('cls||clear')
@@ -566,6 +573,12 @@ def afsearch(tl, ep):
         ntl = ntl[0 : (len(tl))-1]
 
     link = ''.join(['https://animefire.plus/animes/', ntl, '-todos-os-episodios'])
+
+    if cnctvrf(link) == False:
+        print('não foi possivel conectar ao provedor')
+        return False
+
+
     response = requests.get(url=link)
     
     try:
