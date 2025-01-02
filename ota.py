@@ -495,14 +495,13 @@ def vaiumadub():
 
 def streammagnet(link):
     
-    print('\n\n', link, '\n')
+    print(link)
     
-    #exit()
     return True
 
 def nyaa(tl, ep):
 
-    print('PROVEDOR: "nyaa.si"\n\n'.lower())
+    print('PROVEDOR: "nyaa.si"'.lower())
 
     result = False
 
@@ -619,6 +618,7 @@ def afsearch(tl, ep):
                 if dubinfo[0] == False:
                     dubinfo = (True, vaiumadub()) 
                 if dubinfo[1]:
+                    if debugin: print(link)
                     print('BUSCANDO EPISODIO DUBLADO...'.lower())
                     deubom = animefire(dubtl, ep)
         except:
@@ -653,6 +653,9 @@ def afgetqual(tl, ep, args):
     sopa = str((sopapranois(link))[1])
     ogsopa = sopa
     
+    if sopa.find('não é possível fazer o download.') != -1:
+        return (False, args[1], 'none')
+
 
     if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
         if sopa.find('(F-HD)" href="') == -1:
@@ -698,49 +701,13 @@ def afgetqual(tl, ep, args):
     if eplink.find('/mp4_temp/') != -1:
         filename = filename.replace('(HD)', '(HD - LEGENDA TEMPORÁRIA)')
 
-    if eplink.find('lightspeedst.net') == -1: eplink = 'none'
+    if eplink.find('lightspeedst.net') == -1: 
+        eplink = 'none'
+        if debugin:
+            print(ogsopa)
+            time.sleep(500)
     
     return (args[0], args[1], eplink, filename)
-
-
-    global symbs
-
-    if procedimento == 0:
-
-        while tx.find('\\u') != -1:
-            fsymbcode = tx[tx.find('\\u')+1 : tx.find('\\u')+6]
-            symbcode = fsymbcode[1:]
-
-            try:
-                int(symbcode[:1])
-            except:
-                break
-            
-            link = ''.join(['https://www.htmlsymbols.xyz/unicode/U+', symbcode.upper()])
-            sopa = sopapranois(link)[1]
-            symb = sopa[sopa.find('<title>')+7 : sopa.find('<title>')+8]
-            
-            symbsl = list(symbs)
-            symbsl.append(symb)
-            symbs = tuple(symbsl)
-            tx = tx.replace(fsymbcode, symb)
-
-    elif procedimento == 1:
-        for symb in symbs:
-            tx = tx.replace(symb, ' ')
-
-    else:
-        return tx
-
-
-    tx = tx.replace('&quot;', '')
-    tx = tx.replace('\\', '')
-
-    tx = tx.replace('    ', ' ')
-    tx = tx.replace('   ', ' ')
-    tx = tx.replace('  ', ' ')
-    
-    return tx
 
 def ani_cli(tl, ep):
 
@@ -826,7 +793,9 @@ def processid(id):
     return titulo
 
 def geteps(id, proximoep, sopa):
-    if debugin: print('GET EPS\n'), time.sleep(dbfldrt)
+    if debugin: 
+        print('GET EPS\n'), time.sleep(dbfldrt)
+        return False
 
     id=str(id)
     proximoep=str(proximoep)
@@ -856,7 +825,7 @@ def geteps(id, proximoep, sopa):
     if epstotal < 2 or epstotal < int(proximoep): 
         epstotal = int(proximoep)+12
     opts = list(range(1, epstotal))
-    opts.append('RETORNAR AO MENU ANTERIOR')
+    opts.append('VOLTAR')
 
 
     ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', opts, str(proximoep))
