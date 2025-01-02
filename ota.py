@@ -432,7 +432,16 @@ def provedores(tl, ep):
     titulo = titulo.replace('   ', ' ')
     titulo = titulo.replace('  ', ' ')
 
-    funcs = (afsearch, ani_cli)
+    funcs = (afsearch,)
+    funcs = list(funcs)
+
+    try:
+        subprocess.run('ani-cli -V')
+        funcs.append(ani_cli)
+    except:
+        print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
+        
+    if debugin: funcs.append(nyaa)
 
     epfound = False
     for func in funcs:
@@ -442,8 +451,6 @@ def provedores(tl, ep):
             os.system('cls||clear')
             break
 
-    if debugin and epfound == False:
-        nyaa(tl, ep)
 
     print('\n')
 
@@ -739,13 +746,6 @@ def ani_cli(tl, ep):
 
     tocou = False
 
-    try:
-        subprocess.run('ani-cli -V')
-    except:
-        print('(PROVEDOR NÃO ENCCONTRADO/INSTALADO)'.lower())
-        return False
-
-
     titulo = tl
 
     titulo = titulo.replace('3rd Season', '3')
@@ -812,9 +812,15 @@ def processid(id):
 
     link = ''.join(['https://myanimelist.net/anime/', id])
     tl_sopa = sopapranois(link)[1]
+    
+    while tl_sopa.find('<div id="captcha-container"></div>') != -1:
+        if debugin: print("DORMINDO POR CAUSA DO CAPTCHA")
+        time.sleep(5)
+        tl_sopa = sopapranois(link)[1]
+
     titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
     if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
-        
+    
     return titulo
 
 def geteps(id, proximoep, sopa):
@@ -905,8 +911,6 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install requests']))
         import requests
     exnow+=1
-
-    cnctvrf()
 
     print(''.join([str(exnow), '/', extotal]))
     try:
