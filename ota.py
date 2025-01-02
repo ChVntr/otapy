@@ -114,11 +114,13 @@ def setores(lista, listname):
         tllist = list()
         entradas2=0
         for id in idlist:
+            sys.stdout.flush()
             tllist.append(processid(id))
             entradas2+=1
-            print(''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS'.lower()]))
+            tx = ''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS\r'.lower()])
+            sys.stdout.write(tx)
 
-        print('')
+        print('\n')
         tllist.append('RETORNAR ÀS LISTAS')
 
 
@@ -851,7 +853,8 @@ def geteps(id, proximoep, sopa):
 
 
 
-    if epstotal < 2: epstotal = int(proximoep)+12
+    if epstotal < 2 or epstotal < int(proximoep): 
+        epstotal = int(proximoep)+12
     opts = list(range(1, epstotal))
     opts.append('RETORNAR AO MENU ANTERIOR')
 
