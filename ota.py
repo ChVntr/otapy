@@ -815,7 +815,7 @@ def processid(id):
     
     while tl_sopa.find('<div id="captcha-container"></div>') != -1:
         if debugin: print("DORMINDO POR CAUSA DO CAPTCHA")
-        time.sleep(5)
+        time.sleep(10)
         tl_sopa = sopapranois(link)[1]
 
     titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
