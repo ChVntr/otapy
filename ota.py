@@ -617,13 +617,13 @@ def afsearch(tl, ep):
                 if dubinfo[0] == False:
                     dubinfo = (True, vaiumadub()) 
                 if dubinfo[1]:
-                    print('BUSCANDO EPISODIO DUBLADO!'.lower())
+                    print('BUSCANDO EPISODIO DUBLADO...'.lower())
                     deubom = animefire(dubtl, ep)
         except:
             ''
 
         if deubom == False:
-            print('BUSCANDO EPISODIO LEGENDADO!'.lower())
+            print('BUSCANDO EPISODIO LEGENDADO...'.lower())
             deubom = animefire(ntl, ep)
     else:
         print('ANIME NÃO ENCONTRADO!\n'.lower())
