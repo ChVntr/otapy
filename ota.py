@@ -849,7 +849,7 @@ def geteps(id, proximoep, sopa):
                 print(epstotal, '\noh shit')
                 exit()
 
-    print(proximoep, epstotal)
+
 
     if epstotal < 2: epstotal = int(proximoep)+12
     opts = list(range(1, epstotal))
