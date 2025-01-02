@@ -64,9 +64,6 @@ def setores(lista, listname):
         proceed = False
 
 
-    cnctvrf()
-
-
 
     if proceed:
 
@@ -242,9 +239,11 @@ def animefire(tl, ep):
             else:
                 
                 tocou = playmedia(eplink, result[3])
-                if tocou:
+                if tocou == True:
                     return True
-                else:
+                if tocou == 69: 
+                    return False
+                if tocou == False:
                     print('FALHA NA REPRODUÇÃO'.lower())
 
     print('EPISODIO NÃO ENCONTRADO!'.lower())
@@ -255,9 +254,9 @@ def cnctvrf(url=None):
     try:
         requests.get('https://myanimelist.net')
         nocom=False
-    except:
+    except :
         nocom = True
-        print('\n\n\nFALHA DE CONECÇÃO!\nAGUARDANDO RESPOSTA DE "myanimelist.net"...'.lower())
+        print('\nFALHA DE CONECÇÃO!\nAGUARDANDO RESPOSTA DE "myanimelist.net"...\n'.lower())
 
     while nocom:
         time.sleep(10)
@@ -363,10 +362,11 @@ def playmedia(link, filename=None):
     elif escolhas[choice] == 'VLC':
         for item in vlc:
             players.append(item)
-    elif escolhas[choice] == 'CANCELAR':
-        return True
+    elif choice == len(escolhas)-1:
+        return 69
 
     for player in players:
+        cnctvrf()
         try:
             comando = ' '.join([player, link])
             result = subprocess.run(comando).returncode
@@ -391,7 +391,6 @@ def provedores(tl, ep):
 
     global dubinfo
 
-    epfound = False
     dubinfo = (False, False)
 
 
@@ -435,6 +434,7 @@ def provedores(tl, ep):
 
     funcs = (afsearch, ani_cli)
 
+    epfound = False
     for func in funcs:
         epfound = func(titulo, ep)
         print('')
@@ -452,6 +452,8 @@ def provedores(tl, ep):
     return epfound
 
 def sopapranois(link):
+
+    cnctvrf()
 
     page = requests.get(str(link))
     soup = BeautifulSoup(page.text, 'html.parser')
@@ -816,29 +818,37 @@ def processid(id):
     return titulo
 
 def geteps(id, proximoep, sopa):
+    if debugin: print('GET EPS\n'), time.sleep(dbfldrt)
 
     id=str(id)
     proximoep=str(proximoep)
 
     sopa = sopa[sopa.find(id):]
     epstotal = sopa[sopa.find("anime_num_episodes")+20 : sopa.find(',"anime_airing_status"')]
+    
     try:
         epstotal = int(epstotal)+1
+        if debugin: print('case 1')
     except:
         sopa2 = sopapranois(''.join(['https://myanimelist.net/anime/', id]))[1]
         sopa2 = sopa2[sopa2.find('>Episodes:</span>')+17:]
         epstotal = sopa2[ : sopa2.find('</div>')]
         try:
             epstotal = int(epstotal)+1
+            if debugin: print('case 2')
         except:
+            if debugin: print('case 3')
             if epstotal.find('Unknown') != -1 : epstotal = int(proximoep)+10
             else:
                 print(epstotal, '\noh shit')
                 exit()
 
+    print(proximoep, epstotal)
 
+    if epstotal < 2: epstotal = int(proximoep)+12
     opts = list(range(1, epstotal))
     opts.append('RETORNAR AO MENU ANTERIOR')
+
 
     ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', opts, str(proximoep))
     if ep == len(opts)-1: return False
@@ -896,12 +906,13 @@ if sisop != 0:
         import requests
     exnow+=1
 
+    cnctvrf()
+
     print(''.join([str(exnow), '/', extotal]))
     try:
         import bs4
         from bs4 import BeautifulSoup
     except:
-        cnctvrf()
         subprocess.run(''.join(['python -m pip install bs4']))
         import bs4
         from bs4 import BeautifulSoup
@@ -912,7 +923,6 @@ if sisop != 0:
         import concurrent.futures
         from concurrent.futures import ThreadPoolExecutor, TimeoutError
     except:
-        cnctvrf()
         subprocess.run(''.join(['python -m pip install concurrent.futures']))
         import concurrent.futures
         from concurrent.futures import ThreadPoolExecutor, TimeoutError
@@ -925,8 +935,6 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install inquirer']))
         import inquirer
     exnow+=1
-
-print('')
 
 # subprocess.run('py -m pip install --upgrade pip')
 
