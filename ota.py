@@ -41,17 +41,17 @@ def setores(lista, listname):
         onlyptw = False
     
     # PTW em lançamento
-    elif lista == 1:
-        mallink2 = '?airing_status=1&order=-16&order2=14'
+    elif lista == 2:
+        mallink2 = '?airing_status=1&order=-16&order2=-14'
         onlyptw = True
     
     # PTW ainda não lançado
-    elif lista == -3:
+    elif lista == 4:
         mallink2 = '?airing_status=3&order=-14'
         onlyptw = False
     
     # em espera
-    elif lista == 2:
+    elif lista == 1:
         mallink2 = '?order=12&order2=5&status=3'
         onlyptw = False
 
@@ -789,9 +789,10 @@ def selectlist():
 
     listnames = (
         'WATCHING',
-        'PLAN TO WATCH (AIRING)',
         'ON HOLD',
+        'PLAN TO WATCH (AIRING)',
         'PLAN TO WATCH (FINISHED AIRING)',
+        'PLAN TO WATCH (NOT YET AIRED)',
         'ALTERAR USERNAME',
         )    
 
