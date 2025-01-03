@@ -456,7 +456,7 @@ def provedores(tl, ep):
 
     print('\n')
 
-    time.sleep(1)
+    
     
     return epfound
 
@@ -701,11 +701,8 @@ def afgetqual(tl, ep, args):
     if eplink.find('/mp4_temp/') != -1:
         filename = filename.replace('(HD)', '(HD - LEGENDA TEMPORÁRIA)')
 
-    if eplink.find('lightspeedst.net') == -1: 
-        eplink = 'none'
-        if debugin:
-            print(ogsopa)
-            time.sleep(500)
+    if eplink.find('lightspeedst.net') == -1: eplink = 'none'
+
     
     return (args[0], args[1], eplink, filename)
 
