@@ -73,7 +73,7 @@ def setores(lista, listname):
 
         sopa = sopapranois(link)[0]
 
-        opts = ('REPRODUZIR LISTA COMPLETA', 'ESCOLHER ANIME', 'RETORNAR AO MENU ANTERIOR')
+        opts = ('REPRODUZIR LISTA COMPLETA', 'ESCOLHER ANIME', 'VOLTAR')
         erabe = inqlist('', opts)
 
         if erabe == len(opts)-1:
@@ -121,7 +121,7 @@ def setores(lista, listname):
             sys.stdout.write(tx)
 
         print('\n')
-        tllist.append('RETORNAR ÀS LISTAS')
+        tllist.append('VOLTAR')
 
 
         while True:
@@ -350,7 +350,7 @@ def playmedia(link, filename=None):
             ''
     
     escolhas.append('VLC')
-    escolhas.append('CANCELAR')
+    escolhas.append('VOLTAR')
 
     choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
 
@@ -763,7 +763,7 @@ def selectlist():
         'PLAN TO WATCH (AIRING)',
         'PLAN TO WATCH (FINISHED AIRING)',
         'PLAN TO WATCH (NOT YET AIRED)',
-        'ALTERAR USERNAME',
+        'VOLTAR',
         )    
 
     seleção = inqlist('SELECIONE A LISTA DESEJADA', listnames)
