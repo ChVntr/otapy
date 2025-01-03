@@ -15,7 +15,7 @@
 
 
 def setores(lista, listname):
-    if debugin: print('SETORES\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('SETORES\n'), time.sleep(dbfldrt)
 
     global onlyptw
     
@@ -140,7 +140,7 @@ def setores(lista, listname):
                        
 def proximo(sopa):
 
-    if debugin: print('PROXIMO\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('PROXIMO\n'), time.sleep(dbfldrt)
 
     animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
 
@@ -178,7 +178,7 @@ def proximo(sopa):
 
 def update(sopa):
     
-    if debugin: print('UPDATE\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('UPDATE\n'), time.sleep(dbfldrt)
     
 
 
@@ -387,7 +387,7 @@ def playmedia(link, filename=None):
         exit()
 
 def provedores(tl, ep):
-    if debugin: print('PROVEDORES\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
     
     print('\n')
 
@@ -447,7 +447,8 @@ def provedores(tl, ep):
 
     epfound = False
     for func in funcs:
-        epfound = func(titulo, ep)
+        if func == nyaa: epfound = func(tl, ep)
+        else: epfound = func(titulo, ep)
         print('')
         if epfound:
             os.system('cls||clear')
@@ -496,14 +497,17 @@ def vaiumadub():
 def streammagnet(link):
     
     print(link)
-    
+    time.sleep(3)
+
     return True
 
 def nyaa(tl, ep):
 
-    print('PROVEDOR: "nyaa.si"'.lower())
+    print('PROVEDOR: nyaa.si'.lower())
 
     result = False
+
+    tl = tl.replace('½', '1/2')
 
     if int(ep) < 10:
         ep = ''.join(['0', ep])
@@ -552,7 +556,7 @@ def nyaa(tl, ep):
 
     if temep == False:
         achei = False
-        print('EPISODIO NÃO ENCONTRADO!\n'.lower())
+        print('EPISODIO NÃO ENCONTRADO!'.lower())
 
     if achei:
         result = streammagnet(magnet)
@@ -565,7 +569,7 @@ def afsearch(tl, ep):
 
     global dubinfo
 
-    print('PROVEDOR: "animefire.plus"'.lower())
+    print('PROVEDOR: animefire.plus'.lower())
 
 
     ntl = tl
@@ -639,7 +643,7 @@ def afsearchep(tl, ep):
 
     sopa = (sopapranois(link))[1]
 
-    if str(sopa).find('<h6 class="text-white quicksand300 mx-3">Download indisponível</h6>') != -1:
+    if str(sopa).find('<h6 class="text-white quicksand300 mx-3">Download indisponível</h6>') != -1 or sopa.find('não é possível fazer o download.') != -1:
         return False
     else:
         return True
@@ -653,8 +657,6 @@ def afgetqual(tl, ep, args):
     sopa = str((sopapranois(link))[1])
     ogsopa = sopa
     
-    if sopa.find('não é possível fazer o download.') != -1:
-        return (False, args[1], 'none')
 
 
     if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
@@ -773,7 +775,7 @@ def selectlist():
     setores(seleção, listnames[seleção])
 
 def processid(id):
-    if debugin: print('PROCESSANDO ID\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('PROCESSANDO ID\n'), time.sleep(dbfldrt)
 
 
     link = ''.join(['https://myanimelist.net/anime/', id])
@@ -791,7 +793,7 @@ def processid(id):
 
 def geteps(id, proximoep, sopa):
     if debugin: 
-        print('GET EPS\n'), time.sleep(dbfldrt)
+        if flags: print('GET EPS\n'), time.sleep(dbfldrt)
         return False
 
     id=str(id)
@@ -931,6 +933,7 @@ if sisop != 0:
 
 
 debugin = False
+flags = False
 dbfldrt = 0
 
 getusername()
@@ -939,7 +942,7 @@ getusername()
 
 while True:
     os.system('cls||clear')
-    if debugin: print('LOOP START\n'), time.sleep(dbfldrt)
+    if debugin and flags: print('LOOP START\n'), time.sleep(dbfldrt)
     selectlist()
 
 exit()
