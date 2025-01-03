@@ -88,7 +88,7 @@ def setores(lista, listname):
             os.system('cls||clear')
             print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
             while provedores(tl, ep):
-                ep = geteps(id, ep, sopa)
+                ep = geteps(id, ep)
                 if ep == False: break
             sopa = update(sopa)
 
@@ -132,7 +132,7 @@ def setores(lista, listname):
                 return
 
             while True:
-                ep = geteps(idlist[choice], epslist[choice], ogsopa)
+                ep = geteps(idlist[choice], epslist[choice])
                 if ep == False:
                     break
                 else:
@@ -791,44 +791,48 @@ def processid(id):
     
     return titulo
 
-def geteps(id, proximoep, sopa):
+def geteps(id, proximoep):
     if debugin: 
         if flags: print('GET EPS\n'), time.sleep(dbfldrt)
-        return False
 
     id=str(id)
-    proximoep=str(proximoep)
+    proximoep = int(proximoep)
 
-    sopa = sopa[sopa.find(id):]
-    epstotal = sopa[sopa.find("anime_num_episodes")+20 : sopa.find(',"anime_airing_status"')]
-    
-    try:
-        epstotal = int(epstotal)+1
-        if debugin: print('case 1')
-    except:
-        sopa2 = sopapranois(''.join(['https://myanimelist.net/anime/', id]))[1]
-        sopa2 = sopa2[sopa2.find('>Episodes:</span>')+17:]
-        epstotal = sopa2[ : sopa2.find('</div>')]
-        try:
-            epstotal = int(epstotal)+1
-            if debugin: print('case 2')
-        except:
-            if debugin: print('case 3')
-            if epstotal.find('Unknown') != -1 : epstotal = int(proximoep)+10
-            else:
-                print(epstotal, '\noh shit')
-                exit()
+    sopa = sopapranois(''.join(['https://myanimelist.net/anime/', id, '/fuckyou/episode']))[1]
+    ogsopa = sopa
+
+    lista1 = ('"episode-number nowrap" data-raw="', '">')
 
 
+    eps = list()
+    while sopa.find(lista1[0]) != -1:
 
-    if epstotal < 2 or epstotal < int(proximoep): 
-        epstotal = int(proximoep)+12
-    opts = list(range(1, epstotal))
-    opts.append('VOLTAR')
+        cord1 = sopa.find(lista1[0]) + len(lista1[0])
+        cord2 = sopa[cord1:].find(lista1[1]) + cord1
+        epnum = (sopa[cord1 : cord2])
+        sopa = sopa[cord2:]
+
+        try: int(epnum)
+        except: print('OH SHIT'), exit()
+
+        tx = ''.join(['/episode/', epnum, '">'])
+        cord1 = sopa.find(tx) + len(tx)
+        cord2 = sopa[cord1:].find('</a>') + cord1
+        epname = sopa[cord1 : cord2]
+
+        eps.append(' '.join([epnum, '-', epname]))
 
 
-    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', opts, str(proximoep))
-    if ep == len(opts)-1: return False
+
+    if proximoep > len(eps):
+        for num in range(len(eps), proximoep):
+            eps.append(num+1)
+
+    eps.append('VOLTAR')
+
+
+    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, str(proximoep))
+    if ep == len(eps)-1: return False
     
     return str(int(ep)+1)
 
@@ -937,8 +941,6 @@ flags = False
 dbfldrt = 0
 
 getusername()
-
-
 
 while True:
     os.system('cls||clear')
