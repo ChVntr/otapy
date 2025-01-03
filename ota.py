@@ -47,7 +47,7 @@ def setores(lista, listname):
     
     # PTW ainda não lançado
     elif lista == 4:
-        mallink2 = '?airing_status=3&order=-14'
+        mallink2 = '?airing_status=3&order=-16&order2=-14'
         onlyptw = True
     
     # em espera
