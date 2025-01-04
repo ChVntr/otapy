@@ -795,14 +795,51 @@ def geteps(id, proximoep):
     if debugin: 
         if flags: print('GET EPS\n'), time.sleep(dbfldrt)
 
+    print('carregando lista de episódios...')
+
     id=str(id)
     proximoep = int(proximoep)
 
-    sopa = sopapranois(''.join(['https://myanimelist.net/anime/', id, '/fuckyou/episode']))[1]
+    link = ''.join(['https://myanimelist.net/anime/', id, '/fuckyou/episode'])
+    sopa = sopapranois(link)[1]
     ogsopa = sopa
 
-    lista1 = ('"episode-number nowrap" data-raw="', '">')
+    eps = getepslist(sopa)
 
+    eonepiece = 99
+
+    while len(eps) > eonepiece:
+        sys.stdout.write('.')
+
+        link2 = ''.join([link, '?offset=', str(eonepiece+1)])
+        sopa = sopapranois(link2)[1]
+
+        if sopa.find('No episode information has been added to this title.') != -1: break
+
+        maisep = getepslist(sopa)
+        for ep in maisep: eps.append(ep)
+
+        eonepiece +=100
+
+
+
+
+
+    if proximoep > len(eps):
+        for num in range(len(eps), proximoep):
+            eps.append(num+1)
+
+    eps.append('VOLTAR')
+
+
+    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, str(proximoep))
+    if ep == len(eps)-1: return False
+    
+    return str(int(ep)+1)
+
+def getepslist(sopa):
+
+    lista1 = ('"episode-number nowrap" data-raw="', '">')
 
     eps = list()
     while sopa.find(lista1[0]) != -1:
@@ -822,24 +859,7 @@ def geteps(id, proximoep):
 
         eps.append(' '.join([epnum, '-', epname]))
 
-
-
-    if proximoep > len(eps):
-        for num in range(len(eps), proximoep):
-            eps.append(num+1)
-
-    eps.append('VOLTAR')
-
-
-    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, str(proximoep))
-    if ep == len(eps)-1: return False
-    
-    return str(int(ep)+1)
-
-
-
-
-
+    return eps
 
 
 
@@ -941,6 +961,7 @@ flags = False
 dbfldrt = 0
 
 getusername()
+
 
 while True:
     os.system('cls||clear')
