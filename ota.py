@@ -395,6 +395,12 @@ def provedores(tl, ep):
 
     dubinfo = (False, False)
 
+    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
+    titulo = titulo.replace('      ', ' ')
+    titulo = titulo.replace('     ', ' ')
+    titulo = titulo.replace('    ', ' ')
+    titulo = titulo.replace('   ', ' ')
+    titulo = titulo.replace('  ', ' ')
 
 
 
@@ -426,13 +432,7 @@ def provedores(tl, ep):
         if dubinfo[1]: print('DUB = TRUE\n'.lower())
         
 
-    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
 
-    titulo = titulo.replace('      ', ' ')
-    titulo = titulo.replace('     ', ' ')
-    titulo = titulo.replace('    ', ' ')
-    titulo = titulo.replace('   ', ' ')
-    titulo = titulo.replace('  ', ' ')
 
     funcs = (afsearch,)
     funcs = list(funcs)
