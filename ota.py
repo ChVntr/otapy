@@ -658,7 +658,6 @@ def afgetqual(tl, ep, args):
     link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
     sopa = str((sopapranois(link))[1])
     ogsopa = sopa
-    
 
 
     if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
@@ -705,8 +704,9 @@ def afgetqual(tl, ep, args):
     if eplink.find('/mp4_temp/') != -1:
         filename = filename.replace('(HD)', '(HD - LEGENDA TEMPORÁRIA)')
 
-    if eplink.find('lightspeedst.net') == -1: eplink = 'none'
-
+    if eplink.find('lightspeedst.net') == -1: 
+        #eplink = sopa[:sopa.find('&amp;title=[AnimeFire.plus]')]
+        eplink = 'none'
     
     return (args[0], args[1], eplink, filename)
 
