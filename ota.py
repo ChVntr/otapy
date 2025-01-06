@@ -752,8 +752,10 @@ def inqlist(string, opts, dft=None):
     escolha = str(inquirer.prompt(questions))
 
     for opt in range(len(opts)):
-        if escolha == ''.join(["{'opções': '", str(opts[opt]), "'}"]):
+        if escolha == ''.join(["{'opções': '", str(opts[opt]), "'}"]) or escolha == ''.join(["{'opções': ", '"', str(opts[opt]), '"}']):
             return opt
+        
+    print(escolha, '\nOH SHIT'), exit()
         
 def selectlist():
 
@@ -831,10 +833,12 @@ def geteps(id, proximoep):
 
     eps.append('VOLTAR')
 
-
-    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, str(proximoep))
+    print('')
+    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, proximoep)
     if ep == len(eps)-1: return False
     
+
+
     return str(int(ep)+1)
 
 def getepslist(sopa):
