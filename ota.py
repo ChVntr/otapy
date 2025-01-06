@@ -88,6 +88,7 @@ def setores(lista, listname):
             os.system('cls||clear')
             print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
             while provedores(tl, ep):
+                ep = int(ep)+1
                 ep = geteps(id, ep)
                 if ep == False: break
             sopa = update(sopa)
@@ -131,12 +132,14 @@ def setores(lista, listname):
             if choice == len(tllist)-1:
                 return
 
+            varpika = 0
             while True:
-                ep = geteps(idlist[choice], epslist[choice])
+                ep = geteps(idlist[choice], int(epslist[choice])+varpika)
                 if ep == False:
                     break
                 else:
                     provedores(tllist[choice], ep)
+                varpika+=1
                        
 def proximo(sopa):
 
@@ -403,12 +406,12 @@ def provedores(tl, ep):
     titulo = titulo.replace('  ', ' ')
 
 
-
     dubsraw = (
         'one piece', 
         'dragon ball', 
         'one punch man', 
-        'yu yu hakusho', 'yuy yyu hakusho',
+        'yu yu hakusho', 
+        'Yuu Yuu Hakusho',
         'saint seiya',
         'naruto',
         'sailor moon',
@@ -416,13 +419,11 @@ def provedores(tl, ep):
         'InuYasha',
     )
 
-    dubs = list()
     for title in dubsraw:
-        if (tl.lower()).find(title.lower()) != -1:
-            dubs.append(tl)
-    dubs = tuple(dubs)
+        if (titulo.lower()).find(title.lower()) != -1:
+            dubs.append(titulo)
 
-    if tl in dubs:    
+    if titulo in dubs:    
         dubinfo = (dubinfo[0], True)
     else:
         dubinfo = (dubinfo[0], False)
@@ -431,6 +432,7 @@ def provedores(tl, ep):
         dubinfo = (True, dubinfo[1])
         if dubinfo[1]: print('DUB = TRUE\n'.lower())
         
+
 
 
 
@@ -733,6 +735,7 @@ def ani_cli(tl, ep):
 
 def inqlist(string, opts, dft=None):
 
+
     newlist = list()
     for item in opts:
         newlist.append(str(item))
@@ -750,6 +753,8 @@ def inqlist(string, opts, dft=None):
     ]
 
     escolha = str(inquirer.prompt(questions))
+
+
 
     for opt in range(len(opts)):
         if escolha == ''.join(["{'opções': '", str(opts[opt]), "'}"]) or escolha == ''.join(["{'opções': ", '"', str(opts[opt]), '"}']):
@@ -811,7 +816,6 @@ def geteps(id, proximoep):
     eonepiece = 99
 
     while len(eps) > eonepiece:
-        sys.stdout.write('.')
 
         link2 = ''.join([link, '?offset=', str(eonepiece+1)])
         sopa = sopapranois(link2)[1]
@@ -834,7 +838,7 @@ def geteps(id, proximoep):
     eps.append('VOLTAR')
 
     print('')
-    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, proximoep)
+    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, eps[proximoep-1])
     if ep == len(eps)-1: return False
     
 
@@ -963,6 +967,7 @@ if sisop != 0:
 debugin = False
 flags = False
 dbfldrt = 0
+dubs = list()
 
 getusername()
 
