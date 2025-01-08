@@ -251,8 +251,10 @@ def animefire(tl, ep):
                 if tocou == False:
                     print('FALHA NA REPRODUÇÃO'.lower())
 
+
+
     print('EPISODIO NÃO ENCONTRADO!'.lower())
-    return False
+    return animefire2(tl, ep)
 
 def cnctvrf(url=None):
 
@@ -445,7 +447,9 @@ def provedores(tl, ep):
     except:
         print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
         
-    if debugin: funcs.append(nyaa)
+    if debugin: 
+        funcs.append(animesonlinecc)
+        funcs.append(nyaa)
 
     epfound = False
     for func in funcs:
@@ -635,7 +639,7 @@ def afsearch(tl, ep):
             deubom = animefire(ntl, ep)
     else:
         print('ANIME NÃO ENCONTRADO!\n'.lower())
-        deubom = False
+        return False
 
     return deubom
 
@@ -869,6 +873,23 @@ def getepslist(sopa):
 
     return eps
 
+def animefire2(tl, ep):
+
+    link = ''.join(['https://animefire.plus/animes/', tl, '/', ep])
+    sopa = sopapranois(link)[1]
+
+    if debugin:
+        print(sopa)
+        time.sleep(99999)
+        exit()
+
+    return False
+
+def animesonlinecc(tl, ep):
+
+    return False
+
+
 
 
 
@@ -964,7 +985,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = False
+debugin = True
 flags = False
 dbfldrt = 0
 dubs = list()
