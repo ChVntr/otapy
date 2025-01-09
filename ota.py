@@ -631,6 +631,7 @@ def afsearch(tl, ep):
                     if debugin: print(link)
                     print('BUSCANDO EPISODIO DUBLADO...'.lower())
                     deubom = animefire(dubtl, ep)
+                    if usnm.lower() == 'gahvius': return deubom
         except:
             ''
 
