@@ -624,6 +624,7 @@ def afsearch(tl, ep):
         try:
             if str(response) == '<Response [500]>':
                 if usnm.lower() == 'gahvius' and dubinfo[1]: 
+                    print('dub NÃO ENCONTRADO!'.lower())
                     return False
             else:
                 if dubinfo[0] == False:
