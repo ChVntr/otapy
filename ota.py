@@ -792,11 +792,13 @@ def processid(id):
 
     link = ''.join(['https://myanimelist.net/anime/', id])
     tl_sopa = sopapranois(link)[1]
-    
+
+    to = 5
     while tl_sopa.find('<div id="captcha-container"></div>') != -1:
-        if debugin: print("DORMINDO POR CAUSA DO CAPTCHA")
-        time.sleep(10)
+        sys.stdout.write('...')
+        time.sleep(to)
         tl_sopa = sopapranois(link)[1]
+        to+=5
 
     titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
     if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
