@@ -623,7 +623,8 @@ def afsearch(tl, ep):
 
         try:
             if str(response) == '<Response [500]>':
-                ''
+                if usnm.lower() == 'gahvius' and dubinfo[1]: 
+                    return False
             else:
                 if dubinfo[0] == False:
                     dubinfo = (True, vaiumadub()) 
