@@ -797,7 +797,7 @@ def processid(id):
 
     to = 5
     while tl_sopa.find('<div id="captcha-container"></div>') != -1:
-        sys.stdout.write('...')
+        print('...')
         time.sleep(to)
         tl_sopa = sopapranois(link)[1]
         to+=5
