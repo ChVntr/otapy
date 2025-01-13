@@ -864,11 +864,6 @@ def animefire2(tl, ep):
     link = ''.join(['https://animefire.plus/animes/', tl, '/', ep])
     sopa = sopapranois(link)[1]
 
-    if debugin:
-        print(sopa)
-        time.sleep(99999)
-        exit()
-
     return False
 
 def animesonlinecc(tl, ep):
@@ -876,6 +871,9 @@ def animesonlinecc(tl, ep):
     print('provedor: animesonlinecc.to')
 
     tl = processtl(tl)
+
+    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
+
     link = ''.join(['https://animesonlinecc.to/anime/', tl, '/'])
     sopa = sopapranois(link)[1]
 
@@ -890,9 +888,9 @@ def animesonlinecc(tl, ep):
         print('episódio não encontrado!\n')
         return False
 
-    print(link)
+    if debugin:
+        print(link)
 
-    exit()
 
     return False
 
@@ -922,7 +920,7 @@ def processtl(tl, mode=None):
 print('IMPORTANDO EXTENSÕES...')
 
 
-extotal = str(9)
+extotal = str(8)
 exnow = 1
 
 print(''.join([str(exnow), '/', extotal]))
@@ -966,16 +964,6 @@ if sisop != 0:
         subprocess.run(''.join(['python -m pip install bs4']))
         import bs4
         from bs4 import BeautifulSoup
-    exnow+=1
-
-    print(''.join([str(exnow), '/', extotal]))
-    try:
-        import concurrent.futures
-        from concurrent.futures import ThreadPoolExecutor, TimeoutError
-    except:
-        subprocess.run(''.join(['python -m pip install concurrent.futures']))
-        import concurrent.futures
-        from concurrent.futures import ThreadPoolExecutor, TimeoutError
     exnow+=1
 
     print(''.join([str(exnow), '/', extotal]))
