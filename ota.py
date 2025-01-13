@@ -392,6 +392,7 @@ def playmedia(link, filename=None):
         exit()
 
 def provedores(tl, ep):
+    
     if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
     
     print('\n')
@@ -408,18 +409,6 @@ def provedores(tl, ep):
     titulo = titulo.replace('  ', ' ')
 
 
-    dubsraw = (
-        'one piece', 
-        'dragon ball', 
-        'one punch man', 
-        'yu yu hakusho', 
-        'Yuu Yuu Hakusho',
-        'saint seiya',
-        'naruto',
-        'sailor moon',
-        'pokemon',
-        'InuYasha',
-    )
 
     for title in dubsraw:
         if (titulo.lower()).find(title.lower()) != -1:
@@ -577,16 +566,8 @@ def afsearch(tl, ep):
 
     print('PROVEDOR: animefire.plus'.lower())
 
+    ntl = processtl(tl)
 
-    ntl = tl
-
-    ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
-    ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
-    ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
-
-    ntl = ntl.replace(' ', '-')
-
-    ntl = ntl.lower() 
     dubtl = ''.join([ntl, '-dublado'])
 
     if ntl[-1] == '-':
@@ -892,8 +873,44 @@ def animefire2(tl, ep):
 
 def animesonlinecc(tl, ep):
 
+    print('provedor: animesonlinecc.to')
+
+    tl = processtl(tl)
+    link = ''.join(['https://animesonlinecc.to/anime/', tl, '/'])
+    sopa = sopapranois(link)[1]
+
+    if sopa.find('{"@id":null,"name":"Erro 404:') != -1:
+        print('anime não encontrado!\n')
+        return False
+
+    link = ''.join(['https://animesonlinecc.to/episodio/', tl, '-episodio-', ep, '/'])
+    sopa = sopapranois(link)[1]
+
+    if sopa.find('{"@id":null,"name":"Erro 404:') != -1:
+        print('episódio não encontrado!\n')
+        return False
+
+    print(link)
+
+    exit()
+
     return False
 
+def processtl(tl, mode=None):
+
+    if mode == None or mode == 0:
+
+        ntl = tl
+        
+        ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
+        ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
+        ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
+
+        ntl = ntl.replace(' ', '-')
+
+        ntl = ntl.lower() 
+
+    return ntl
 
 
 
@@ -995,8 +1012,22 @@ flags = False
 dbfldrt = 0
 dubs = list()
 
-getusername()
+dubsraw = (
+    'one piece', 
+    'dragon ball', 
+    'one punch man', 
+    'yu yu hakusho', 
+    'Yuu Yuu Hakusho',
+    'saint seiya',
+    'naruto',
+    'sailor moon',
+    'pokemon',
+    'InuYasha',
+)
 
+
+
+getusername()
 
 while True:
     os.system('cls||clear')
