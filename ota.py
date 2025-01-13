@@ -405,7 +405,7 @@ def provedores(titulo, ep):
 
 
     for title in dubsraw:
-        if (titulo.lower()).find(title.lower()) != -1:
+        if (processtl(titulo, -1).lower()).find(title.lower()) != -1:
             dubs.append(titulo)
 
     if titulo in dubs:    
