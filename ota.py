@@ -391,7 +391,7 @@ def playmedia(link, filename=None):
         print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO'.lower())
         exit()
 
-def provedores(tl, ep):
+def provedores(titulo, ep):
     
     if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
     
@@ -401,12 +401,6 @@ def provedores(tl, ep):
 
     dubinfo = (False, False)
 
-    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
-    titulo = titulo.replace('      ', ' ')
-    titulo = titulo.replace('     ', ' ')
-    titulo = titulo.replace('    ', ' ')
-    titulo = titulo.replace('   ', ' ')
-    titulo = titulo.replace('  ', ' ')
 
 
 
@@ -442,7 +436,7 @@ def provedores(tl, ep):
 
     epfound = False
     for func in funcs:
-        if func == nyaa: epfound = func(tl, ep)
+        if func == nyaa: epfound = func(titulo, ep)
         else: epfound = func(titulo, ep)
         print('')
         if epfound:
@@ -566,6 +560,7 @@ def afsearch(tl, ep):
 
     print('PROVEDOR: animefire.plus'.lower())
 
+    tl = tl.replace('Ü', 'ue')
     ntl = processtl(tl)
 
     dubtl = ''.join([ntl, '-dublado'])
@@ -896,9 +891,18 @@ def animesonlinecc(tl, ep):
 
 def processtl(tl, mode=None):
 
+    tl = tl.replace('Ü', 'U')
+
+    titulo = re.sub(r'[^a-zA-Z0-9]', ' ', tl) 
+    titulo = titulo.replace('      ', ' ')
+    titulo = titulo.replace('     ', ' ')
+    titulo = titulo.replace('    ', ' ')
+    titulo = titulo.replace('   ', ' ')
+    titulo = titulo.replace('  ', ' ')
+
     if mode == None or mode == 0:
 
-        ntl = tl
+        ntl = titulo
         
         ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
         ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
