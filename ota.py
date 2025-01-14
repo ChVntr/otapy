@@ -907,11 +907,11 @@ def processtl(tl, mode=None):
     ntl = titulo
     
     if mode == None or mode == 0:
-        ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
-        ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
+        ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken hen', '2nd season')
+        ntl = ntl.replace('Kagaijugyou hen', '2nd season Kagaijugyou hen')
         ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
         ntl = ntl.replace(' Meido ', ' maid ')
-        ntl = ntl.replace('Dededede Destruction (OVA)', 'Dededede Destruction (ONA)')
+        ntl = ntl.replace('Dededede Destruction OVA', 'Dededede Destruction ONA')
 
         ntl = ntl.replace(' ', '-')
 
