@@ -232,7 +232,6 @@ def animefire(tl, ep):
         else:
             temp=True
 
-
     result = (True, 0, 'none')
     while result[0]:
 
@@ -253,6 +252,7 @@ def animefire(tl, ep):
                     print('FALHA NA REPRODUÇÃO'.lower())
 
     if temp:
+        if debugin: print('indo ali')
         result = animefire2(tl, ep)
         if result: return True
 
@@ -861,12 +861,27 @@ def getepslist(sopa):
 
 def animefire2(tl, ep):
 
-    link = ''.join(['https://animefire.plus/animes/', tl, '/', ep])
+    if debugin == False: return False
+
+
+    link = ''.join(['https://animefire.plus/animes/', tl, '/', str(ep)])
     sopa = sopapranois(link)[1]
+    if debugin: print(link)
 
-    if debugin: print(sopa), time.sleep(99999), exit()
+    if sopa.find('https://www.blogger.com/video') == -1:
+        if debugin: print('naotem')
+        return False
+    else:
+        if debugin: print('tem')
 
-    return False
+    kw = 'src="https://www.blogger.com/video'
+    loc = sopa.find(kw)+5
+    link = sopa[sopa.find(loc) : loc+sopa[loc:].find('" gesture="')]
+    if debugin: print(link)
+
+    #return playmedia(link)
+
+    if debugin: print(sopa, link), time.sleep(99999), exit()
 
 def animesonlinecc(tl, ep):
 
@@ -1014,7 +1029,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = True
+debugin = False
 flags = False
 dbfldrt = 0
 dubs = list()
