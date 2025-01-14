@@ -425,7 +425,7 @@ def provedores(titulo, ep):
     funcs = (afsearch,)
     funcs = list(funcs)
 
-    if not triedanicli:
+    if triedanicli == False:
         try:
             subprocess.run('ani-cli -V')
             funcs.append(ani_cli)
