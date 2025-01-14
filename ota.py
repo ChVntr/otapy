@@ -294,7 +294,7 @@ def getusername():
         response = str(requests.get(str(''.join(['https://myanimelist.net/profile/', usnm]))))
         if response.find('404') != -1:
             print(
-                'USUARIO NÃO ENCONTRADO\n\n'.lower()
+                'USUARIO NÃO ENCONTRADO\n'.lower()
             )
         else:
             validusername = True
@@ -620,7 +620,7 @@ def afsearch(tl, ep):
             print('BUSCANDO EPISODIO LEGENDADO...'.lower())
             deubom = animefire(ntl, ep)
     else:
-        print('ANIME NÃO ENCONTRADO!\n'.lower())
+        print('ANIME NÃO ENCONTRADO!'.lower())
         return False
 
     return deubom
@@ -881,8 +881,8 @@ def animesonlinecc(tl, ep):
     sopa = sopapranois(link)[1]
     if debugin: print(link)
 
-    if sopa.find('{"@id":null,"name":"Erro 404:') != -1:
-        print('episódio não encontrado!\n')
+    if sopa.find('https://www.blogger.com/video') == -1:
+        print('episódio não encontrado!')
         return False
 
     loc = sopa.find('src="https://www.blogger.com/video') +5
