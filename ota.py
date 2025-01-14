@@ -335,7 +335,7 @@ def vaiounao(link):
 
     return qzq
 
-def playmedia(link, filename=None):
+def playmedia(link, filename=None, novlc=None):
     
     if filename == None: filename = 'ARQIUVO DE MEDIA'
 
@@ -355,7 +355,7 @@ def playmedia(link, filename=None):
         except:
             ''
     
-    escolhas.append('VLC')
+    if novlc != True: escolhas.append('VLC')
     escolhas.append('VOLTAR')
 
     choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
@@ -868,33 +868,29 @@ def animesonlinecc(tl, ep):
 
     print('provedor: animesonlinecc.to')
 
+    fnm = ''.join([tl, ' - Episódio ', ep])
+
     tl = processtl(tl)
 
     tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
-
-    link = ''.join(['https://animesonlinecc.to/anime/', tl, '/'])
-    sopa = sopapranois(link)[1]
-
-    if sopa.find('{"@id":null,"name":"Erro 404:') != -1:
-        print('anime não encontrado!\n')
-        return False
+    tl = tl.replace('-daidaidaidaidaisuki-', '-dai-dai-dai-dai-daisuki-')
+    tl = tl.replace('2nd-season', '2')
+    tl = tl.replace('3rd-season', '3')
 
     link = ''.join(['https://animesonlinecc.to/episodio/', tl, '-episodio-', ep, '/'])
     sopa = sopapranois(link)[1]
+    if debugin: print(link)
 
     if sopa.find('{"@id":null,"name":"Erro 404:') != -1:
         print('episódio não encontrado!\n')
         return False
 
-    if debugin:
-        print(link)
-
     loc = sopa.find('src="https://www.blogger.com/video') +5
     link = sopa[loc : sopa[loc:].find('"')+loc]
     if debugin: print(link)
 
-    result = playmedia(link)
-    if result: return True
+    result = playmedia(link, novlc=True, filename=fnm)
+    if result == True: return True
 
 
 
