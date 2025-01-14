@@ -424,11 +424,13 @@ def provedores(titulo, ep):
     funcs = (afsearch,)
     funcs = list(funcs)
 
-    try:
-        subprocess.run('ani-cli -V')
-        funcs.append(ani_cli)
-    except:
-        print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
+    if not triedanicli:
+        try:
+            subprocess.run('ani-cli -V')
+            funcs.append(ani_cli)
+        except:
+            print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
+        triedanicli = True
         
     if debugin: 
         funcs.append(animesonlinecc)
@@ -1004,6 +1006,7 @@ debugin = False
 flags = False
 dbfldrt = 0
 dubs = list()
+triedanicli = False
 
 dubsraw = (
     'one piece', 
