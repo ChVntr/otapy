@@ -252,10 +252,12 @@ def animefire(tl, ep):
                 if tocou == False:
                     print('FALHA NA REPRODUÇÃO'.lower())
 
-
+    if temp:
+        result = animefire2(tl, ep)
+        if result: return True
 
     print('EPISODIO NÃO ENCONTRADO!'.lower())
-    return animefire2(tl, ep)
+    return False
 
 def cnctvrf(url=None):
 
@@ -862,6 +864,8 @@ def animefire2(tl, ep):
     link = ''.join(['https://animefire.plus/animes/', tl, '/', ep])
     sopa = sopapranois(link)[1]
 
+    if debugin: print(sopa), time.sleep(99999), exit()
+
     return False
 
 def animesonlinecc(tl, ep):
@@ -1010,7 +1014,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = False
+debugin = True
 flags = False
 dbfldrt = 0
 dubs = list()
