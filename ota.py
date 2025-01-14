@@ -392,6 +392,7 @@ def playmedia(link, filename=None):
         exit()
 
 def provedores(titulo, ep):
+    global triedanicli
     
     if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
     
