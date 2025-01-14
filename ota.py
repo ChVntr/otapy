@@ -907,6 +907,7 @@ def processtl(tl, mode=None):
         ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
         ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
         ntl = ntl.replace(' Meido ', ' maid ')
+        ntl = ntl.replace('Dededede Destruction (OVA)', 'Dededede Destruction (ONA)')
 
         ntl = ntl.replace(' ', '-')
 
