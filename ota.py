@@ -906,6 +906,7 @@ def processtl(tl, mode=None):
         ntl = ntl.replace('Shinkakusha Kouho Senbatsu Shiken-hen', '2nd season')
         ntl = ntl.replace('Kagaijugyou-hen', '2nd season Kagaijugyou-hen')
         ntl = ntl.replace('Azumanga Daiou The Animation', 'Azumanga Daioh')
+        ntl = ntl.replace(' Meido ', ' maid ')
 
         ntl = ntl.replace(' ', '-')
 
