@@ -18,7 +18,8 @@ def setores(lista, listname):
     if debugin and flags: print('SETORES\n'), time.sleep(dbfldrt)
 
     global onlyptw
-    
+    global triedanicli
+    triedanicli = False
 
 
     #listas:
@@ -1007,7 +1008,6 @@ debugin = False
 flags = False
 dbfldrt = 0
 dubs = list()
-triedanicli = False
 
 dubsraw = (
     'one piece', 
