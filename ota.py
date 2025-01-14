@@ -341,7 +341,7 @@ def playmedia(link, filename=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    if debugin: return True
+    #if debugin: return True
 
     escolhas = list()
 
@@ -423,7 +423,7 @@ def provedores(titulo, ep):
 
 
 
-    funcs = (afsearch,)
+    funcs = (afsearch, animesonlinecc)
     funcs = list(funcs)
 
     if triedanicli == False:
@@ -435,7 +435,6 @@ def provedores(titulo, ep):
         triedanicli = True
         
     if debugin: 
-        funcs.append(animesonlinecc)
         funcs.append(nyaa)
 
     epfound = False
@@ -889,6 +888,14 @@ def animesonlinecc(tl, ep):
 
     if debugin:
         print(link)
+
+    loc = sopa.find('src="https://www.blogger.com/video') +5
+    link = sopa[loc : sopa[loc:].find('"')+loc]
+    if debugin: print(link)
+
+    result = playmedia(link)
+    if result: return True
+
 
 
     return False
