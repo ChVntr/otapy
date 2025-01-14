@@ -915,6 +915,9 @@ def processtl(tl, mode=None):
 
         ntl = ntl.replace(' ', '-')
 
+        while ntl[-1] == '-':
+            ntl = ntl[:-1]
+
         ntl = ntl.lower() 
 
     return ntl
