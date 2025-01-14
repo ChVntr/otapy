@@ -870,8 +870,8 @@ def animesonlinecc(tl, ep):
 
     fnm = ''.join([tl, ' - Episódio ', ep])
 
+    tl = tl.replace('½', '1/2')
     tl = processtl(tl)
-
     tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
     tl = tl.replace('-daidaidaidaidaisuki-', '-dai-dai-dai-dai-daisuki-')
     tl = tl.replace('2nd-season', '2')
