@@ -208,9 +208,6 @@ def update(sopa):
 
 def animefire(tl, ep):  
 
-    sv = 1
-
-
     #um monte de variavel pro bagulho funcionar
 
     tocou=False
@@ -254,7 +251,7 @@ def animefire(tl, ep):
     if temp:
         if debugin: print('indo ali')
         result = animefire2(tl, ep)
-        if result: return True
+        if result == True: return True
 
     print('EPISODIO NÃO ENCONTRADO!'.lower())
     return False
@@ -861,9 +858,6 @@ def getepslist(sopa):
 
 def animefire2(tl, ep):
 
-    if debugin == False: return False
-
-
     link = ''.join(['https://animefire.plus/animes/', tl, '/', str(ep)])
     sopa = sopapranois(link)[1]
     if debugin: print(link)
@@ -871,17 +865,16 @@ def animefire2(tl, ep):
     if sopa.find('https://www.blogger.com/video') == -1:
         if debugin: print('naotem')
         return False
-    else:
-        if debugin: print('tem')
+
+    if debugin: print('tem')
 
     kw = 'src="https://www.blogger.com/video'
     loc = sopa.find(kw)+5
-    link = sopa[sopa.find(loc) : loc+sopa[loc:].find('" gesture="')]
-    if debugin: print(link)
-
-    #return playmedia(link)
-
-    if debugin: print(sopa, link), time.sleep(99999), exit()
+    loc2 = loc + sopa[loc:].find('" style="')
+    if debugin: print(loc, loc2)
+    link = sopa[loc : loc2]
+    
+    return playmedia(link, novlc=True)
 
 def animesonlinecc(tl, ep):
 
