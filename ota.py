@@ -1029,7 +1029,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = True
+debugin = False
 flags = False
 dbfldrt = 0
 dubs = list()
