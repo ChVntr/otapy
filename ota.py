@@ -882,6 +882,7 @@ def animesonlinecc(tl, ep):
 
     fnm = ''.join([tl, ' - Episódio ', ep])
 
+    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
     tl = tl.replace('½', '1/2')
     tl = processtl(tl)
     tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
