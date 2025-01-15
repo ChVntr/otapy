@@ -245,8 +245,6 @@ def animefire(tl, ep):
                     return True
                 if tocou == 69: 
                     return False
-                if tocou == False:
-                    print('FALHA NA REPRODUÇÃO'.lower())
 
     if temp:
         if debugin: print('indo ali')
@@ -381,6 +379,7 @@ def playmedia(link, filename=None, novlc=None):
             if int(result) == 0:
                 return True
             else:
+                print('FALHA NA REPRODUÇÃO'.lower())
                 return False
             break
         except:
