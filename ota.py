@@ -873,6 +873,9 @@ def animefire2(tl, ep):
     if debugin: print(loc, loc2)
     link = sopa[loc : loc2]
     
+    if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
+        return False
+    
     return playmedia(link, novlc=True)
 
 def animesonlinecc(tl, ep):
@@ -901,6 +904,10 @@ def animesonlinecc(tl, ep):
     link = sopa[loc : sopa[loc:].find('"')+loc]
     if debugin: print(link)
 
+    if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
+        print('episódio não encontrado!')
+        return False
+    
     result = playmedia(link, novlc=True, filename=fnm)
     if result == True: return True
 
@@ -1022,7 +1029,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = False
+debugin = True
 flags = False
 dbfldrt = 0
 dubs = list()
