@@ -413,7 +413,7 @@ def provedores(titulo, ep):
     else:
         dubinfo = (dubinfo[0], False)
 
-    if usnm.lower() == 'ggahvius':
+    if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1])
         if dubinfo[1]: print('DUB = TRUE\n'.lower())
         
