@@ -338,7 +338,7 @@ def playmedia(link, filename=None, novlc=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    #if debugin: return True
+    if debugin: return False
 
     escolhas = list()
 
@@ -413,7 +413,7 @@ def provedores(titulo, ep):
     else:
         dubinfo = (dubinfo[0], False)
 
-    if usnm.lower() == 'gahvius':
+    if usnm.lower() == 'ggahvius':
         dubinfo = (True, dubinfo[1])
         if dubinfo[1]: print('DUB = TRUE\n'.lower())
         
@@ -421,7 +421,7 @@ def provedores(titulo, ep):
 
 
 
-    funcs = (afsearch, animesonlinecc)
+    funcs = (afsearch, animesonlinecc,)
     funcs = list(funcs)
 
     if triedanicli == False:
@@ -473,23 +473,22 @@ def verifyos():
     return os
 
 def vaiumadub():
+    global dubinfo
 
     opts = ['SIM', 'NÃO']
     choice = inqlist('BUSCAR POR EPISÓDIO DUBLADO?', opts)
 
     if choice == 0:
-        dub = True
+        dubinfo = (True, True)
     else:
-        dub = False
-
-    return dub
+        dubinfo = (True, False)
 
 def streammagnet(link):
     
     print(link)
     time.sleep(3)
 
-    return True
+    return False
 
 def nyaa(tl, ep):
 
@@ -557,8 +556,6 @@ def nyaa(tl, ep):
 
 def afsearch(tl, ep):
 
-    global dubinfo
-
     print('PROVEDOR: animefire.plus'.lower())
 
     tl = tl.replace('Ü', 'ue')
@@ -605,7 +602,7 @@ def afsearch(tl, ep):
                     return False
             else:
                 if dubinfo[0] == False:
-                    dubinfo = (True, vaiumadub()) 
+                    vaiumadub() 
                 if dubinfo[1]:
                     if debugin: print(link)
                     print('BUSCANDO EPISODIO DUBLADO...'.lower())
@@ -900,16 +897,67 @@ def animesonlinecc(tl, ep):
         print('episódio não encontrado!')
         return False
 
-    loc = sopa.find('src="https://www.blogger.com/video') +5
-    link = sopa[loc : sopa[loc:].find('"')+loc]
-    if debugin: print(link)
 
-    if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
-        print('episódio não encontrado!')
-        return False
-    
-    result = playmedia(link, novlc=True, filename=fnm)
-    if result == True: return True
+
+
+
+    temdub = False
+    temsub = False
+    duasops = False
+    dubop = None
+    subop = None
+
+    if sopa.find('</b> Dublado </a>') != -1: 
+        temdub = True
+        loc = sopa.find('"> <b class="icon-play_arrow"></b> Dublado </a>')
+        dubop = sopa[loc-1:loc]
+
+        linkloc1 = ''.join(['id="option-', dubop])
+        linkloc2 = sopa.find(linkloc1)
+        loc = linkloc2 + sopa[linkloc2:].find('https://www.blogger.com/video')
+
+        linkdub = sopa[loc : sopa[loc:].find('"')+loc]
+        fnmdub = ''.join([fnm, ' (Dublado)'])
+        if debugin: print(link)
+
+    if sopa.find('</b> Legendado </a>') != -1: 
+        temsub = True
+        loc = sopa.find('"> <b class="icon-play_arrow"></b> Legendado </a>')
+        dubop = sopa[loc-1:loc]
+
+        linkloc1 = ''.join(['id="option-', dubop])
+        linkloc2 = sopa.find(linkloc1)
+        loc = linkloc2 + sopa[linkloc2:].find('https://www.blogger.com/video')
+
+        linksub = sopa[loc : sopa[loc:].find('"')+loc]
+        fnmsub = ''.join([fnm, ' (Legendado)'])
+        if debugin: print(link)
+
+
+    if debugin: print(temsub, temdub)
+
+    if temdub and temsub:
+        if dubinfo[0] == False:
+            vaiumadub()
+            temdub = dubinfo[1]
+
+    while temdub:
+        print('BUSCANDO EPISODIO DUBLADO...'.lower())
+        if sopapranois(linkdub)[1].find('<div class="errorMessage">') != -1:
+            print('episódio não encontrado!')
+            break
+        result = playmedia(linkdub, novlc=True, filename=fnmdub)
+        if result == True: return True
+        break
+    while temsub:
+        print('BUSCANDO EPISODIO Legendado...'.lower())
+        if debugin: print(linksub)
+        if sopapranois(linksub)[1].find('<div class="errorMessage">') != -1:
+            print('episódio não encontrado!')
+            break
+        result = playmedia(linksub, novlc=True, filename=fnmsub)
+        if result == True: return True
+        break
 
 
 
