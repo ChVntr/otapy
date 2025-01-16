@@ -45,23 +45,48 @@ cls
 
 :: instalando player se não tiver um instalado
 
-
-    if exist otapy\mpv (
-        set player=1
-        cls
-        echo VERIFICANDO VERSAO DO REPRODUTOR...
-        echo.
-        cd otapy\mpv
-        del updater.bat
-        powershell Invoke-WebRequest https://github.com/ChVntr/otapy/releases/download/depend/updater.bat -OutFile updater.bat
-        CALL updater.bat
-        cd..
-        cd..
+set jadeuupdate=0
+if exist otapy\mpv (
+    set player=1
+    cls
+    if exist \otapy\mpv\lastupdate.txt (
+        set jadeuupdate=1 
     ) else (
-        set player=0
+        echo 00 >> \otapy\mpv\lastupdate.txt
     )
+) else (
+    set player=0
+)
 
 cls
+set podeatualuzar=0
+
+if %jadeuupdate% == 1 (
+    FOR /F "tokens=* delims=" %%x in (otapy\mpv\lastupdate.txt) DO (
+        if %%x == %date:~0,2% (
+            echo deu igual
+            set podeatualuzar=0
+        ) else (
+            echo deu diferente
+            set podeatualizar=0
+        )
+    )
+)
+
+if %podeatualizar% == 1 (
+    del otapy\mpv\lastupdate.txt
+    echo %date:~0,2% >> otapy\mpv\lastupdate.txt
+    cd otapy\mpv
+    echo VERIFICANDO VERSAO DO REPRODUTOR...
+    echo.
+    del updater.bat
+    powershell Invoke-WebRequest https://github.com/ChVntr/otapy/releases/download/depend/updater.bat -OutFile updater.bat
+    CALL updater.bat
+    cd..
+    cd..
+)
+
+
 
 if %player% == 0 (
     echo INSTALANDO REPRODUTOR DE VIDEO...
