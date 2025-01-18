@@ -919,7 +919,7 @@ def animesonlinecc(tl, ep):
         fnmdub = ''.join([fnm, ' (Dublado)'])
         if debugin: print(link)
     else:
-        if dubinfo[2]and dubinfo[0]:
+        if dubinfo[2] and dubinfo[0]:
             print('dub NÃO ENCONTRADO!'.lower())
             return False
 
