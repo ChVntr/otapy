@@ -118,8 +118,9 @@ def setores(lista, listname):
         for id in idlist:
             sys.stdout.flush()
             tllist.append(processid(id))
+            sys.stdout.write('\r')
             entradas2+=1
-            tx = ''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS\r'.lower()])
+            tx = ''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS'.lower()])
             sys.stdout.write(tx)
 
         print('\n')
@@ -281,7 +282,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7\n')
+    print('V1.0.8\n')
     
     global usnm
     validusername = False
@@ -716,6 +717,7 @@ def ani_cli(tl, ep):
 
 def inqlist(string, opts, dft=None):
 
+    '\a'
 
     newlist = list()
     for item in opts:
