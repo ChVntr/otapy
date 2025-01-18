@@ -281,7 +281,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5\n')
+    print('V1.0.6\n')
     
     global usnm
     validusername = False
@@ -411,13 +411,14 @@ def provedores(titulo, ep):
 
     if titulo in dubs:    
         dubinfo = (dubinfo[0], True, dubinfo[2])
-        if usnm.lower() == 'gahvius':
-            dubinfo = (True, dubinfo[1], True)
-            print('DUB = TRUE\n'.lower())
     else:
         dubinfo = (dubinfo[0], False, dubinfo[2])        
 
-
+        if usnm.lower() == 'gahvius':
+            dubinfo = (True, dubinfo[1], dubinfo[2])
+            if dubinfo[1]:
+                dubinfo = (dubinfo[0], dubinfo[1], True)
+                print('DUB = TRUE\n'.lower())
 
 
     funcs = (afsearch, animesonlinecc,)
