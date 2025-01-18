@@ -332,7 +332,7 @@ def vaiounao(link):
 
     return qzq
 
-def playmedia(link, filename=None, novlc=None):
+def playmedia(link, filename=None):
     
     if filename == None: filename = 'ARQIUVO DE MEDIA'
 
@@ -352,7 +352,7 @@ def playmedia(link, filename=None, novlc=None):
         except:
             ''
     
-    if novlc != True: escolhas.append('VLC')
+    if link.find('https://www.blogger.com/video') == -1: escolhas.append('VLC')
     escolhas.append('VOLTAR')
 
     choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
@@ -399,7 +399,7 @@ def provedores(titulo, ep):
 
     global dubinfo
 
-    dubinfo = (False, False)
+    dubinfo = (False, False, False)
 
 
 
@@ -409,13 +409,13 @@ def provedores(titulo, ep):
             dubs.append(titulo)
 
     if titulo in dubs:    
-        dubinfo = (dubinfo[0], True)
+        dubinfo = (dubinfo[0], True, dubinfo[2])
     else:
-        dubinfo = (dubinfo[0], False)
+        dubinfo = (dubinfo[0], False, dubinfo[2])
 
     if usnm.lower() == 'gahvius':
-        dubinfo = (True, dubinfo[1])
-        if dubinfo[1]: print('DUB = TRUE\n'.lower())
+        dubinfo = (dubinfo[0], dubinfo[1], True)
+    if dubinfo[3]: print('DUB = TRUE\n'.lower())
         
 
 
@@ -479,9 +479,9 @@ def vaiumadub():
     choice = inqlist('BUSCAR POR EPISÓDIO DUBLADO?', opts)
 
     if choice == 0:
-        dubinfo = (True, True)
+        dubinfo = (True, True, False)
     else:
-        dubinfo = (True, False)
+        dubinfo = (True, False, False)
 
 def streammagnet(link):
     
@@ -597,7 +597,7 @@ def afsearch(tl, ep):
 
         try:
             if str(response) == '<Response [500]>':
-                if usnm.lower() == 'gahvius' and dubinfo[1]: 
+                if dubinfo[2]: 
                     print('dub NÃO ENCONTRADO!'.lower())
                     return False
             else:
@@ -873,7 +873,7 @@ def animefire2(tl, ep):
     if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
         return False
     
-    return playmedia(link, novlc=True)
+    return playmedia(link, filename=' '.join([tl, 'Episódio', ep]))
 
 def animesonlinecc(tl, ep):
 
@@ -903,9 +903,7 @@ def animesonlinecc(tl, ep):
 
     temdub = False
     temsub = False
-    duasops = False
     dubop = None
-    subop = None
 
     if sopa.find('</b> Dublado </a>') != -1: 
         temdub = True
@@ -919,6 +917,10 @@ def animesonlinecc(tl, ep):
         linkdub = sopa[loc : sopa[loc:].find('"')+loc]
         fnmdub = ''.join([fnm, ' (Dublado)'])
         if debugin: print(link)
+    else:
+        if dubinfo[2]:
+            print('dub NÃO ENCONTRADO!'.lower())
+            return False
 
     if sopa.find('</b> Legendado </a>') != -1: 
         temsub = True
@@ -946,7 +948,7 @@ def animesonlinecc(tl, ep):
         if sopapranois(linkdub)[1].find('<div class="errorMessage">') != -1:
             print('episódio não encontrado!')
             break
-        result = playmedia(linkdub, novlc=True, filename=fnmdub)
+        result = playmedia(linkdub, filename=fnmdub)
         if result == True: return True
         break
     while temsub:
@@ -955,7 +957,7 @@ def animesonlinecc(tl, ep):
         if sopapranois(linksub)[1].find('<div class="errorMessage">') != -1:
             print('episódio não encontrado!')
             break
-        result = playmedia(linksub, novlc=True, filename=fnmsub)
+        result = playmedia(linksub, filename=fnmsub)
         if result == True: return True
         break
 
