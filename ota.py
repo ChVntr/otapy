@@ -415,7 +415,7 @@ def provedores(titulo, ep):
 
     if usnm.lower() == 'gahvius':
         dubinfo = (dubinfo[0], dubinfo[1], True)
-    if dubinfo[3]: print('DUB = TRUE\n'.lower())
+    if dubinfo[2]: print('DUB = TRUE\n'.lower())
         
 
 
