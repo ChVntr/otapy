@@ -281,7 +281,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3\n')
+    print('V1.0.4\n')
     
     global usnm
     validusername = False
@@ -411,13 +411,11 @@ def provedores(titulo, ep):
 
     if titulo in dubs:    
         dubinfo = (dubinfo[0], True, dubinfo[2])
+        if usnm.lower() == 'gahvius':
+            dubinfo = (dubinfo[0], dubinfo[1], True)
+            print('DUB = TRUE\n'.lower())
     else:
-        dubinfo = (dubinfo[0], False, dubinfo[2])
-
-    if usnm.lower() == 'gahvius':
-        dubinfo = (dubinfo[0], dubinfo[1], True)
-    if dubinfo[2] and dubinfo[1]: print('DUB = TRUE\n'.lower())
-        
+        dubinfo = (dubinfo[0], False, dubinfo[2])        
 
 
 
@@ -598,7 +596,7 @@ def afsearch(tl, ep):
 
         try:
             if str(response) == '<Response [500]>':
-                if dubinfo[2] and dubinfo[1]: 
+                if dubinfo[2]: 
                     print('dub NÃO ENCONTRADO!'.lower())
                     return False
             else:
@@ -919,7 +917,7 @@ def animesonlinecc(tl, ep):
         fnmdub = ''.join([fnm, ' (Dublado)'])
         if debugin: print(link)
     else:
-        if dubinfo[2] and dubinfo[1]:
+        if dubinfo[2]:
             print('dub NÃO ENCONTRADO!'.lower())
             return False
 
