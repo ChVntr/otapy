@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.2.3\n')
+    print('V1.0.2.4\n')
     
     global usnm
     validusername = False
@@ -996,9 +996,9 @@ def processtl(tl, mode=None):
 def animesdigitalorg(tl, ep):
     print('provedor: animesdigital.org')
 
-    #if tl.lower().find('one punch man') != -1:
-    #    print('ANIME NÃO ENCONTRADO!'.lower())
-    #    return False
+    if tl.lower().find('one punch man') != -1:
+        print('ANIME NÃO ENCONTRADO!'.lower())
+        return False
 
     temdub=False
     edub=False
