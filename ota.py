@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.2.2\n')
+    print('V1.0.2.3\n')
     
     global usnm
     validusername = False
@@ -996,9 +996,9 @@ def processtl(tl, mode=None):
 def animesdigitalorg(tl, ep):
     print('provedor: animesdigital.org')
 
-    if tl.lower().find('one punch man') != -1:
-        print('ANIME NÃO ENCONTRADO!'.lower())
-        return False
+    #if tl.lower().find('one punch man') != -1:
+    #    print('ANIME NÃO ENCONTRADO!'.lower())
+    #    return False
 
     temdub=False
     edub=False
@@ -1014,19 +1014,19 @@ def animesdigitalorg(tl, ep):
     sublink = ''.join(['https://animesdigital.org/anime/a/', tl])
     link = sublink
     dublink = ''.join([link, '-dublado'])
-    if debugin: print(link)
     sopa = sopapranois(link)[1]
 
     if sopa.find('<div class="msg404">') != -1:
         print('ANIME NÃO ENCONTRADO!'.lower())
         return False
     links = (sublink,)
-
+    if debugin: print(sublink)
 
     if sopa[sopa.find('<title>') : sopa.find('</title>')].find('Dublado') != -1:
         edub=True
     else:
         if sopapranois(dublink)[1].find('<div class="msg404">') == -1:
+            if debugin: print(dublink)
             temdub=True
 
     if dubinfo[2]:
@@ -1045,7 +1045,6 @@ def animesdigitalorg(tl, ep):
 
 
 
-
     eploc = ''.join(['class="episode">Episódio ', ep])
 
     for link in links:
@@ -1059,24 +1058,27 @@ def animesdigitalorg(tl, ep):
         page = 1
         tx = 'class="episode">Episódio '
 
+        varalha = False
         while sopa.find(eploc) == -1:
+            varalha = True
             if sopa.find('<div class="episode">') == -1:
                 print('episódio não encontrado!')
                 defbreak = True
                 break
             loc = sopa.find(tx)+len(tx)
             fep = sopa[loc : loc + sopa[loc:].find('</div>')]
-            if int(fep) < int(ep):
+            if int(fep) <= int(ep):
                 print('episódio não encontrado!')
                 defbreak = True
                 break
             page+=1
             linkus = ''.join([link, '/page/', str(page)])
+            if debugin: print(linkus)
             print('...')
             sopa = sopapranois(linkus)[1]
             
-        if not defbreak:
-            link = linkus
+        if defbreak == False:
+            if varalha: link = linkus
 
             tx = '><div class="item_ep'
             while True:
