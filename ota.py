@@ -282,7 +282,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.1.10\n')
+    print('V1.0.1.0\n')
     
     global usnm
     validusername = False
@@ -891,7 +891,7 @@ def animesonlinecc(tl, ep):
     if debugin: print(link)
 
     if sopa.find('https://www.blogger.com/video') == -1:
-        print('episódio não encontrado!')
+        print('anime/episódio não encontrado!')
         return False
 
 
