@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.2.0\n')
+    print('V1.0.2.1\n')
     
     global usnm
     validusername = False
@@ -411,7 +411,7 @@ def provedores(titulo, ep):
         if (processtl(titulo, -1).lower()).find(title.lower()) != -1:
             dubinfo = (dubinfo[0], True, dubinfo[2])
 
-    if usnm.lower() == 'gaahvius':
+    if usnm.lower() == 'gahvius':
         dubinfo = (True, dubinfo[1], dubinfo[2])
         if dubinfo[1]:
             dubinfo = (True, True, True)
