@@ -233,6 +233,8 @@ def animefire(tl, ep):
     result = (True, 0, 'none')
     while result[0]:
 
+        print('...')
+
         result = afgetqual(tl, ep, result)
         eplink = result[2]
 
@@ -282,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.1.0\n')
+    print('V1.0.2.0\n')
     
     global usnm
     validusername = False
@@ -409,7 +411,7 @@ def provedores(titulo, ep):
         if (processtl(titulo, -1).lower()).find(title.lower()) != -1:
             dubinfo = (dubinfo[0], True, dubinfo[2])
 
-    if usnm.lower() == 'gahvius':
+    if usnm.lower() == 'gaahvius':
         dubinfo = (True, dubinfo[1], dubinfo[2])
         if dubinfo[1]:
             dubinfo = (True, True, True)
@@ -994,53 +996,119 @@ def processtl(tl, mode=None):
 def animesdigitalorg(tl, ep):
     print('provedor: animesdigital.org')
 
+    temdub=False
+    edub=False
+
 
     if int(ep) < 10: ep = ''.join(['0', ep])
-    tl = processtl(tl)
 
-    link = ''.join(['https://animesdigital.org/anime/a/', tl])
+    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
+    tl = processtl(tl)
+    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
+
+
+    sublink = ''.join(['https://animesdigital.org/anime/a/', tl])
+    link = sublink
+    dublink = ''.join([link, '-dublado'])
     if debugin: print(link)
     sopa = sopapranois(link)[1]
 
     if sopa.find('<div class="msg404">') != -1:
         print('ANIME NÃO ENCONTRADO!'.lower())
         return False
-    
+    links = (sublink,)
+
+
+    if sopa[sopa.find('<title>') : sopa.find('</title>')].find('Dublado') != -1:
+        edub=True
+    else:
+        if sopapranois(dublink)[1].find('<div class="msg404">') == -1:
+            temdub=True
+
+    if dubinfo[2]:
+        if not edub and not temdub:
+            print('dub NÃO ENCONTRADO!'.lower())
+            return False
+        
+
+    if temdub:
+        if not dubinfo[0]:
+            vaiumadub()
+        if dubinfo[1]:
+            print('BUSCANDO EPISODIO DUBLADO...'.lower())
+            links = (dublink, sublink)
+
+
+
+
+
     eploc = ''.join(['class="episode">Episódio ', ep])
-    if sopa.find(eploc) == -1:
-        print('episódio não encontrado!')
-        return False
 
-    tx = '><div class="item_ep'
-    while True:
-        sopa = sopa[sopa.find(tx)+len(tx):]
-        loc = sopa.find('https://animesdigital.org/video/a/')
-        if sopa.find(eploc) == -1:
-            if debugin: print(link)
-            break
-        link = sopa[loc:sopa[loc:].find('"')+loc]
-    
-    sopa = sopapranois(link)[1]
+    for link in links:
+        defbreak = False
 
-    tempsopa = sopa[sopa.find('"position": 3,'):]
-    tx = '"name": "'
-    loc = tempsopa.find(tx) + len(tx)
-    fnm = tempsopa[loc : loc + tempsopa[loc:].find('",')]
+        sopa = sopapranois(link)[1]
 
-    loc = sopa.find('https://api.anivideo.fun')
-    link = sopa[loc : loc + sopa[loc:].find('"')]
-    if debugin: print(link)
+        if link == dublink or edub: print('buscando episódio dublado...')
+        else: print('buscando episódio legendado...')
 
-    sopa = sopapranois(link)[1]
-    tx = "file: '"
-    loc = sopa.find(tx)+len(tx)
-    link = sopa[loc : loc+ sopa[loc:].find("'")]
-    if debugin: print(link)
+        page = 1
+        tx = 'class="episode">Episódio '
 
-    return playmedia(link, fnm)
+        while sopa.find(eploc) == -1:
+            if sopa.find('<div class="episode">') == -1:
+                print('episódio não encontrado!')
+                defbreak = True
+                break
+            loc = sopa.find(tx)+len(tx)
+            fep = sopa[loc : loc + sopa[loc:].find('</div>')]
+            if int(fep) < int(ep):
+                print('episódio não encontrado!')
+                defbreak = True
+                break
+            page+=1
+            linkus = ''.join([link, '/page/', str(page)])
+            print('...')
+            sopa = sopapranois(linkus)[1]
+            
+        if not defbreak:
+            link = linkus
 
-    exit()
+            tx = '><div class="item_ep'
+            while True:
+                sopa = sopa[sopa.find(tx)+len(tx):]
+                loc = sopa.find('https://animesdigital.org/video/a/')
+                if sopa.find(eploc) == -1:
+                    if debugin: print(link)
+                    break
+                link = sopa[loc:sopa[loc:].find('"')+loc]
+            
+            sopa = sopapranois(link)[1]
 
+            tempsopa = sopa[sopa.find('"position": 3,'):]
+            tx = '"name": "'
+            loc = tempsopa.find(tx) + len(tx)
+            fnm = tempsopa[loc : loc + tempsopa[loc:].find('",')]
+
+            loc = sopa.find('https://api.anivideo.fun')
+            if loc == -1:
+                print('episódio não encontrado!')
+                defbreak = True
+            if not defbreak:
+                link = sopa[loc : loc + sopa[loc:].find('"')]
+                if debugin: print(link)
+
+                sopa = sopapranois(link)[1]
+                tx = "file: '"
+                loc = sopa.find(tx)+len(tx)
+                link = sopa[loc : loc+ sopa[loc:].find("'")]
+                if debugin: print(link)
+
+                if playmedia(link, fnm) == True:
+                    return True
+
+
+    return False
 
 
 
