@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.2.4\n')
+    print('V1.0.2.5\n')
     
     global usnm
     validusername = False
@@ -1009,6 +1009,7 @@ def animesdigitalorg(tl, ep):
     if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
     tl = processtl(tl)
     tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
+    tl = tl.replace('ranma-2024', 'ranma-½-2024')
 
 
     sublink = ''.join(['https://animesdigital.org/anime/a/', tl])
