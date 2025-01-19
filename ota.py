@@ -282,7 +282,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.9\n')
+    print('V1.0.10\n')
     
     global usnm
     validusername = False
@@ -711,7 +711,7 @@ def ani_cli(tl, ep):
 
 def inqlist(string, opts, dft=None):
 
-    '\a'
+    print('\a')
 
     newlist = list()
     for item in opts:
