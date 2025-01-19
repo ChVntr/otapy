@@ -282,7 +282,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.10\n')
+    print('V1.0.1.10\n')
     
     global usnm
     validusername = False
@@ -409,14 +409,14 @@ def provedores(titulo, ep):
         if (processtl(titulo, -1).lower()).find(title.lower()) != -1:
             dubinfo = (dubinfo[0], True, dubinfo[2])
 
-        if usnm.lower() == 'gahvius':
-            dubinfo = (True, dubinfo[1], dubinfo[2])
-            if dubinfo[1]:
-                dubinfo = (True, True, True)
-                print('DUB = TRUE\n'.lower())
+    if usnm.lower() == 'gahvius':
+        dubinfo = (True, dubinfo[1], dubinfo[2])
+        if dubinfo[1]:
+            dubinfo = (True, True, True)
+            print('DUB = TRUE\n'.lower())
 
 
-    funcs = (afsearch, animesonlinecc,)
+    funcs = (animesdigitalorg, afsearch, animesonlinecc,)
     funcs = list(funcs)
 
     if triedanicli == False:
@@ -428,7 +428,8 @@ def provedores(titulo, ep):
         triedanicli = True
         
     if debugin: 
-        funcs.append(nyaa)
+        funcs = (animesdigitalorg,)
+        funcs = list(funcs)
 
     epfound = False
     for func in funcs:
@@ -989,6 +990,56 @@ def processtl(tl, mode=None):
         ntl = ntl.lower() 
 
     return ntl
+
+def animesdigitalorg(tl, ep):
+    print('provedor: animesdigital.org')
+
+
+    if int(ep) < 10: ep = ''.join(['0', ep])
+    tl = processtl(tl)
+
+    link = ''.join(['https://animesdigital.org/anime/a/', tl])
+    if debugin: print(link)
+    sopa = sopapranois(link)[1]
+
+    if sopa.find('<div class="msg404">') != -1:
+        print('ANIME NÃO ENCONTRADO!'.lower())
+        return False
+    
+    eploc = ''.join(['class="episode">Episódio ', ep])
+    if sopa.find(eploc) == -1:
+        print('episódio não encontrado!')
+        return False
+
+    tx = '><div class="item_ep'
+    while True:
+        sopa = sopa[sopa.find(tx)+len(tx):]
+        loc = sopa.find('https://animesdigital.org/video/a/')
+        if sopa.find(eploc) == -1:
+            if debugin: print(link)
+            break
+        link = sopa[loc:sopa[loc:].find('"')+loc]
+    
+    sopa = sopapranois(link)[1]
+
+    tempsopa = sopa[sopa.find('"position": 3,'):]
+    tx = '"name": "'
+    loc = tempsopa.find(tx) + len(tx)
+    fnm = tempsopa[loc : loc + tempsopa[loc:].find('",')]
+
+    loc = sopa.find('https://api.anivideo.fun')
+    link = sopa[loc : loc + sopa[loc:].find('"')]
+    if debugin: print(link)
+
+    sopa = sopapranois(link)[1]
+    tx = "file: '"
+    loc = sopa.find(tx)+len(tx)
+    link = sopa[loc : loc+ sopa[loc:].find("'")]
+    if debugin: print(link)
+
+    return playmedia(link, fnm)
+
+    exit()
 
 
 
