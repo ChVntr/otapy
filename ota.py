@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3\n')
+    print('V1.0.3.1\n')
     
     global usnm
     validusername = False
@@ -429,7 +429,7 @@ def provedores(titulo, ep):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch, animesonlinecc,)
+    funcs = (animesdigitalorg, afsearch, animesonlinecc, animesorion)
     funcs = list(funcs)
 
     if triedanicli == False:
