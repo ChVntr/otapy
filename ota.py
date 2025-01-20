@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.2.5\n')
+    print('V1.0.3\n')
     
     global usnm
     validusername = False
@@ -342,7 +342,7 @@ def playmedia(link, filename=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    if debugin: return False
+    #if debugin: return False
 
     escolhas = list()
 
@@ -356,7 +356,18 @@ def playmedia(link, filename=None):
         except:
             ''
     
-    if link.find('https://www.blogger.com/video') == -1: escolhas.append('VLC')
+    vlcbanlist = (
+        'https://www.blogger.com/video',
+        'animesorionvip.net/player',
+    )
+
+    vlcban = False
+
+    for item in vlcbanlist:
+        if link.find(item) != -1: vlcban = True
+
+    if not vlcban:
+        escolhas.append('VLC')
     escolhas.append('VOLTAR')
 
     choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
@@ -430,7 +441,7 @@ def provedores(titulo, ep):
         triedanicli = True
         
     if debugin: 
-        funcs = (animesdigitalorg,)
+        funcs = (animesorion,)
         funcs = list(funcs)
 
     epfound = False
@@ -1116,6 +1127,52 @@ def animesdigitalorg(tl, ep):
 
 
     return False
+
+def animesorion(tl, ep):
+    print('provedor: animesorionvip.net')
+
+    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
+    tl = processtl(tl)
+    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
+
+    link = ''.join(['https://animesorionvip.net/animes/', tl, '-todos-os-episodios'])
+    if debugin: print(link)
+    sopa = sopapranois(link)[1]
+
+    tx = 'https://animesorionvip.net/video/'
+    if sopa.find(tx) == -1:
+        print('ANIME NÃO ENCONTRADO!'.lower())
+        return False
+
+    tempsopa = sopa
+    while True:
+        if tempsopa.find(tx) == -1:
+            print('episódio não encontrado!')
+            return False
+        loc = tempsopa.find(tx)
+        tempsopa = tempsopa[loc : loc + tempsopa[loc:].find('">')]
+        if tempsopa.find(''.join(['Episódio ', ep])) == -1:
+            tempsopa = sopa[sopa.find(tempsopa)+5:]
+        else: 
+            break
+
+    if debugin: print(tempsopa)
+    tx = 'title="'
+    fnm = tempsopa[tempsopa.find(tx)+len(tx) : ]
+    link = tempsopa[:tempsopa.find('"')]
+    if debugin: print(link)
+
+    sopa = sopapranois(link)[1]
+    loc = sopa.find('https://animesorionvip.net/player')
+    link = sopa[loc : loc + sopa[loc:].find('"')]
+    if debugin: print(link)
+
+    if dubinfo[2]:
+        if fnm.lower().find('dublado') == -1:
+            print('dub NÃO ENCONTRADO!'.lower())
+            return False
+
+    return playmedia(link, fnm)
 
 
 
