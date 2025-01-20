@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.1\n')
+    print('V1.0.3.2\n')
     
     global usnm
     validusername = False
@@ -1144,6 +1144,10 @@ def animesorion(tl, ep):
         print('ANIME NÃO ENCONTRADO!'.lower())
         return False
 
+    if sopa.find(''.join(['Episódio ', ep])) == -1:
+        print('episódio não encontrado!')
+        return False
+
     tempsopa = sopa
     while True:
         if tempsopa.find(tx) == -1:
@@ -1153,8 +1157,10 @@ def animesorion(tl, ep):
         tempsopa = tempsopa[loc : loc + tempsopa[loc:].find('">')]
         if tempsopa.find(''.join(['Episódio ', ep])) == -1:
             tempsopa = sopa[sopa.find(tempsopa)+5:]
+            print('...')
         else: 
             break
+        
 
     if debugin: print(tempsopa)
     tx = 'title="'
