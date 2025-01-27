@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.8\n')
+    print('V1.0.3.9\n')
     
     global usnm
     validusername = False
@@ -1083,7 +1083,12 @@ def animesdigitalorg(tl, ep):
                 break
             loc = sopa.find(tx)+len(tx)
             fep = sopa[loc : loc + sopa[loc:].find('</div>')]
-            if int(round(fep)) <= int(ep):
+            try:
+                fep = int(fep)
+            except:
+                print('provedor indisponivel!')
+                return False
+            if fep <= int(ep):
                 print('episódio não encontrado!')
                 defbreak = True
                 break
