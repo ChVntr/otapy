@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.7\n')
+    print('V1.0.3.8\n')
     
     global usnm
     validusername = False
@@ -383,7 +383,7 @@ def playmedia(link, filename=None):
         for item in vlc:
             players.append(item)
     elif choice == len(escolhas)-1:
-        return 69
+        return False
 
     for player in players:
         cnctvrf()
@@ -429,7 +429,7 @@ def provedores(titulo, ep):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, animesorion, afsearch, animesonlinecc)
+    funcs = (animesorion, animesdigitalorg, afsearch, animesonlinecc)
     funcs = list(funcs)
 
     if triedanicli == False:
@@ -1083,7 +1083,7 @@ def animesdigitalorg(tl, ep):
                 break
             loc = sopa.find(tx)+len(tx)
             fep = sopa[loc : loc + sopa[loc:].find('</div>')]
-            if int(fep) <= int(ep):
+            if int(round(fep)) <= int(ep):
                 print('episódio não encontrado!')
                 defbreak = True
                 break
