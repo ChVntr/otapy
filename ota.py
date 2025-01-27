@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.6\n')
+    print('V1.0.3.7\n')
     
     global usnm
     validusername = False
@@ -468,7 +468,7 @@ def sopapranois(link):
         page = requests.get(str(link), timeout=5)
     except:
         cnctvrf()
-        return False
+        return (False, '')
     soup = BeautifulSoup(page.text, 'html.parser')
     sopa = str(soup.find('table', class_='list-table'))
 
