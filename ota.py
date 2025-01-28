@@ -43,7 +43,7 @@ def setores(lista, listname):
     
     # PTW em lançamento
     elif lista == 2:
-        mallink2 = '?airing_status=1&order=-16&order2=-14'
+        mallink2 = '?airing_status=1&order=-16&order2=14'
         onlyptw = True
     
     # PTW ainda não lançado
@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.9\n')
+    print('V1.0.3.10\n')
     
     global usnm
     validusername = False
