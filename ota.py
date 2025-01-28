@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.3.11\n')
+    print('V1.0.4\n')
     
     global usnm
     validusername = False
@@ -342,7 +342,7 @@ def playmedia(link, filename=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    #if debugin: return False
+    if debugin: return False
 
     escolhas = list()
 
@@ -429,7 +429,7 @@ def provedores(titulo, ep):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch, animesonlinecc, animesorion)
+    funcs = (animesdigitalorg, afsearch, q1n, animesonlinecc, animesorion)
     funcs = list(funcs)
 
     if triedanicli == False:
@@ -441,7 +441,7 @@ def provedores(titulo, ep):
         triedanicli = True
         
     if debugin: 
-        funcs = (animesorion,)
+        funcs = (q1n,)
         funcs = list(funcs)
 
     epfound = False
@@ -1188,6 +1188,77 @@ def animesorion(tl, ep):
             return False
 
     return playmedia(link, fnm)
+
+def q1n(tl, ep):
+
+    print('provedor: q1n.net')
+
+    tl = processtl(tl)
+
+    titulos = list()
+
+    link = ''.join(['https://q1n.net/a/', tl])
+    if debugin: print(link)
+    sopa = sopapranois(link)[1]
+
+    if sopa.find('<body class="error404">') != -1:
+        print('anime não encontrado!')
+        return False
+
+    dubtl = ''
+    link = ''.join(['https://q1n.net/a/', tl, '-Dublado'])
+    sopa = sopapranois(link)[1]
+    if sopa.find('<body class="error404">') == -1:
+        if debugin: print(link)
+        if dubinfo[0] == False:
+            vaiumadub()
+        if dubinfo[1]:
+            dubtl = ''.join([tl, '-dublado'])
+            titulos.append(dubtl)
+    else: 
+        if dubinfo[2]:
+            print('dub não encontrado')
+            return False
+
+    if dubinfo[2] == False: titulos.append(tl)
+
+    for tl in titulos:
+
+        if tl == dubtl: print('buscando episódio dublado...')
+        else: print('buscando episódio legendado...')
+
+        link = ''.join(['https://q1n.net/e/', tl, '-episodio-', ep])
+        if debugin: print(link)
+        sopa = sopapranois(link)[1]
+
+        tx = '"VideoObject","name": "'
+        loc1 = sopa.find(tx) + len(tx)
+        fnm = sopa[loc1 : ]
+        fnm = fnm[ : fnm.find('"')]
+
+        if sopa.find('<body class="error404">') != -1:
+            print('episódio não encontrado!')
+            break
+
+        if sopa.find("https://q1n.net/ao/?id=") != -1:
+            link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
+            link = link[ : link.find('"')]
+            sopa2 = sopapranois(link)[1]
+            if sopa2.find('secvideo') != -1:
+                ''
+
+        if sopa.find("https://www.blogger.com/video.g") != -1:
+            link = sopa[sopa.find('https://www.blogger.com/video.g') : ]
+            link = link[ : link.find(';')]
+            if debugin: print(link)
+            if playmedia(link, fnm) == True:
+                return True
+
+        print('falha ao reproduzir episódio!')
+
+
+    return False
+    
 
 
 
