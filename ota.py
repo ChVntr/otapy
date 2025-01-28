@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.1\n')
+    print('V1.0.4.2\n')
     
     global usnm
     validusername = False
@@ -1055,7 +1055,6 @@ def animesdigitalorg(tl, ep):
         if not dubinfo[0]:
             vaiumadub()
         if dubinfo[1]:
-            print('BUSCANDO EPISODIO DUBLADO...'.lower())
             links = (dublink, sublink)
 
 
@@ -1075,6 +1074,7 @@ def animesdigitalorg(tl, ep):
         tx = 'class="episode">Episódio '
 
         varalha = False
+        sys.stdout.write('...')
         while sopa.find(eploc) == -1:
             varalha = True
             if sopa.find('<div class="episode">') == -1:
@@ -1095,9 +1095,10 @@ def animesdigitalorg(tl, ep):
             page+=1
             linkus = ''.join([link, '/page/', str(page)])
             if debugin: print(linkus)
-            print('...')
+            sys.stdout.write('.')
             sopa = sopapranois(linkus)[1]
-            
+        print('')
+
         if defbreak == False:
             if varalha: link = linkus
 
@@ -1166,7 +1167,6 @@ def animesorion(tl, ep):
         tempsopa = tempsopa[loc : loc + tempsopa[loc:].find('">')]
         if tempsopa.find(''.join(['Episódio ', ep])) == -1:
             tempsopa = sopa[sopa.find(tempsopa)+5:]
-            sys.stdout.write('.')
         else: 
             break
         
