@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4\n')
+    print('V1.0.4.1\n')
     
     global usnm
     validusername = False
@@ -1166,7 +1166,7 @@ def animesorion(tl, ep):
         tempsopa = tempsopa[loc : loc + tempsopa[loc:].find('">')]
         if tempsopa.find(''.join(['Episódio ', ep])) == -1:
             tempsopa = sopa[sopa.find(tempsopa)+5:]
-            print('...')
+            sys.stdout.write('.')
         else: 
             break
         
@@ -1240,19 +1240,19 @@ def q1n(tl, ep):
             print('episódio não encontrado!')
             break
 
-        if sopa.find("https://q1n.net/ao/?id=") != -1:
-            link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
-            link = link[ : link.find('"')]
-            sopa2 = sopapranois(link)[1]
-            if sopa2.find('secvideo') != -1:
-                ''
-
         if sopa.find("https://www.blogger.com/video.g") != -1:
             link = sopa[sopa.find('https://www.blogger.com/video.g') : ]
             link = link[ : link.find(';')]
             if debugin: print(link)
             if playmedia(link, fnm) == True:
                 return True
+
+        #elif sopa.find("https://q1n.net/ao/?id=") != -1:
+        #    link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
+        #    link = link[ : link.find('"')]
+        #    sopa2 = sopapranois(link)[1]
+        #    if sopa2.find('secvideo') != -1:
+                ''
 
         print('falha ao reproduzir episódio!')
 
