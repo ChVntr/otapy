@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.3\n')
+    print('V1.0.4.4\n')
     
     global usnm
     validusername = False
@@ -1105,9 +1105,10 @@ def animesdigitalorg(tl, ep):
             sys.stdout.write('.')
             sys.stdout.flush()
             sopa = sopapranois(linkus)[1]
-        print('')
+        
 
         if defbreak == False:
+            print('')
             if varalha: link = linkus
 
             tx = '><div class="item_ep'
@@ -1248,6 +1249,14 @@ def q1n(tl, ep):
             print('episódio não encontrado!')
             break
 
+        if sopa.find("https://q1n.net/ao/?id=") != -1:
+            link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
+            link = link[ : link.find('"')]
+            sopa2 = sopapranois(link)[1]
+            if sopa2.find('secvideo') != -1:
+                if usnm.lower() == 'gahvius':
+                    print(link, '\a'), time.sleep(99999), exit()
+
         if sopa.find("https://www.blogger.com/video.g") != -1:
             link = sopa[sopa.find('https://www.blogger.com/video.g') : ]
             link = link[ : link.find(';')]
@@ -1255,12 +1264,6 @@ def q1n(tl, ep):
             if playmedia(link, fnm) == True:
                 return True
 
-        #elif sopa.find("https://q1n.net/ao/?id=") != -1:
-        #    link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
-        #    link = link[ : link.find('"')]
-        #    sopa2 = sopapranois(link)[1]
-        #    if sopa2.find('secvideo') != -1:
-                ''
 
         print('falha ao reproduzir episódio!')
 
