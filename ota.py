@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.5\n')
+    print('V1.0.4.6\n')
     
     global usnm
     validusername = False
@@ -1361,7 +1361,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = True
+debugin = False
 flags = False
 dbfldrt = 0
 dubs = list()
