@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.4\n')
+    print('V1.0.4.5\n')
     
     global usnm
     validusername = False
@@ -1253,9 +1253,16 @@ def q1n(tl, ep):
             link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
             link = link[ : link.find('"')]
             sopa2 = sopapranois(link)[1]
+            if debugin: print(link)
             if sopa2.find('secvideo') != -1:
                 if usnm.lower() == 'gahvius':
-                    print(link, '\a'), time.sleep(99999), exit()
+                    print(link, '\nEITA POHA\a'), time.sleep(99999), exit()
+            else:
+                if debugin == 1231:
+                    sopa2 = sopapranois(link)[1]
+                    link = sopa2[sopa2.find('https://api.q9x.in/') :]
+                    link = link[: link.find('"')]
+                    print(link, sopapranois(link)[1]), exit()
 
         if sopa.find("https://www.blogger.com/video.g") != -1:
             link = sopa[sopa.find('https://www.blogger.com/video.g') : ]
@@ -1304,7 +1311,6 @@ import re
 exnow+=1
 
 sisop = verifyos()
-#print(sisop)
 
 if sisop != 0:
 
@@ -1355,7 +1361,7 @@ if sisop != 0:
 # loop que faz a parada funcionar
 
 
-debugin = False
+debugin = True
 flags = False
 dbfldrt = 0
 dubs = list()
