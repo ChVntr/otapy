@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.2\n')
+    print('V1.0.4.3\n')
     
     global usnm
     validusername = False
@@ -784,8 +784,11 @@ def processid(id):
     tl_sopa = sopapranois(link)[1]
 
     to = 5
+    sys.stdout.write('...')
+    sys.stdout.flush()
     while tl_sopa.find('<div id="captcha-container"></div>') != -1:
-        print('...')
+        sys.stdout.write('.')
+        sys.stdout.flush()
         time.sleep(to)
         tl_sopa = sopapranois(link)[1]
         to+=5
@@ -799,7 +802,8 @@ def geteps(id, proximoep):
     if debugin: 
         if flags: print('GET EPS\n'), time.sleep(dbfldrt)
 
-    print('carregando lista de episódios...')
+    sys.stdout.write('carregando lista de episódios...'), sys.stdout.flush()
+    
 
     id=str(id)
     proximoep = int(proximoep)
@@ -813,6 +817,8 @@ def geteps(id, proximoep):
     eonepiece = 99
 
     while len(eps) > eonepiece:
+
+        sys.stdout.write('.'), sys.stdout.flush()
 
         link2 = ''.join([link, '?offset=', str(eonepiece+1)])
         sopa = sopapranois(link2)[1]
@@ -1067,14 +1073,15 @@ def animesdigitalorg(tl, ep):
 
         sopa = sopapranois(link)[1]
 
-        if link == dublink or edub: print('buscando episódio dublado...')
-        else: print('buscando episódio legendado...')
+        if link == dublink or edub: sys.stdout.write('buscando episódio dublado...'), sys.stdout.flush()
+        else: sys.stdout.write('buscando episódio legendado...'), sys.stdout.flush()
 
         page = 1
         tx = 'class="episode">Episódio '
 
         varalha = False
         sys.stdout.write('...')
+        sys.stdout.flush()
         while sopa.find(eploc) == -1:
             varalha = True
             if sopa.find('<div class="episode">') == -1:
@@ -1086,16 +1093,17 @@ def animesdigitalorg(tl, ep):
             try:
                 fep = int(fep)
             except:
-                print('provedor indisponivel!')
+                print('\nprovedor indisponivel!')
                 return False
             if fep <= int(ep):
-                print('episódio não encontrado!')
+                print('\nepisódio não encontrado!')
                 defbreak = True
                 break
             page+=1
             linkus = ''.join([link, '/page/', str(page)])
             if debugin: print(linkus)
             sys.stdout.write('.')
+            sys.stdout.flush()
             sopa = sopapranois(linkus)[1]
         print('')
 
