@@ -233,7 +233,7 @@ def animefire(tl, ep):
     result = (True, 0, 'none')
     while result[0]:
 
-        print('...')
+        prt('.')
 
         result = afgetqual(tl, ep, result)
         eplink = result[2]
@@ -242,7 +242,7 @@ def animefire(tl, ep):
             if eplink.find('/mp4_temp/') and temp == False:
                 ''
             else:
-                
+                prt('\n')
                 tocou = playmedia(eplink, result[3])
                 if tocou == True:
                     return True
@@ -254,7 +254,7 @@ def animefire(tl, ep):
         result = animefire2(tl, ep)
         if result == True: return True
 
-    print('EPISODIO NÃO ENCONTRADO!'.lower())
+    prt('\nfalha ao reproduzir episódio!')
     return False
 
 def cnctvrf(url=None):
@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.7\n')
+    print('V1.0.4.8\n')
     
     global usnm
     validusername = False
@@ -440,10 +440,6 @@ def provedores(titulo, ep):
             print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
         triedanicli = True
         
-    if debugin: 
-        funcs = (q1n,)
-        funcs = list(funcs)
-
     epfound = False
     for func in funcs:
         if func == nyaa: epfound = func(titulo, ep)
@@ -618,14 +614,14 @@ def afsearch(tl, ep):
                     vaiumadub() 
                 if dubinfo[1]:
                     if debugin: print(link)
-                    print('BUSCANDO EPISODIO DUBLADO...'.lower())
+                    prt('BUSCANDO EPISODIO DUBLADO...'.lower())
                     deubom = animefire(dubtl, ep)
                     if usnm.lower() == 'gahvius': return deubom
         except:
             ''
 
         if deubom == False:
-            print('BUSCANDO EPISODIO LEGENDADO...'.lower())
+            prt('BUSCANDO EPISODIO LEGENDADO...'.lower())
             deubom = animefire(ntl, ep)
     else:
         print('ANIME NÃO ENCONTRADO!'.lower())
@@ -889,10 +885,13 @@ def animefire2(tl, ep):
     loc2 = loc + sopa[loc:].find('" style="')
     if debugin: print(loc, loc2)
     link = sopa[loc : loc2]
-    
+    if debugin: prt(link)
+
+
     if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
         return False
     
+    prt('\n')
     return playmedia(link, filename=' '.join([tl, 'Episódio', ep]))
 
 def animesonlinecc(tl, ep):
@@ -1073,19 +1072,17 @@ def animesdigitalorg(tl, ep):
 
         sopa = sopapranois(link)[1]
 
-        if link == dublink or edub: sys.stdout.write('buscando episódio dublado...'), sys.stdout.flush()
-        else: sys.stdout.write('buscando episódio legendado...'), sys.stdout.flush()
+        if link == dublink or edub: prt('buscando episódio dublado...')
+        else: prt('buscando episódio legendado...')
 
         page = 1
         tx = 'class="episode">Episódio '
 
         varalha = False
-        sys.stdout.write('...')
-        sys.stdout.flush()
         while sopa.find(eploc) == -1:
             varalha = True
             if sopa.find('<div class="episode">') == -1:
-                print('episódio não encontrado!')
+                prt('\nepisódio não encontrado!\n')
                 defbreak = True
                 break
             loc = sopa.find(tx)+len(tx)
@@ -1093,17 +1090,16 @@ def animesdigitalorg(tl, ep):
             try:
                 fep = int(fep)
             except:
-                print('\nprovedor indisponivel!')
+                prt('\nprovedor indisponivel!\n')
                 return False
             if fep <= int(ep):
-                print('\nepisódio não encontrado!')
+                prt('\nepisódio não encontrado!\n')
                 defbreak = True
                 break
             page+=1
             linkus = ''.join([link, '/page/', str(page)])
             if debugin: print(linkus)
-            sys.stdout.write('.')
-            sys.stdout.flush()
+            prt('.')
             sopa = sopapranois(linkus)[1]
         
 
@@ -1129,7 +1125,7 @@ def animesdigitalorg(tl, ep):
 
             loc = sopa.find('https://api.anivideo.fun')
             if loc == -1:
-                print('episódio não encontrado!')
+                print('falha ao reproduzir episódio!')
                 defbreak = True
             if not defbreak:
                 link = sopa[loc : loc + sopa[loc:].find('"')]
@@ -1277,6 +1273,17 @@ def q1n(tl, ep):
 
     return False
     
+def prt(string):
+
+    if type(string) == tuple or type(string) == list:
+        lista = list()
+        for item in string:
+            lista.append(str(item))
+        string = ''.join(lista)
+
+    string = str(string)
+    sys.stdout.write(string)
+    sys.stdout.flush()
 
 
 
