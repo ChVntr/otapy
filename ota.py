@@ -53,7 +53,7 @@ def setores(lista, listname):
     
     # em espera
     elif lista == 1:
-        mallink2 = '?order=12&order2=5&status=3'
+        mallink2 = '?order=-12&order2=5&status=3'
         onlyptw = False
 
     # PTW
@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.6\n')
+    print('V1.0.4.7\n')
     
     global usnm
     validusername = False
