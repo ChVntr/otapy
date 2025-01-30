@@ -254,7 +254,7 @@ def animefire(tl, ep):
         result = animefire2(tl, ep)
         if result == True: return True
 
-    prt('\nfalha ao reproduzir episódio!')
+    prt('\nfalha ao reproduzir episódio!\n')
     return False
 
 def cnctvrf(url=None):
@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.8\n')
+    print('V1.0.4.9\n')
     
     global usnm
     validusername = False
