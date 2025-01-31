@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.13\n')
+    print('V1.0.4.14\n')
     
     global usnm
     validusername = False
@@ -363,6 +363,7 @@ def playmedia(link, filename=None):
         if sopapranois(link)[1].find(item) != -1: vlcban = True
     for item in mpvbanlist:
         if link.find(item) != -1: mpvban = True
+        if sopapranois(link)[1].find(item) != -1: mpvban = True
 
     if not mpvban:
         try: 
