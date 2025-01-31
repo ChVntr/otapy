@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.10\n')
+    print('V1.0.4.11\n')
     
     global usnm
     validusername = False
@@ -1016,15 +1016,23 @@ def processtl(tl, mode=None):
 def animesdigitalorg(tl, ep):
     print('provedor: animesdigital.org')
 
+    temdub=False
+    edub=False
+    ova = False
+
+    ogtl = tl
+
     if tl.lower().find('one punch man') != -1:
         print('ANIME NÃO ENCONTRADO!'.lower())
         return False
-
-    temdub=False
-    edub=False
-
-
+    
     if int(ep) < 10: ep = ''.join(['0', ep])
+
+    if tl.find('Fullmetal Alchemist: Brotherhood') != -1:
+        if tl == 'Fullmetal Alchemist: Brotherhood Specials': 
+            ova = True
+        tl = 'fullmetal-abb001'
+        
 
     if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
     tl = processtl(tl)
@@ -1064,8 +1072,10 @@ def animesdigitalorg(tl, ep):
 
 
 
-
-    eploc = ''.join(['class="episode">Episódio ', ep])
+    
+    if ova == True: tx = 'class="episode">Ova '
+    else: tx = 'class="episode">Episódio '
+    eploc = ''.join([tx, ep])
 
     for link in links:
         defbreak = False
@@ -1076,7 +1086,6 @@ def animesdigitalorg(tl, ep):
         else: prt('buscando episódio legendado...')
 
         page = 1
-        tx = 'class="episode">Episódio '
 
         varalha = False
         while sopa.find(eploc) == -1:
@@ -1118,10 +1127,11 @@ def animesdigitalorg(tl, ep):
             
             sopa = sopapranois(link)[1]
 
-            tempsopa = sopa[sopa.find('"position": 3,'):]
-            tx = '"name": "'
+            tempsopa = sopa
+            tx = '<span id="video_title">'
             loc = tempsopa.find(tx) + len(tx)
-            fnm = tempsopa[loc : loc + tempsopa[loc:].find('",')]
+            fnm = tempsopa[loc : loc + tempsopa[loc:].find('</span>')]
+            fnm = ''.join([ogtl, ' - ', fnm])
 
             loc = sopa.find('https://api.anivideo.fun')
             if loc == -1:
