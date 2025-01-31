@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.11\n')
+    print('V1.0.4.12\n')
     
     global usnm
     validusername = False
@@ -345,26 +345,34 @@ def playmedia(link, filename=None):
     if debugin: return False
 
     escolhas = list()
-
-    try: 
-        subprocess.run('mpv -clr')
-        escolhas.append('MPV')
-    except:
-        try: 
-            subprocess.run('mpv\\mpv.exe -clr')
-            escolhas.append('MPV')
-        except:
-            ''
     
     vlcbanlist = (
         'https://www.blogger.com/video',
         'animesorionvip.net/player',
     )
 
+    mpvbanlist = (
+        '#EXT-X-PLAYLIST-TYPE:VOD',
+    )
+
     vlcban = False
+    mpvban = False
 
     for item in vlcbanlist:
         if link.find(item) != -1: vlcban = True
+    for item in mpvbanlist:
+        if link.find(item) != -1: mpvban = True
+
+    if not mpvban:
+        try: 
+            subprocess.run('mpv -clr')
+            escolhas.append('MPV')
+        except:
+            try: 
+                subprocess.run('mpv\\mpv.exe -clr')
+                escolhas.append('MPV')
+            except:
+                ''
 
     if not vlcban:
         escolhas.append('VLC')
@@ -1145,7 +1153,7 @@ def animesdigitalorg(tl, ep):
                 tx = "file: '"
                 loc = sopa.find(tx)+len(tx)
                 link = sopa[loc : loc+ sopa[loc:].find("'")]
-                if debugin: print(link)
+                if debugin: print(link), exit()
 
                 if playmedia(link, fnm) == True:
                     return True
