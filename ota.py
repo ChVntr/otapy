@@ -214,7 +214,7 @@ def animefire(tl, ep):
     tocou=False
 
     if afsearchep(tl, ep) == False:
-        print('EPISODIO NÃO ENCONTRADO!'.lower())
+        print('\nEPISODIO NÃO ENCONTRADO!'.lower())
         return False
 
 
@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.9\n')
+    print('V1.0.4.10\n')
     
     global usnm
     validusername = False
