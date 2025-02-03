@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.15\n')
+    print('V1.0.4.16\n')
     
     global usnm
     validusername = False
@@ -353,6 +353,7 @@ def playmedia(link, filename=None):
 
     mpvbanlist = (
         '#EXT-X-PLAYLIST-TYPE:VOD',
+        'mywallpaper-4k-image',
     )
 
     vlcban = False
