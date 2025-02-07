@@ -284,7 +284,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.16\n')
+    print('V1.0.4.17\n')
     
     global usnm
     validusername = False
@@ -1295,14 +1295,13 @@ def q1n(tl, ep):
 def prt(string):
 
     if type(string) == tuple or type(string) == list:
-        lista = list()
         for item in string:
-            lista.append(str(item))
-        string = ''.join(lista)
-
-    string = str(string)
-    sys.stdout.write(string)
-    sys.stdout.flush()
+            prt(item)
+            prt(' ')
+    else:
+        string = str(string)
+        sys.stdout.write(string)
+        sys.stdout.flush()
 
 
 
