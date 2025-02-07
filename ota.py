@@ -66,6 +66,7 @@ def setores(lista, listname):
 
 
 
+
     if proceed:
 
         print(''.join(['BUSCANDO DA LISTA "', listname, '"...\n' ]))
@@ -73,6 +74,11 @@ def setores(lista, listname):
         link = ''.join([mallink, usnm, mallink2])
 
         sopa = sopapranois(link)[0]
+
+        if update(sopa) == '':
+            prt('lista vazia!')
+            time.sleep(2)
+            return False
 
         opts = ('REPRODUZIR LISTA COMPLETA', 'ESCOLHER ANIME', 'VOLTAR')
         erabe = inqlist('', opts)
@@ -284,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.18\n')
+    print('V1.0.4.19\n')
     
     global usnm
     validusername = False
@@ -734,7 +740,7 @@ def ani_cli(tl, ep):
 
 def inqlist(string, opts, dft=None):
 
-    print('\a')
+    prt('\a')
 
     newlist = list()
     for item in opts:
