@@ -59,13 +59,13 @@ if exist otapy\mpv (
 )
 
 cls
-set podeatualuzar=0
+set podeatualizar=0
 
 if %jadeuupdate% == 1 (
     FOR /F "tokens=* delims=" %%x in (otapy\mpv\lastupdate.txt) DO (
         if %%x == %date:~0,2% (
             echo deu igual
-            set podeatualuzar=0
+            set podeatualizar=0
         ) else (
             echo deu diferente
             set podeatualizar=0
@@ -85,8 +85,6 @@ if %podeatualizar% == 1 (
     cd..
     cd..
 )
-
-
 
 if %player% == 0 (
     echo INSTALANDO REPRODUTOR DE VIDEO...
