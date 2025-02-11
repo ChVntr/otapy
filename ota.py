@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.4.19\n')
+    print('V1.0.5\n')
     
     global usnm
     validusername = False
@@ -790,23 +790,58 @@ def selectlist():
 def processid(id):
     if debugin and flags: print('PROCESSANDO ID\n'), time.sleep(dbfldrt)
 
+    filename = 'MalIDToTitle'
+
+    try:
+        with open(filename, 'r') as f:
+            ''
+    except:
+        with open(filename, 'w') as f:
+            f.write('')
+
+    with open(filename, 'r') as f:
+        data = f.readlines()
+    
+    podeir = False
+    try:
+        tlfromfile = data[int(id)]
+        podeir = True
+    except:
+            for t in range(len(data), int(id)+1):
+                data.append('\n')
+            if debugin: print('')
+        
+    if podeir and tlfromfile != '' and tlfromfile != ' ' and tlfromfile != '\n':
+        if debugin: print('\ncu seco')
+        return tlfromfile[:-1]
 
     link = ''.join(['https://myanimelist.net/anime/', id])
     tl_sopa = sopapranois(link)[1]
 
     to = 5
-    sys.stdout.write('...')
-    sys.stdout.flush()
-    while tl_sopa.find('<div id="captcha-container"></div>') != -1:
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(to)
-        tl_sopa = sopapranois(link)[1]
-        to+=5
+    if tl_sopa.find('<div id="captcha-container"></div>') != -1:
+        prt('..')
+        while tl_sopa.find('<div id="captcha-container"></div>') != -1:
+            prt('.')
+            time.sleep(to)
+            tl_sopa = sopapranois(link)[1]
+            to+=5
 
     titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
     if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
     
+    
+    try:
+        data[int(id)] = ''.join([titulo, '\n'])
+        with open(filename, 'w') as f:
+            f.writelines(data)
+    except:
+        data[int(id)] = '\n'
+        with open(filename, 'w') as f:
+            f.writelines(data)
+
+    if debugin: print('\n\n', id, data[int(id)])
+
     return titulo
 
 def geteps(id, proximoep):
@@ -1303,7 +1338,7 @@ def prt(string):
     if type(string) == tuple or type(string) == list:
         for item in string:
             prt(item)
-            prt(' ')
+            #prt(' ')
     else:
         string = str(string)
         sys.stdout.write(string)
