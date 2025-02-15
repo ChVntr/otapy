@@ -19,7 +19,7 @@ def setores(lista, listname):
 
     global onlyptw
     global triedanicli
-    triedanicli = False
+    triedanicli = 0
 
 
     #listas:
@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5\n')
+    print('V1.0.5.1\n')
     
     global usnm
     validusername = False
@@ -372,11 +372,11 @@ def playmedia(link, filename=None):
 
     if not mpvban:
         try: 
-            subprocess.run('mpv -clr')
+            spcs('mpv -clr')
             escolhas.append('MPV')
         except:
             try: 
-                subprocess.run('mpv\\mpv.exe -clr')
+                spcs('mpv\\mpv.exe -clr')
                 escolhas.append('MPV')
             except:
                 ''
@@ -404,7 +404,7 @@ def playmedia(link, filename=None):
         cnctvrf()
         try:
             comando = ' '.join([player, link])
-            result = subprocess.run(comando).returncode
+            result = spcs(comando).returncode
             foi=True
             if int(result) == 0:
                 return True
@@ -447,14 +447,23 @@ def provedores(titulo, ep):
     funcs = (animesdigitalorg, afsearch, q1n, animesonlinecc, animesorion)
     funcs = list(funcs)
 
-    if triedanicli == False:
+    if triedanicli == 0:
         try:
-            subprocess.run('ani-cli -V')
-            funcs.append(ani_cli)
+            spcs('ani-cli -V')
+            triedanicli = 1
         except:
             print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
-        triedanicli = True
+            triedanicli = 2
+    
+    if triedanicli == 1:
+        tmplist = (ani_cli,)
+        tmplist = list(tmplist)
+        for item in funcs:
+            tmplist.append(item)
+        funcs = tmplist
         
+
+
     epfound = False
     for func in funcs:
         if func == nyaa: epfound = func(titulo, ep)
@@ -493,6 +502,9 @@ def verifyos():
 
     if ptf.find('Emscripten') != -1:
         os = 0
+
+    if ptf.find('Linux') != -1:
+        os = 1
 
     return os
 
@@ -731,7 +743,7 @@ def ani_cli(tl, ep):
     info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
     comando = str(''.join(info))
     
-    result = str(subprocess.run(comando, shell = True, executable="/bin/bash"))
+    result = str(spcs(comando))
 
     if result.find('returncode=1') == -1:
         tocou = True
@@ -1344,6 +1356,16 @@ def prt(string):
         sys.stdout.write(string)
         sys.stdout.flush()
 
+def spcs(comando):
+
+    volta = None
+    if verifyos() == 1:
+        volta = subprocess.run(comando, shell=True, executable='/bin/bash')
+    elif verifyos() == -1:
+        volta = subprocess.run(comando)
+
+    return volta
+
 
 
 
@@ -1384,7 +1406,7 @@ if sisop != 0:
     try:
         import requests
     except:
-        subprocess.run(''.join(['python -m pip install requests']))
+        spcs(''.join(['python -m pip install requests']))
         import requests
     exnow+=1
 
@@ -1393,7 +1415,7 @@ if sisop != 0:
         import bs4
         from bs4 import BeautifulSoup
     except:
-        subprocess.run(''.join(['python -m pip install bs4']))
+        spcs(''.join(['python -m pip install bs4']))
         import bs4
         from bs4 import BeautifulSoup
     exnow+=1
@@ -1402,7 +1424,7 @@ if sisop != 0:
     try:
         import inquirer
     except:
-        subprocess.run(''.join(['python -m pip install inquirer']))
+        spcs(''.join(['python -m pip install inquirer']))
         import inquirer
     exnow+=1
 
