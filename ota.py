@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.1\n')
+    print('V1.0.5.2\n')
     
     global usnm
     validusername = False
@@ -825,7 +825,9 @@ def processid(id):
         
     if podeir and tlfromfile != '' and tlfromfile != ' ' and tlfromfile != '\n':
         if debugin: print('\ncu seco')
-        return tlfromfile[:-1]
+        tl = tlfromfile[:-1]
+        tl = tl.replace('&amp;', '&')
+        return tl
 
     link = ''.join(['https://myanimelist.net/anime/', id])
     tl_sopa = sopapranois(link)[1]
