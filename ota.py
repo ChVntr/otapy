@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.2\n')
+    print('V1.0.5.3\n')
     
     global usnm
     validusername = False
@@ -455,7 +455,7 @@ def provedores(titulo, ep):
             print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
             triedanicli = 2
     
-    if triedanicli == 1:
+    if triedanicli == 1 and not dubinfo[2]:
         tmplist = (ani_cli,)
         tmplist = list(tmplist)
         for item in funcs:
@@ -471,6 +471,8 @@ def provedores(titulo, ep):
         print('')
         if epfound:
             os.system('cls||clear')
+            if func == ani_cli:
+                return False
             break
 
 
