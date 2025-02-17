@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.3\n')
+    print('V1.0.5.4\n')
     
     global usnm
     validusername = False
@@ -471,8 +471,6 @@ def provedores(titulo, ep):
         print('')
         if epfound:
             os.system('cls||clear')
-            if func == ani_cli:
-                return False
             break
 
 
@@ -731,7 +729,7 @@ def afgetqual(tl, ep, args):
 
 def ani_cli(tl, ep):
 
-    print('PROVEDOR: "ani-cli"'.lower())
+    print('PROVEDOR: ani-cli'.lower())
 
     tocou = False
 
@@ -749,6 +747,13 @@ def ani_cli(tl, ep):
 
     if result.find('returncode=1') == -1:
         tocou = True
+    else:
+        if result.find('Episode not released!') != -1:
+            prt('episódio não encontrado!\n')
+            return False
+        if result.find('No results found!') != -1:
+            prt('anime não encontrado!\n')
+            return False
 
     return tocou
 
@@ -1364,7 +1369,7 @@ def spcs(comando):
 
     volta = None
     if verifyos() == 1:
-        volta = subprocess.run(comando, shell=True, executable='/bin/bash')
+        volta = subprocess.run(comando, shell=True, capture_output=True)
     elif verifyos() == -1:
         volta = subprocess.run(comando)
 
