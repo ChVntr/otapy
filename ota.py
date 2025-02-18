@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.4\n')
+    print('V1.0.5.5\n')
     
     global usnm
     validusername = False
@@ -740,22 +740,22 @@ def ani_cli(tl, ep):
     titulo = titulo.replace('2nd Season', '2')
     titulo = titulo.replace('Goumon', '')
 
-    info = ('ani-cli --skip -e ', str(ep), ' ', titulo)
+    info = ('ani-cli --skip -e ', str(ep), ' ', titulo, ' &')
     comando = str(''.join(info))
     
     result = str(spcs(comando))
 
-    if result.find('returncode=1') == -1:
-        tocou = True
-    else:
-        if result.find('Episode not released!') != -1:
-            prt('episódio não encontrado!\n')
-            return False
-        if result.find('No results found!') != -1:
-            prt('anime não encontrado!\n')
-            return False
+    #print(result), exit()
 
-    return tocou
+    if result.find('Episode not released!') != -1:
+        prt('episódio não encontrado!\n')
+        return False
+    if result.find('No results found!') != -1 or result.find(': rofi:') != -1 :
+        prt('anime não encontrado!\n')
+        return False
+
+
+    return True
 
 def inqlist(string, opts, dft=None):
 
@@ -1369,7 +1369,7 @@ def spcs(comando):
 
     volta = None
     if verifyos() == 1:
-        volta = subprocess.run(comando, shell=True, capture_output=True)
+        volta = subprocess.run(comando, capture_output=True, shell=True)
     elif verifyos() == -1:
         volta = subprocess.run(comando)
 
