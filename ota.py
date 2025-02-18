@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.5\n')
+    print('V1.0.5.6\n')
     
     global usnm
     validusername = False
@@ -745,17 +745,18 @@ def ani_cli(tl, ep):
     
     result = str(spcs(comando))
 
-    #print(result), exit()
-
     if result.find('Episode not released!') != -1:
         prt('episódio não encontrado!\n')
         return False
-    if result.find('No results found!') != -1 or result.find(': rofi:') != -1 :
+    if result.find('No results found!') != -1:
         prt('anime não encontrado!\n')
         return False
+    if result.find('Links Fetched') != -1:
+        return True
+    if result.find(': rofi:') != -1:
+        return False
 
-
-    return True
+    return False
 
 def inqlist(string, opts, dft=None):
 
@@ -934,6 +935,7 @@ def getepslist(sopa):
         cord1 = sopa.find(tx) + len(tx)
         cord2 = sopa[cord1:].find('</a>') + cord1
         epname = sopa[cord1 : cord2]
+        epname = epname.replace('&amp;', '&')
 
         eps.append(' '.join([epnum, '-', epname]))
 
