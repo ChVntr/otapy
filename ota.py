@@ -75,7 +75,7 @@ def setores(lista, listname):
 
         sopa = sopapranois(link)[0]
 
-        if update(sopa) == '':
+        if sopa.find('status":6') == -1 and sopa.find('status&quot;:6') == -1 and onlyptw:
             prt('lista vazia!')
             time.sleep(2)
             return False
@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.6\n')
+    print('V1.0.5.7\n')
     
     global usnm
     validusername = False
