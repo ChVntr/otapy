@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.8\n')
+    print('V1.0.5.9\n')
     
     global usnm
     validusername = False
@@ -1106,7 +1106,7 @@ def animesdigitalorg(tl, ep):
             ova = True
         tl = 'fullmetal-abb001'
         
-
+    if tl == 'Ore dake Level Up na Ken Season 2: Arise from the Shadow': tl = 'solo leveling ii'
     if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
     tl = processtl(tl)
     tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
