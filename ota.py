@@ -146,8 +146,8 @@ def setores(lista, listname):
                 if ep == False:
                     break
                 else:
-                    provedores(tllist[choice], ep)
-                varpika+=1
+                    rslt = provedores(tllist[choice], ep)
+                if rslt: varpika+=1
                        
 def proximo(sopa):
 
@@ -290,7 +290,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.7\n')
+    print('V1.0.5.8\n')
     
     global usnm
     validusername = False
