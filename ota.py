@@ -94,10 +94,13 @@ def setores(lista, listname):
             tl = processid(id)
             os.system('cls||clear')
             print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
-            while provedores(tl, ep):
+
+            while provedores(tl, ep, id):
                 ep = int(ep)+1
                 ep = geteps(id, ep)
                 if ep == False: break
+
+
             sopa = update(sopa)
 
 
@@ -290,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.5.9\n')
+    print('V1.0.6\n')
     
     global usnm
     validusername = False
@@ -420,7 +423,7 @@ def playmedia(link, filename=None):
         print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO'.lower())
         exit()
 
-def provedores(titulo, ep):
+def provedores(titulo, ep, id=None):
     global triedanicli
     
     if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
@@ -462,7 +465,9 @@ def provedores(titulo, ep):
             tmplist.append(item)
         funcs = tmplist
         
-
+    if id != None:
+        if idtoyt(id, ep):
+            return True
 
     epfound = False
     for func in funcs:
@@ -1376,6 +1381,31 @@ def spcs(comando):
         volta = subprocess.run(comando)
 
     return volta
+
+def idtoyt(id, ep):
+
+    link = ''.join(['https://myanimelist.net/anime/', id])
+    sopa = sopapranois(link)[1]
+    sopa = sopa[sopa.find('<div class="external_links">') : ]
+    sopa = sopa[ : sopa.find('<div class="clearfix')]
+
+    if sopa.find('https://www.youtube.com/watch') != -1:
+
+        print('provedor: youtube.com')
+
+
+        link = sopa[sopa.find('https://www.youtube.com/watch') : ]
+        link = link[ : link.find('"')]
+        link = link.replace('&amp;', '&')
+        
+        tx = '"title":{"simpleText":"'
+        titulo = sopapranois(link)[1]
+        titulo = titulo[titulo.find(tx)+len(tx) : ]
+        titulo = titulo[ : titulo.find('"},"description"')]
+        titulo = titulo.replace('\\', '')
+        return playmedia(link, titulo)
+        
+    return False
 
 
 
