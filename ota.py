@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.6.1\n')
+    print('V1.0.6.2\n')
     
     global usnm
     validusername = False
@@ -459,12 +459,9 @@ def provedores(titulo, ep, id=None):
             triedanicli = 2
     
     if triedanicli == 1 and not dubinfo[2]:
-        tmplist = (ani_cli,)
-        tmplist = list(tmplist)
-        for item in funcs:
-            tmplist.append(item)
-        funcs = tmplist
-        
+        funcs.append(ani_cli)
+
+
     if id != None:
         if idtoyt(id, ep):
             return True
