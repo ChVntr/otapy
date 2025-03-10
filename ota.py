@@ -508,6 +508,8 @@ def verifyos():
     if ptf.find('Linux') != -1:
         os = 1
 
+    if os == -1: print(ptf)
+
     return os
 
 def vaiumadub():
