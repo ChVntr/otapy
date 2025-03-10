@@ -1383,7 +1383,7 @@ def spcs(comando):
     elif verifyos() == -1:
         volta = subprocess.run(comando)
     elif verifyos() == 2:
-        volta = subprocess.run(comando, capture_output=True, shell=True)
+        volta = subprocess.run(comando, shell=True)
 
     return volta
 
