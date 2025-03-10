@@ -508,7 +508,11 @@ def verifyos():
     if ptf.find('Linux') != -1:
         os = 1
 
-    print(ptf)
+    if ptf.find('android') != -1:
+        os = 2
+
+
+    #print(ptf)
 
     return os
 
@@ -1377,6 +1381,8 @@ def spcs(comando):
     if verifyos() == 1:
         volta = subprocess.run(comando, capture_output=True, shell=True)
     elif verifyos() == -1:
+        volta = subprocess.run(comando)
+    elif verifyos() == 2:
         volta = subprocess.run(comando)
 
     return volta
