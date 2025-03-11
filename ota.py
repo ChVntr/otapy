@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.6.2\n')
+    print('V1.0.6.3\n')
     
     global usnm
     validusername = False
@@ -1510,6 +1510,7 @@ dubsraw = (
     'naruto',
     'sailor moon',
     'InuYasha',
+    'gokudolls',
 )
 
 
