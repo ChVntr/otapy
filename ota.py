@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.6.3\n')
+    print('V1.0.6.4\n')
     
     global usnm
     validusername = False
@@ -407,9 +407,9 @@ def playmedia(link, filename=None):
         cnctvrf()
         try:
             comando = ' '.join([player, link])
-            result = spcs(comando).returncode
+            result = spcs(comando)
             foi=True
-            if int(result) == 0:
+            if int(result.returncode) == 0:
                 return True
             else:
                 print('FALHA NA REPRODUÇÃO'.lower())
@@ -1271,12 +1271,10 @@ def animesorion(tl, ep):
     tx = 'title="'
     fnm = tempsopa[tempsopa.find(tx)+len(tx) : ]
     link = tempsopa[:tempsopa.find('"')]
-    if debugin: print(link)
 
     sopa = sopapranois(link)[1]
     loc = sopa.find('https://animesorionvip.net/player')
-    link = sopa[loc : loc + sopa[loc:].find('"')]
-    if debugin: print(link)
+    link = sopa[loc : loc + sopa[loc:].find('=&')]
 
     if dubinfo[2]:
         if fnm.lower().find('dublado') == -1:
