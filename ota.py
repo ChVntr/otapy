@@ -149,7 +149,7 @@ def setores(lista, listname):
                 if ep == False:
                     break
                 else:
-                    rslt = provedores(tllist[choice], ep)
+                    rslt = provedores(tllist[choice], ep, idlist[choice])
                 if rslt: varpika+=1
                        
 def proximo(sopa):
@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.6.4\n')
+    print('V1.0.7\n')
     
     global usnm
     validusername = False
@@ -465,6 +465,16 @@ def provedores(titulo, ep, id=None):
     if id != None:
         if idtoyt(id, ep):
             return True
+        var = 0
+        for item in id_ep_link:
+            if item[0] == int(id):
+                for eps in item:
+                    if type(eps) == list:
+                        if eps[0] == int(ep):
+                            for link in eps[1]:
+                                if yt_especifico(link):
+                                    return True
+
 
     epfound = False
     for func in funcs:
@@ -475,6 +485,8 @@ def provedores(titulo, ep, id=None):
             os.system('cls||clear')
             break
 
+    if id == 11795:
+        epfound = yt_especifico('https://youtu.be/dRBP1rpE5y8')
 
     print('\n')
 
@@ -1394,19 +1406,24 @@ def idtoyt(id, ep):
 
     if sopa.find('https://www.youtube.com/watch') != -1:
 
-        print('provedor: youtube.com')
-
-
         link = sopa[sopa.find('https://www.youtube.com/watch') : ]
         link = link[ : link.find('"')]
         link = link.replace('&amp;', '&')
         
-        tx = '"title":{"simpleText":"'
-        titulo = sopapranois(link)[1]
-        titulo = titulo[titulo.find(tx)+len(tx) : ]
-        titulo = titulo[ : titulo.find('"},"description"')]
-        titulo = titulo.replace('\\', '')
-        return playmedia(link, titulo)
+        return yt_especifico(link)
+        
+    return False
+
+def yt_especifico(link):
+
+    print('provedor: youtube.com')
+
+    tx = '"title":{"simpleText":"'
+    titulo = sopapranois(link)[1]
+    titulo = titulo[titulo.find(tx)+len(tx) : ]
+    titulo = titulo[ : titulo.find('"},"description"')]
+    titulo = titulo.replace('\\', '')
+    return playmedia(link, titulo)
         
     return False
 
@@ -1510,6 +1527,12 @@ dubsraw = (
     'InuYasha',
     'gokudolls',
 )
+
+id_ep_link = [[11795, [1, ['https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]], 
+              [58507, [1, ['https://youtu.be/sHGcGkaYd38']]], 
+              [8939, [1, ['https://youtu.be/GlxrJVdNyro']]],
+              ]
+
 
 
 
