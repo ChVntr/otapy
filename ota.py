@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.2\n')
+    print('V1.0.7.3\n')
     
     global usnm
     validusername = False
