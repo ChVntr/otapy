@@ -756,8 +756,8 @@ def ani_cli(tl, ep):
     titulo = titulo.replace('2nd Season', '2')
     titulo = titulo.replace('Goumon', '')
 
-    info = ('ani-cli --skip ', titulo, ' &')
-    comando = str(''.join(info))
+    info = ('ani-cli --skip -e', ep, titulo, '&')
+    comando = str(' '.join(info))
     result = str(spcs(comando))
     
 
