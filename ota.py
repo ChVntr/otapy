@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7\n')
+    print('V1.0.7.1\n')
     
     global usnm
     validusername = False
@@ -351,7 +351,7 @@ def playmedia(link, filename=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    if debugin: return False
+    return False
 
     escolhas = list()
     
@@ -462,7 +462,17 @@ def provedores(titulo, ep, id=None):
         funcs.append(ani_cli)
 
 
-    if id != None:
+
+    epfound = False
+    for func in funcs:
+        if func == nyaa: epfound = func(titulo, ep)
+        else: epfound = func(titulo, ep)
+        print('')
+        if epfound:
+            os.system('cls||clear')
+            break
+
+    if id != None and not epfound:
         if idtoyt(id, ep):
             return True
         var = 0
@@ -475,18 +485,6 @@ def provedores(titulo, ep, id=None):
                                 if yt_especifico(link):
                                     return True
 
-
-    epfound = False
-    for func in funcs:
-        if func == nyaa: epfound = func(titulo, ep)
-        else: epfound = func(titulo, ep)
-        print('')
-        if epfound:
-            os.system('cls||clear')
-            break
-
-    if id == 11795:
-        epfound = yt_especifico('https://youtu.be/dRBP1rpE5y8')
 
     print('\n')
 
@@ -760,20 +758,21 @@ def ani_cli(tl, ep):
     titulo = titulo.replace('2nd Season', '2')
     titulo = titulo.replace('Goumon', '')
 
-    info = ('ani-cli --skip -e ', str(ep), ' ', titulo, ' &')
+    info = ('ani-cli --skip ', titulo, ' &')
     comando = str(''.join(info))
-    
     result = str(spcs(comando))
+    
 
-    if result.find('Episode not released!') != -1:
-        prt('episódio não encontrado!\n')
-        return False
     if result.find('No results found!') != -1:
         prt('anime não encontrado!\n')
+        return False
+    if result.find('Episode not released!') != -1:
+        prt('episódio não encontrado!\n')
         return False
     if result.find('Links Fetched') != -1:
         return True
     if result.find(': rofi:') != -1:
+        prt('provedor indisponivel!\n')
         return False
 
     return False
@@ -1529,9 +1528,13 @@ dubsraw = (
 )
 
 id_ep_link = [[11795, [1, ['https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]], 
-              [58507, [1, ['https://youtu.be/sHGcGkaYd38']]], 
-              [8939, [1, ['https://youtu.be/GlxrJVdNyro']]],
-              ]
+            [58507, [1, ['https://youtu.be/sHGcGkaYd38']]], 
+            [8939, [1, ['https://youtu.be/GlxrJVdNyro']]],
+            [56213, [1, ['https://www.youtube.com/watch?v=2zcZbIN3VPE']],
+                    [2, ['https://www.youtube.com/watch?v=3VRuAhF1gLY']],
+                    [3, ['https://www.youtube.com/watch?v=5n6K33W442w']],
+                    [4, ['https://www.youtube.com/watch?v=Gv_lwgPAQsQ']]],
+            ]
 
 
 
