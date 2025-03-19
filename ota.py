@@ -351,8 +351,6 @@ def playmedia(link, filename=None):
 
     print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
 
-    return False
-
     escolhas = list()
     
     vlcbanlist = (
@@ -447,7 +445,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch, q1n, animesonlinecc, animesorion)
+    funcs = (goyabu, animesdigitalorg, afsearch, q1n, animesonlinecc, animesorion)
     funcs = list(funcs)
 
     if triedanicli == 0:
@@ -1424,6 +1422,64 @@ def yt_especifico(link):
     titulo = titulo.replace('\\', '')
     return playmedia(link, titulo)
         
+    return False
+
+def goyabu(tl, ep):
+    
+    prt('provedor: goyabu.to\n')
+
+    tl = processtl(tl)
+
+    link = ''.join(['https://goyabu.to/anime/', tl])
+    sopa = sopapranois(link)[1]
+    dubsopa = sopapranois(''.join([link, '-dublado']))[1]
+
+    vrs = list()
+
+    if dubsopa.find('<title>404 Not Found</title>') == -1:
+        vrs.append(dubsopa)
+    else:
+        if dubinfo[2]:
+            print('dub NÃO ENCONTRADO!'.lower())
+            return False
+
+    if sopa.find('<title>404 Not Found</title>') == -1:
+        vrs.append(sopa)
+    
+    if len(vrs) > 1:
+        if not dubinfo[0]:
+            prt('\n')
+            vaiumadub()
+        if not dubinfo[1]:
+            vrs = (sopa,)
+
+    for sopa in vrs:
+        
+        if sopa == dubsopa:
+            prt('buscando episódio dublado...\n')
+        else:
+            prt('buscando episódio legendado...\n')
+
+        if sopa.find(''.join(['id="ep ', ep, '"'])) == -1:
+            prt('episódio não enontrado!\n')
+
+        else:
+
+            int_point = ''.join(['id="ep ', ep, '">'])
+            file_name = sopa[sopa.find(int_point) + len(int_point) : ]
+            file_name = file_name[ : file_name.find('</a>')]
+
+            int_point = sopa.find(int_point)
+            link = sopa[(sopa[:int_point].rfind('https://goyabu.to/')):]
+            link = link[ : link.find('"')]
+
+            sopa = sopapranois(link)[1]
+
+            link = sopa[sopa.find('https://www.blogger.com/video'):]
+            link = link[ : link.find('"')]
+
+            if playmedia(link, file_name): return True
+
     return False
 
 
