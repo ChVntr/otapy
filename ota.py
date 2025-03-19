@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.3\n')
+    print('V1.0.7.4\n')
     
     global usnm
     validusername = False
@@ -1593,6 +1593,7 @@ id_ep_link = [[11795, [1, ['https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]]
                     [2, ['https://www.youtube.com/watch?v=3VRuAhF1gLY']],
                     [3, ['https://www.youtube.com/watch?v=5n6K33W442w']],
                     [4, ['https://www.youtube.com/watch?v=Gv_lwgPAQsQ']]],
+            [30059, [1, ['https://www.youtube.com/watch?v=mzGU_iUMBi8']]],
             ]
 
 
