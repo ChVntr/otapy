@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.1\n')
+    print('V1.0.7.2\n')
     
     global usnm
     validusername = False
@@ -447,6 +447,7 @@ def provedores(titulo, ep, id=None):
 
     funcs = (goyabu, animesdigitalorg, afsearch, q1n, animesonlinecc, animesorion)
     funcs = list(funcs)
+    
 
     if triedanicli == 0:
         try:
@@ -458,7 +459,6 @@ def provedores(titulo, ep, id=None):
     
     if triedanicli == 1 and not dubinfo[2]:
         funcs.append(ani_cli)
-
 
 
     epfound = False
@@ -1446,6 +1446,9 @@ def goyabu(tl, ep):
     if sopa.find('<title>404 Not Found</title>') == -1:
         vrs.append(sopa)
     
+    if len(vrs) == 0:
+        prt('anime não encontrado!\n')
+
     if len(vrs) > 1:
         if not dubinfo[0]:
             prt('\n')
