@@ -216,7 +216,7 @@ def update(sopa):
     else:
         return novasopa
 
-def animefire(tl, ep):  
+def animefire(tl, ep, part2):  
 
     #um monte de variavel pro bagulho funcionar
 
@@ -244,7 +244,7 @@ def animefire(tl, ep):
 
         prt('.')
 
-        result = afgetqual(tl, ep, result)
+        result = afgetqual(tl, ep, result, part2)
         eplink = result[2]
 
         if eplink != 'none':
@@ -259,9 +259,9 @@ def animefire(tl, ep):
                     return False
 
     if temp:
-        if debugin: print('indo ali')
-        result = animefire2(tl, ep)
-        if result == True: return True
+        if part2:
+            result = animefire2(tl, ep)
+            if result == True: return True
 
     prt('\nfalha ao reproduzir episódio!\n')
     return False
@@ -293,7 +293,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.5\n')
+    print('V1.0.7.6\n')
     
     global usnm
     validusername = False
@@ -460,6 +460,7 @@ def provedores(titulo, ep, id=None):
     if triedanicli == 1 and not dubinfo[2]:
         funcs.append(ani_cli)
 
+    funcs.append(afsearch2)
 
     epfound = False
     for func in funcs:
@@ -606,9 +607,11 @@ def nyaa(tl, ep):
 
     return result
 
-def afsearch(tl, ep):
+def afsearch(tl, ep, part2=None):
 
     print('PROVEDOR: animefire.plus'.lower())
+
+    if part2 == None: part2 = False
 
     tl = tl.replace('Ü', 'ue')
     ntl = processtl(tl)
@@ -658,14 +661,14 @@ def afsearch(tl, ep):
                 if dubinfo[1]:
                     if debugin: print(link)
                     prt('BUSCANDO EPISODIO DUBLADO...'.lower())
-                    deubom = animefire(dubtl, ep)
+                    deubom = animefire(dubtl, ep, part2)
                     if usnm.lower() == 'gahvius': return deubom
         except:
             ''
 
         if deubom == False:
             prt('BUSCANDO EPISODIO LEGENDADO...'.lower())
-            deubom = animefire(ntl, ep)
+            deubom = animefire(ntl, ep, part2)
     else:
         print('ANIME NÃO ENCONTRADO!'.lower())
         return False
@@ -683,17 +686,18 @@ def afsearchep(tl, ep):
     else:
         return True
 
-def afgetqual(tl, ep, args):
+def afgetqual(tl, ep, args, part2):
 
     wtf = False
     args = (args[0], args[1]+1, args[2])
+
 
     link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
     sopa = str((sopapranois(link))[1])
     ogsopa = sopa
 
 
-    if sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
+    if not part2 and sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
         if sopa.find('(F-HD)" href="') == -1:
             wtf= True
         else:
@@ -703,7 +707,7 @@ def afgetqual(tl, ep, args):
             wtf= True
         else:
             sopa = sopa[sopa.find('(HD)" href="') + 12 : ]
-    elif sopa.find(';opacity: 0.3;">SD</span>') == -1 and args[1] == 3:
+    elif part2 and sopa.find(';opacity: 0.3;">SD</span>') == -1 and args[1] == 3:
         if sopa.find('(SD)" href="') == -1:
             wtf= True
         else:
@@ -735,7 +739,9 @@ def afgetqual(tl, ep, args):
         filename = ' '.join([tl.replace('-', ' '), '- Episódio', ep, qual])
             
     if eplink.find('/mp4_temp/') != -1:
-        filename = filename.replace('(HD)', '(HD - LEGENDA TEMPORÁRIA)')
+        if not part2:
+            return (False, args[1], 'none')
+        filename = ' '.join([filename, '(LEGENDA TEMPORÁRIA)'])
 
     if eplink.find('lightspeedst.net') == -1: 
         #eplink = sopa[:sopa.find('&amp;title=[AnimeFire.plus]')]
@@ -746,7 +752,7 @@ def afgetqual(tl, ep, args):
 def ani_cli(tl, ep):
 
     print('PROVEDOR: ani-cli'.lower())
-
+    
     tocou = False
 
     titulo = tl
@@ -1484,6 +1490,10 @@ def goyabu(tl, ep):
             if playmedia(link, file_name): return True
 
     return False
+
+def afsearch2(tl, ep):
+
+    return afsearch(tl, ep, part2=True)
 
 
 
