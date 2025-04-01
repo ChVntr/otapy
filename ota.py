@@ -218,12 +218,15 @@ def update(sopa):
 
 def animefire(tl, ep, part2):  
 
+    global afpart2
+
     #um monte de variavel pro bagulho funcionar
 
     tocou=False
 
     if afsearchep(tl, ep) == False:
         print('\nEPISODIO NÃO ENCONTRADO!'.lower())
+        afpart2 = False
         return False
 
 
@@ -293,7 +296,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.6\n')
+    print('V1.0.7.7\n')
     
     global usnm
     validusername = False
@@ -423,6 +426,8 @@ def playmedia(link, filename=None):
 
 def provedores(titulo, ep, id=None):
     global triedanicli
+    global afpart2
+    afpart2 = True
     
     if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
     
@@ -445,7 +450,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch, q1n, goyabu, animesonlinecc, animesorion)
+    funcs = (animesdigitalorg, afsearch)
     funcs = list(funcs)
     
 
@@ -460,7 +465,9 @@ def provedores(titulo, ep, id=None):
     if triedanicli == 1 and not dubinfo[2]:
         funcs.append(ani_cli)
 
-    funcs.append(afsearch2)
+    funcs2 = (q1n, goyabu, animesonlinecc, animesorion, afsearch2)
+    for item in funcs2:
+        funcs.append(item)
 
     epfound = False
     for func in funcs:
@@ -609,6 +616,8 @@ def nyaa(tl, ep):
 
 def afsearch(tl, ep, part2=None):
 
+    global afpart2
+
     print('PROVEDOR: animefire.plus'.lower())
 
     if part2 == None: part2 = False
@@ -671,6 +680,7 @@ def afsearch(tl, ep, part2=None):
             deubom = animefire(ntl, ep, part2)
     else:
         print('ANIME NÃO ENCONTRADO!'.lower())
+        afpart2 = False
         return False
 
     return deubom
@@ -1492,7 +1502,7 @@ def goyabu(tl, ep):
     return False
 
 def afsearch2(tl, ep):
-
+    if not afpart2: return False
     return afsearch(tl, ep, part2=True)
 
 
