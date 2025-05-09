@@ -450,7 +450,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch)
+    funcs = (afsearch,)
     funcs = list(funcs)
     
 
