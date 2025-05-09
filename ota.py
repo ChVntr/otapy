@@ -296,7 +296,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.7\n')
+    print('V1.0.7.8\n')
     
     global usnm
     validusername = False
@@ -450,7 +450,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (afsearch,)
+    funcs = (animesdigitalorg, afsearch)
     funcs = list(funcs)
     
 
