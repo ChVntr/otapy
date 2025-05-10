@@ -296,7 +296,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.10\n')
+    print('V1.0.7.11\n')
     
     global usnm
     validusername = False
@@ -363,7 +363,7 @@ def playmedia(link, filename=None):
 
     mpvbanlist = (
         '#EXT-X-PLAYLIST-TYPE:VOD',
-        'mywallpaper-4k-image',
+        #'mywallpaper-4k-image',
     )
 
     vlcban = False
@@ -450,7 +450,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (afsearch,)
+    funcs = (animesdigitalorg, afsearch,)
     funcs = list(funcs)
     
 
@@ -477,6 +477,7 @@ def provedores(titulo, ep, id=None):
         if epfound:
             os.system('cls||clear')
             break
+        if debugin: exit()
 
     if id != None and not epfound:
         if idtoyt(id, ep):
@@ -865,7 +866,7 @@ def processid(id):
             if debugin: print('')
         
     if podeir and tlfromfile != '' and tlfromfile != ' ' and tlfromfile != '\n':
-        if debugin: print('\ncu seco')
+        #if debugin: print('\ncu seco')
         tl = tlfromfile[:-1]
         tl = tl.replace('&amp;', '&')
         return tl
@@ -1149,6 +1150,7 @@ def animesdigitalorg(tl, ep):
     sublink = ''.join(['https://animesdigital.org/anime/a/', tl])
     link = sublink
     dublink = ''.join([link, '-dublado'])
+    if debugin: print(link)
     sopa = sopapranois(link)[1]
 
     if sopa.find('<div class="msg404">') != -1:
@@ -1179,14 +1181,16 @@ def animesdigitalorg(tl, ep):
 
 
     
-    if ova == True: tx = 'class="episode">Ova '
-    else: tx = 'class="episode">Episódio '
-    eploc = ''.join([tx, ep])
+    if ova == True: tx = 'Ova '
+    else: tx = 'Episódio '
+    eploc = tx + str(ep) + '"'
+    if debugin: print(eploc)
 
     for link in links:
         defbreak = False
 
         sopa = sopapranois(link)[1]
+        if debugin: print(link)
 
         if link == dublink or edub: prt('buscando episódio dublado...')
         else: prt('buscando episódio legendado...')
@@ -1196,18 +1200,19 @@ def animesdigitalorg(tl, ep):
         varalha = False
         while sopa.find(eploc) == -1:
             varalha = True
-            if sopa.find('<div class="episode">') == -1:
+            if sopa.find('<div class="item_ep b_flex">') == -1:
                 prt('\nepisódio não encontrado!\n')
                 defbreak = True
                 break
-            loc = sopa.find(tx)+len(tx)
-            fep = sopa[loc : loc + sopa[loc:].find('</div>')]
+            fep = texto_no_meio(sopa, '<div class="item_ep b_flex">', '<div class="date"')
+            fep = texto_no_meio(fep, 'Episódio ', '"')
+            if debugin: print(fep)
             try:
                 fep = int(fep)
             except:
                 prt('\nprovedor indisponivel!\n')
                 return False
-            if fep <= int(ep):
+            if fep < int(ep):
                 prt('\nepisódio não encontrado!\n')
                 defbreak = True
                 break
@@ -1222,36 +1227,35 @@ def animesdigitalorg(tl, ep):
             print('')
             if varalha: link = linkus
 
-            tx = '><div class="item_ep'
-            while True:
+            tx = '<div class="item_ep b_flex">'
+            enquanto = True
+            while enquanto:
+                if sopa.find(tx) == -1: break
                 sopa = sopa[sopa.find(tx)+len(tx):]
-                loc = sopa.find('https://animesdigital.org/video/a/')
                 if sopa.find(eploc) == -1:
-                    if debugin: print(link)
+                    if debugin: print(link, 'sem eploc')
+                    enquanto = False
                     break
-                link = sopa[loc:sopa[loc:].find('"')+loc]
+                link = texto_no_meio(sopa, 'https://animesdigital.org/video/a/', '"', True)            
             
             sopa = sopapranois(link)[1]
+            if debugin: print(link)
 
-            tempsopa = sopa
-            tx = '<span id="video_title">'
-            loc = tempsopa.find(tx) + len(tx)
-            fnm = tempsopa[loc : loc + tempsopa[loc:].find('</span>')]
-            fnm = ''.join([ogtl, ' - ', fnm])
+            fnm = texto_no_meio(sopa, '<title>', '</title>')
+            if debugin: print(fnm)
 
-            loc = sopa.find('https://api.anivideo.fun')
+            loc = sopa.find('https://api.anivideo.net')
             if loc == -1:
                 print('falha ao reproduzir episódio!')
+                if debugin: print('SEU MERDA')
                 defbreak = True
             if not defbreak:
-                link = sopa[loc : loc + sopa[loc:].find('"')]
+                link = texto_no_meio(sopa, 'https://api.anivideo.net', '"', True)
                 if debugin: print(link)
 
                 sopa = sopapranois(link)[1]
-                tx = "file: '"
-                loc = sopa.find(tx)+len(tx)
-                link = sopa[loc : loc+ sopa[loc:].find("'")]
-                if debugin: print(link), exit()
+                link = texto_no_meio(sopa, "https://cdn-s", "'", True)
+                if debugin: print(link)
 
                 if playmedia(link, fnm) == True:
                     return True
@@ -1504,6 +1508,15 @@ def goyabu(tl, ep):
 def afsearch2(tl, ep):
     if not afpart2: return False
     return afsearch(tl, ep, part2=True)
+
+def texto_no_meio(texto, começo, fim, prsv_começo = None):
+
+    loc1 = texto.find(começo)
+    loc2 = loc1 + texto[loc1:].find(fim)
+
+    if prsv_começo != True: loc1 += len(começo)
+
+    return texto[loc1:loc2]
 
 
 
