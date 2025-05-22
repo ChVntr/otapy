@@ -296,7 +296,7 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.11\n')
+    print('V1.0.7.12\n')
     
     global usnm
     validusername = False
@@ -450,7 +450,7 @@ def provedores(titulo, ep, id=None):
             print('DUB = TRUE\n'.lower())
 
 
-    funcs = (animesdigitalorg, afsearch,)
+    funcs = (animesdigitalorg, afsearch, goyabu)
     funcs = list(funcs)
     
 
@@ -465,7 +465,7 @@ def provedores(titulo, ep, id=None):
     if triedanicli == 1 and not dubinfo[2]:
         funcs.append(ani_cli)
 
-    funcs2 = (q1n, goyabu, animesonlinecc, animesorion, afsearch2)
+    funcs2 = (q1n, animesonlinecc, animesorion, afsearch2)
     for item in funcs2:
         funcs.append(item)
 
