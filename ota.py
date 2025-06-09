@@ -296,7 +296,8 @@ def cnctvrf(url=None):
 
 def getusername():
     os.system('cls||clear')
-    print('V1.0.7.12\n')
+
+    print('V1.0.7.13\n')
     
     global usnm
     validusername = False
@@ -510,6 +511,7 @@ def sopapranois(link):
         return (False, '')
     soup = BeautifulSoup(page.text, 'html.parser')
     sopa = str(soup.find('table', class_='list-table'))
+    
 
     return sopa, str(soup)
 
@@ -1251,11 +1253,22 @@ def animesdigitalorg(tl, ep):
                 defbreak = True
             if not defbreak:
                 link = texto_no_meio(sopa, 'https://api.anivideo.net', '"', True)
-                if debugin: print(link)
+                if debugin: print('link -1 = ' + link)
 
                 sopa = sopapranois(link)[1]
+
+                if sopa == '':
+                    print('falha ao reproduzir episódio!')
+                    return False
+
+
                 link = texto_no_meio(sopa, "https://cdn-s", "'", True)
-                if debugin: print(link)
+
+                if debugin and link == '':
+                    print(sopa)
+                    time.sleep(9999)
+
+                if debugin: print('link final = ' + link)
 
                 if playmedia(link, fnm) == True:
                     return True
