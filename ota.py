@@ -1,273 +1,33 @@
-#!/usr/bin/python
+run = True
 
 
 
+#funções
 
+def key_press(key):
 
+    global tecla
 
+    tecla = str(key)
 
-
-
-
-
-# funções
-
-
-
-def setores(lista, listname):
-    if debugin and flags: print('SETORES\n'), time.sleep(dbfldrt)
-
-    global onlyptw
-    global triedanicli
-    triedanicli = 0
-
-
-    #listas:
-
-
-
-
-
-
-
-    mallink = 'https://myanimelist.net/animelist/'
-    proceed = True
-
-
-
-
-    # assistindo
-    if lista == 0:
-        mallink2 = '?order=11&order2=-5&status=1'
-        onlyptw = False
-    
-    # PTW em lançamento
-    elif lista == 2:
-        mallink2 = '?airing_status=1&order=-16&order2=14'
-        onlyptw = True
-    
-    # PTW ainda não lançado
-    elif lista == 4:
-        mallink2 = '?airing_status=3&order=-16&order2=14'
-        onlyptw = True
-    
-    # em espera
-    elif lista == 1:
-        mallink2 = '?order=12&order2=5&status=3'
-        onlyptw = False
-
-    # PTW
-    elif lista == 3:
-        mallink2 = '?airing_status=2&order=-16&order2=-15'
-        onlyptw = True
-
-    else:
-        proceed = False
-
-
-
-
-    if proceed:
-
-        print(''.join(['BUSCANDO DA LISTA "', listname, '"...\n' ]))
-
-        link = ''.join([mallink, usnm, mallink2])
-
-        sopa = sopapranois(link)[0]
-
-        if sopa.find('status":6') == -1 and sopa.find('status&quot;:6') == -1 and onlyptw:
-            prt('lista vazia!')
-            time.sleep(2)
-            return False
-
-        opts = ('REPRODUZIR LISTA COMPLETA', 'ESCOLHER ANIME', 'VOLTAR')
-        erabe = inqlist('', opts)
-
-        if erabe == len(opts)-1:
-            return
-
-        while erabe == 0:
-            ideep = proximo(sopa)
-            if ideep == False: return
-            id = ideep[0]
-            ep = ideep[1]
-            tl = processid(id)
-            os.system('cls||clear')
-            print('BUSCANDO ANIME:'.lower(), tl, '\nEPISÓDIO:'.lower(), ep, '')
-
-            while provedores(tl, ep, id):
-                ep = int(ep)+1
-                ep = geteps(id, ep)
-                if ep == False: break
-
-
-            sopa = update(sopa)
-
-
-
-
-        ogsopa = sopa
-
-
-        idlist = list()
-        epslist = list()
-        entradas = 0
-        while True:
-            result = proximo(sopa)
-            if result == False: break
-            idlist.append(result[0])
-            epslist.append(result[1])
-            sopa = update(sopa)
-            entradas+=1
-
-        idlist = tuple(idlist)
-
-        tllist = list()
-        entradas2=0
-        for id in idlist:
-            sys.stdout.flush()
-            tllist.append(processid(id))
-            sys.stdout.write('\r')
-            entradas2+=1
-            tx = ''.join(['(', str(entradas2), '/', str(entradas), ') ENTRADAS ENCONTRADAS'.lower()])
-            sys.stdout.write(tx)
-
-        print('\n')
-        tllist.append('VOLTAR')
-
-
-        while True:
-
-            
-            choice = inqlist('SELECIONE O ANIME DESEJADO', tllist)
-            if choice == len(tllist)-1:
-                return
-
-            varpika = 0
-            while True:
-                ep = geteps(idlist[choice], int(epslist[choice])+varpika)
-                if ep == False:
-                    break
-                else:
-                    rslt = provedores(tllist[choice], ep, idlist[choice])
-                if rslt: varpika+=1
-                       
-def proximo(sopa):
-
-    if debugin and flags: print('PROXIMO\n'), time.sleep(dbfldrt)
-
-    animeid = (sopa[ sopa.find(';anime_id&quot;:')+16 : sopa.find(',&quot;anime_studios')])
-
-    try:
-        int(animeid)
-    except:
-        animeid = (sopa[sopa.find(',"anime_id":')+12 : sopa.find(',"anime_studios"')])
-        try:
-            int(animeid)
-        except:
-            return False
-
-    if sopa.find('"num_watched_episodes":') != -1:
+    #if tecla == 'Key.enter': 
+    #    prt('\033[1A')
         
-        findep = (int(sopa.find('"num_watched_episodes":'))+23, int(sopa.find(',"created_at":')))
-        
-    elif sopa.find(',&quot;num_watched_episodes&quot;:') != -1:
-
-        findep = (int(sopa.find(',&quot;num_watched_episodes&quot;:'))+34, int(sopa.find(',&quot;created_at')))
-        
-    elif sopa.find('&quot;,&quot;anime_title_eng') != -1:
-
-        findep = (int(sopa.find('"watched_episodes&quot;:'))+23, int(sopa.find(',&quot;created_at')))
-
-    else:
-        print('\n\nOH SHIT\ntitulo e ep não encontrados')
-        exit()
-
-    ep = int(sopa[findep[0] : (findep[1])])+1
-    nextep=str(ep)
-
-
-
-    return str(animeid), nextep
-
-def update(sopa):
-    
-    if debugin and flags: print('UPDATE\n'), time.sleep(dbfldrt)
-    
-
-
-    # checa se ainda tem coisa pra assistir
-    # se não tiver manda de volra pros setores
-    # se tiver tira o que já assistiu e manda de volta
-    
-    novasopa = sopa[int(sopa.find('anime_studios'))+5:]
-
-    if novasopa.find('status":6') == -1 and novasopa.find('status&quot;:6') == -1:
-        temptw = False
-    else:
-        temptw = True
-
-    if (str(novasopa).find('"is_rewatching"')) == -1 and (str(novasopa).find(';is_rewatching&')) == -1:
-        return ''
-
-    elif onlyptw and temptw == False:
-        return ''
-    
-    else:
-        return novasopa
-
-def animefire(tl, ep, part2):  
-
-    global afpart2
-
-    #um monte de variavel pro bagulho funcionar
-
-    tocou=False
-
-    if afsearchep(tl, ep) == False:
-        print('\nEPISODIO NÃO ENCONTRADO!'.lower())
-        afpart2 = False
-        return False
-
-
-    notemplist = (
-        'dandadan',
-        'ranma-2024',
-        )
-
-    for title in notemplist:
-        if tl == title:
-            temp=False
-            break
-        else:
-            temp=True
-
-    result = (True, 0, 'none')
-    while result[0]:
-
-        prt('.')
-
-        result = afgetqual(tl, ep, result, part2)
-        eplink = result[2]
-
-        if eplink != 'none':
-            if eplink.find('/mp4_temp/') and temp == False:
-                ''
-            else:
-                prt('\n')
-                tocou = playmedia(eplink, result[3])
-                if tocou == True:
-                    return True
-                if tocou == 69: 
-                    return False
-
-    if temp:
-        if part2:
-            result = animefire2(tl, ep)
-            if result == True: return True
-
-    prt('\nfalha ao reproduzir episódio!\n')
     return False
+
+def texto_no_meio(texto, começo, fim, prsv_começo = None, prsv_final = None):
+
+    loc1 = texto.find(começo) + len(começo)
+    loc2 = loc1 + texto[loc1:].find(fim)
+
+    if prsv_começo == True: loc1 -= len(começo)
+    if prsv_final == True: loc2 += len(fim)
+
+    for linha in (começo, fim):
+        if texto.find(linha) == -1:
+            return f'"{linha}" não encontrado'
+
+    return texto[loc1:loc2]
 
 def cnctvrf(url=None):
 
@@ -294,213 +54,42 @@ def cnctvrf(url=None):
         except:
             return False
 
-def getusername():
-    os.system('cls||clear')
+def prt(string):
 
-    print('V1.0.7.13\n')
-    
+    if type(string) == tuple or type(string) == list:
+        for item in string:
+            prt(item)
+    else:
+        sys.stdout.write(str(string))
+
+def getusername():
+
     global usnm
     validusername = False
 
-    while validusername == False and debugin == False:
-        usnm = input('USERNAME DO MYANIMELIST: ')
+    while validusername == False:
+        usnm = input('\nUSERNAME DO MYANIMELIST: ')
         cnctvrf()
         response = str(requests.get(str(''.join(['https://myanimelist.net/profile/', usnm]))))
         if response.find('404') != -1:
             print(
-                'USUARIO NÃO ENCONTRADO\n'.lower()
+                'USUARIO NÃO ENCONTRADO!'.lower()
             )
         else:
             validusername = True
             print('\n')
 
-    if debugin: usnm = 'gahvius'
+def apagar_linhas(n):
 
-def vaiounao(link):
+    sys.stdout.write(f"\033[{n}A")
+    sys.stdout.write("\033[J")
+    sys.stdout.write('\r')
+    sys.stdout.write("\033[J")
+    sys.stdout.flush()
 
-    start = time.perf_counter()
+def sopapranois(link, t = None):
 
-
-    try:
-        response = str(requests.get(url=link, timeout=6))
-        finish = time.perf_counter()
-        if response.find('Response [404]') == -1:
-            sys.stdout.write(' <200>')
-            qzq=False
-        else:
-            sys.stdout.write(' <404>')
-            qzq=True
-    except requests.exceptions.ConnectionError:
-        finish = time.perf_counter()
-        qzq=True
-        sys.stdout.write(' <Connection Error>')
-    except requests.exceptions.Timeout:
-        finish = time.perf_counter()
-        qzq=True
-        sys.stdout.write(' <Connection TimeOut>')
-
-    except:
-        finish = time.perf_counter()
-        qzq=True
-        sys.stdout.write(' <Erro Desconhecido>')
-
-
-    sys.stdout.write(f' {round(finish-start, 2)}s')
-
-    return qzq
-
-def playmedia(link, filename=None):
-    
-    if filename == None: filename = 'ARQIUVO DE MEDIA'
-
-    print(' '.join(['\nREPRODUZIR:'.lower(), filename, '\n']))
-
-    escolhas = list()
-    
-    vlcbanlist = (
-        'https://www.blogger.com/video',
-        'animesorionvip.net/player',
-    )
-
-    mpvbanlist = (
-        '#EXT-X-PLAYLIST-TYPE:VOD',
-        #'mywallpaper-4k-image',
-    )
-
-    vlcban = False
-    mpvban = False
-
-    for item in vlcbanlist:
-        if link.find(item) != -1: vlcban = True
-    for item in mpvbanlist:
-        if link.find(item) != -1: mpvban = True
-
-    if not mpvban:
-        try: 
-            spcs('mpv -clr')
-            escolhas.append('MPV')
-        except:
-            try: 
-                spcs('mpv\\mpv.exe -clr')
-                escolhas.append('MPV')
-            except:
-                ''
-
-    if not vlcban:
-        escolhas.append('VLC')
-    escolhas.append('VOLTAR')
-
-    choice = inqlist('SELECIONE O REPRODUTOR DESEJADO', escolhas)
-
-    mpv = ('mpv', 'mpv\\mpv.exe')
-    vlc = ('vlc', 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe')
-   
-    players = list()
-    if escolhas[choice] == 'MPV':
-        for item in mpv:
-            players.append(item)
-    elif escolhas[choice] == 'VLC':
-        for item in vlc:
-            players.append(item)
-    elif choice == len(escolhas)-1:
-        return False
-
-    for player in players:
-        cnctvrf()
-        try:
-            comando = ' '.join([player, link])
-            result = spcs(comando)
-            foi=True
-            if int(result.returncode) == 0:
-                return True
-            else:
-                print('FALHA NA REPRODUÇÃO'.lower())
-                return False
-            break
-        except:
-            foi=False
-
-    if foi == False:
-        os.system('cls||clear')
-        print('NENHUM REPRODUTOR DE VIDEO ENCONTRADO'.lower())
-        exit()
-
-def provedores(titulo, ep, id=None):
-    global triedanicli
-    global afpart2
-    afpart2 = True
-    
-    if debugin and flags: print('PROVEDORES\n'), time.sleep(dbfldrt)
-    
-    print('\n')
-
-    global dubinfo
-
-    dubinfo = (False, False, False)
-
-
-
-    for title in dubsraw:
-        if (processtl(titulo, -1).lower()).find(title.lower()) != -1:
-            dubinfo = (dubinfo[0], True, dubinfo[2])
-
-    if usnm.lower() == 'gahvius':
-        dubinfo = (True, dubinfo[1], dubinfo[2])
-        if dubinfo[1]:
-            dubinfo = (True, True, True)
-            print('DUB = TRUE\n'.lower())
-
-
-    funcs = (animesdigitalorg, afsearch, goyabu)
-    funcs = list(funcs)
-    
-
-    if triedanicli == 0:
-        try:
-            spcs('ani-cli -V')
-            triedanicli = 1
-        except:
-            print('ani-cli NÃO ENCCONTRADO/INSTALADO\n'.lower())
-            triedanicli = 2
-    
-    if triedanicli == 1 and not dubinfo[2]:
-        funcs.append(ani_cli)
-
-    funcs2 = (q1n, animesonlinecc, animesorion, afsearch2)
-    for item in funcs2:
-        funcs.append(item)
-
-    epfound = False
-    for func in funcs:
-        if func == nyaa: epfound = func(titulo, ep)
-        else: epfound = func(titulo, ep)
-        print('')
-        if epfound:
-            os.system('cls||clear')
-            break
-        if debugin: exit()
-
-    if id != None and not epfound:
-        if idtoyt(id, ep):
-            return True
-        var = 0
-        for item in id_ep_link:
-            if item[0] == int(id):
-                for eps in item:
-                    if type(eps) == list:
-                        if eps[0] == int(ep):
-                            for link in eps[1]:
-                                if yt_especifico(link):
-                                    return True
-
-
-    print('\n')
-
-    
-    
-    return epfound
-
-def sopapranois(link):
+    if t == None: t = 1
 
     cnctvrf()
 
@@ -508,591 +97,84 @@ def sopapranois(link):
         page = requests.get(str(link), timeout=5)
     except:
         cnctvrf()
-        return (False, '')
-    soup = BeautifulSoup(page.text, 'html.parser')
-    sopa = str(soup.find('table', class_='list-table'))
-    
+        prt('   TIMEOUT!')
+        return sopapranois(link)
+    soup = bs4.BeautifulSoup(page.text, 'html.parser')    
 
-    return sopa, str(soup)
+    if str(soup).find('<div id="captcha-container"></div>') != -1:
+        time.sleep(t)
+        return sopapranois(link, t*2)
 
-def verifyos():
+    return str(soup)
 
-    os = -1
+def get_name_from_id(id):
 
-    ptf = platform.platform()
+    link = f'https://myanimelist.net/anime/{id}'
 
-    if ptf.find('Emscripten') != -1:
-        os = 0
+    sopa = sopapranois(link)
 
-    if ptf.find('Linux') != -1:
-        os = 1
+    titulo = texto_no_meio(sopa, '<h1 class="title-name h1_bold_none"><strong>', '</strong>')
 
-    if ptf.find('android') != -1:
-        os = 2
-
-
-    #print(ptf)
-
-    return os
-
-def vaiumadub():
-    global dubinfo
-
-    opts = ['SIM', 'NÃO']
-    choice = inqlist('BUSCAR POR EPISÓDIO DUBLADO?', opts)
-
-    if choice == 0:
-        dubinfo = (True, True, False)
-    else:
-        dubinfo = (True, False, False)
-
-def streammagnet(link):
-    
-    print(link)
-    time.sleep(3)
-
-    return False
-
-def nyaa(tl, ep):
-
-    print('PROVEDOR: nyaa.si'.lower())
-
-    result = False
-
-    tl = tl.replace('½', '1/2')
-
-    if int(ep) < 10:
-        ep = ''.join(['0', ep])
-
-
-
-    link = ''.join(['https://nyaa.si/?f=0&c=0_0&q=', (tl.replace(' ', '+')).lower(), '+', ep, '&s=seeders&o=desc'])
-    if debugin: print(link)
-    sopa = str(sopapranois(link)[1])
-
-
-
-    trclasloc = sopa.find('<tr class="')
-    if trclasloc != -1:
-        temep = True
-    else:
-        temep = False
-
-
-    achei = False
-    while temep and achei == False:
-
-        sopa = sopa[sopa.find('<tr class="'):]
-
-        tlloc = (sopa.lower()).find(tl.lower())
-        if tlloc != -1:
-
-            eploc = sopa.find(''.join([' - ', ep, ' ']))
-            diff = eploc - tlloc
-            if eploc != -1 and diff < 200 and diff > -200:
-                sopa = sopa[sopa.find(''.join([' - ', ep, ' '])):]
-            else:
-                temep = False
-                
-        else:
-            temep = False
-
-        if temep:
-            if sopa.find('<a href="magnet:') != -1:
-                magnet = sopa[sopa.find('<a href="magnet:') + 9 : sopa.find('"><i class="fa fa-fw fa-magnet"></i></a>')]
-                achei = True
-
-            if achei == False:
-                if sopa.find('<tr class="') == -1:
-                    temep = False
-
-    if temep == False:
-        achei = False
-        print('EPISODIO NÃO ENCONTRADO!'.lower())
-
-    if achei:
-        result = streammagnet(magnet)
-
-
-
-    return result
-
-def afsearch(tl, ep, part2=None):
-
-    global afpart2
-
-    print('PROVEDOR: animefire.plus'.lower())
-
-    if part2 == None: part2 = False
-
-    tl = tl.replace('Ü', 'ue')
-    ntl = processtl(tl)
-
-    dubtl = ''.join([ntl, '-dublado'])
-
-    if ntl[-1] == '-':
-        ntl = ntl[0 : (len(tl))-1]
-
-    link = ''.join(['https://animefire.plus/animes/', ntl, '-todos-os-episodios'])
-
-    if cnctvrf(link) == False:
-        print('não foi possivel conectar ao provedor')
-        return False
-
-
-    response = requests.get(url=link)
-    
-    try:
-        if str(response) == '<Response [500]>':
-            animeexiste = False
-        else:
-            animeexiste = True
-    except:
-        animeexiste = False
-
-    if debugin: print(link)
-
-
-    if animeexiste:
-
-        deubom = False
-
-
-        # verificar se tem dub
-        link = ''.join(['https://animefire.plus/animes/', ntl, '-dublado-todos-os-episodios'])
-        response = requests.get(url=link)
-
-        try:
-            if str(response) == '<Response [500]>':
-                if dubinfo[2]: 
-                    print('dub NÃO ENCONTRADO!'.lower())
-                    return False
-            else:
-                if dubinfo[0] == False:
-                    vaiumadub() 
-                if dubinfo[1]:
-                    if debugin: print(link)
-                    prt('BUSCANDO EPISODIO DUBLADO...'.lower())
-                    deubom = animefire(dubtl, ep, part2)
-                    if usnm.lower() == 'gahvius': return deubom
-        except:
-            ''
-
-        if deubom == False:
-            prt('BUSCANDO EPISODIO LEGENDADO...'.lower())
-            deubom = animefire(ntl, ep, part2)
-    else:
-        print('ANIME NÃO ENCONTRADO!'.lower())
-        afpart2 = False
-        return False
-
-    return deubom
-
-def afsearchep(tl, ep):
-
-    link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
-
-    sopa = (sopapranois(link))[1]
-
-    if str(sopa).find('<h6 class="text-white quicksand300 mx-3">Download indisponível</h6>') != -1 or sopa.find('não é possível fazer o download.') != -1:
-        return False
-    else:
-        return True
-
-def afgetqual(tl, ep, args, part2):
-
-    wtf = False
-    args = (args[0], args[1]+1, args[2])
-
-
-    link = ''.join(['https://animefire.plus/download/', tl, '/', ep])
-    sopa = str((sopapranois(link))[1])
-    ogsopa = sopa
-
-
-    if not part2 and sopa.find(';opacity: 0.3;">F-HD</span>') == -1 and args[1] == 1:
-        if sopa.find('(F-HD)" href="') == -1:
-            wtf= True
-        else:
-            sopa = sopa[sopa.find('(F-HD)" href="') + 14 : ]
-    elif sopa.find(';opacity: 0.3;">HD</span>') == -1 and args[1] == 2:
-        if sopa.find('(HD)" href="') == -1:
-            wtf= True
-        else:
-            sopa = sopa[sopa.find('(HD)" href="') + 12 : ]
-    elif part2 and sopa.find(';opacity: 0.3;">SD</span>') == -1 and args[1] == 3:
-        if sopa.find('(SD)" href="') == -1:
-            wtf= True
-        else:
-            sopa = sopa[sopa.find('(SD)" href="') + 12 : ]
-    else:
-        if args[1] == 4:
-            return (False, args[1], 'none')
-        else:
-            return (True, args[1], 'none')
-
-    eplink = sopa[:sopa.find('.mp4?type')+4]
-    filename = sopa[sopa.find('[AnimeFire.plus] ')+17 : sopa.find('" style="cursor')]
-
-    if wtf:
-
-        sopa = ogsopa
-
-        if args[1] == 1:
-            sopa = sopa[sopa.find('<a (f-hd)'):]
-            qual = '(F-HD)'            
-        if args[1] == 2:
-            sopa = sopa[sopa.find('<a (hd)'):]
-            qual = '(HD)' 
-        if args[1] == 3:
-            sopa = sopa[sopa.find('<a (sd)'):]       
-            qual = '(SD)'      
-
-        eplink = sopa[sopa.find('download="')+10 : sopa.find('.mp4?type')+4]
-        filename = ' '.join([tl.replace('-', ' '), '- Episódio', ep, qual])
-            
-    if eplink.find('/mp4_temp/') != -1:
-        if not part2:
-            return (False, args[1], 'none')
-        filename = ' '.join([filename, '(LEGENDA TEMPORÁRIA)'])
-
-    if eplink.find('lightspeedst.net') == -1: 
-        #eplink = sopa[:sopa.find('&amp;title=[AnimeFire.plus]')]
-        eplink = 'none'
-    
-    return (args[0], args[1], eplink, filename)
-
-def ani_cli(tl, ep):
-
-    print('PROVEDOR: ani-cli'.lower())
-    
-    tocou = False
-
-    titulo = tl
-
-    titulo = titulo.replace('3rd Season', '3')
-    titulo = titulo.replace('3rd Season', '3')
-    titulo = titulo.replace('2nd Season', '2')
-    titulo = titulo.replace('Goumon', '')
-
-    info = ('ani-cli -e', ep, titulo, '&')
-    comando = str(' '.join(info))
-    result = str(spcs(comando))
-    
-
-    if result.find('No results found!') != -1:
-        prt('anime não encontrado!\n')
-        return False
-    if result.find('Episode not released!') != -1:
-        prt('episódio não encontrado!\n')
-        return False
-    if result.find('Links Fetched') != -1:
-        return True
-    if result.find(': rofi:') != -1:
-        prt('provedor indisponivel!\n')
-        return False
-
-    return False
-
-def inqlist(string, opts, dft=None):
-
-    prt('\a')
-
-    newlist = list()
-    for item in opts:
-        newlist.append(str(item))
-    opts = tuple(newlist)
-        
-    if dft != None: dft = str(dft)
-
-    questions = [
-        inquirer.List(
-            "opções",
-            message=string,
-            choices=opts,
-            default=dft,
-        ),
-    ]
-
-    escolha = str(inquirer.prompt(questions))
-
-
-
-    for opt in range(len(opts)):
-        if escolha == ''.join(["{'opções': '", str(opts[opt]), "'}"]) or escolha == ''.join(["{'opções': ", '"', str(opts[opt]), '"}']):
-            return opt
-        
-    print(escolha, '\nOH SHIT'), exit()
-        
-def selectlist():
-
-    listnames = (
-        'WATCHING',
-        'ON HOLD',
-        'PLAN TO WATCH (AIRING)',
-        'PLAN TO WATCH (FINISHED AIRING)',
-        'PLAN TO WATCH (NOT YET AIRED)',
-        'VOLTAR',
-        )    
-
-    seleção = inqlist('SELECIONE A LISTA DESEJADA', listnames)
-
-    if seleção == len(listnames)-1:
-        getusername()
-        return
-
-    setores(seleção, listnames[seleção])
-
-def processid(id):
-    if debugin and flags: print('PROCESSANDO ID\n'), time.sleep(dbfldrt)
-
-    filename = 'MalIDToTitle'
-
-    try:
-        with open(filename, 'r') as f:
-            ''
-    except:
-        with open(filename, 'w') as f:
-            f.write('')
-
-    with open(filename, 'r') as f:
-        data = f.readlines()
-    
-    podeir = False
-    try:
-        tlfromfile = data[int(id)]
-        podeir = True
-    except:
-            for t in range(len(data), int(id)+1):
-                data.append('\n')
-            if debugin: print('')
-        
-    if podeir and tlfromfile != '' and tlfromfile != ' ' and tlfromfile != '\n':
-        #if debugin: print('\ncu seco')
-        tl = tlfromfile[:-1]
-        tl = tl.replace('&amp;', '&')
-        return tl
-
-    link = ''.join(['https://myanimelist.net/anime/', id])
-    tl_sopa = sopapranois(link)[1]
-
-    to = 5
-    if tl_sopa.find('<div id="captcha-container"></div>') != -1:
-        prt('..')
-        while tl_sopa.find('<div id="captcha-container"></div>') != -1:
-            prt('.')
-            time.sleep(to)
-            tl_sopa = sopapranois(link)[1]
-            to+=5
-
-    titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find('" property="og:title"')])
-    if len(titulo) > 500: titulo = (tl_sopa[tl_sopa.find('"twitter:site"/><meta content=') +31 : tl_sopa.find(' property="og:title"')-1])
-    
-    
-    try:
-        data[int(id)] = ''.join([titulo, '\n'])
-        with open(filename, 'w') as f:
-            f.writelines(data)
-    except:
-        data[int(id)] = '\n'
-        with open(filename, 'w') as f:
-            f.writelines(data)
-
-    if debugin: print('\n\n', id, data[int(id)])
+    #print(titulo)
+    #print(link)
+    #exit()
 
     return titulo
 
-def geteps(id, proximoep):
-    if debugin: 
-        if flags: print('GET EPS\n'), time.sleep(dbfldrt)
+def get_name_from_file(id):
 
-    sys.stdout.write('carregando lista de episódios...'), sys.stdout.flush()
+    filename = f'{os.path.expanduser("~")}/otapy/MalIDToTitle'
+
+
+
+    try:
+        with open(filename, 'r') as f:
+            data = f.readlines()
+            f.close()
+    except:
+        with open(filename, 'w') as f:
+            f.write('')
+            f.close()
+        return get_name_from_file(id)
+
+
+
+
+
+    if len(data) > int(id):
+
+        if data[int(id)] != '' and data[int(id)] != '\n':
+            return data[int(id)][:-1]
+
+        else:
+            titulo = get_name_from_id(id)
+            data[int(id)] = titulo+'\n'
+            with open(filename, 'w') as f:
+                f.writelines(data)
+                f.close()
     
+    else: 
+        while len(data) <= int(id):
+            data.append('\n')
+        with open(filename, 'w') as f:
+            f.writelines(data)
+            f.close()
 
-    id=str(id)
-    proximoep = int(proximoep)
+    return get_name_from_file(id)
 
-    link = ''.join(['https://myanimelist.net/anime/', id, '/fuckyou/episode'])
-    sopa = sopapranois(link)[1]
-    ogsopa = sopa
-
-    eps = getepslist(sopa)
-
-    eonepiece = 99
-
-    while len(eps) > eonepiece:
-
-        sys.stdout.write('.'), sys.stdout.flush()
-
-        link2 = ''.join([link, '?offset=', str(eonepiece+1)])
-        sopa = sopapranois(link2)[1]
-
-        if sopa.find('No episode information has been added to this title.') != -1: break
-
-        maisep = getepslist(sopa)
-        for ep in maisep: eps.append(ep)
-
-        eonepiece +=100
-
-
-
-
-
-    if proximoep > len(eps):
-        for num in range(len(eps), proximoep):
-            eps.append(num+1)
-
-    eps.append('VOLTAR')
-
-    print('')
-    ep = inqlist('SELECIONE O EPISÓDIO DESEJADO', eps, eps[proximoep-1])
-    if ep == len(eps)-1: return False
+def play_ep(id_ep_titulo):
     
+    prt(f'anime: {id_ep_titulo[2]}\nep: {id_ep_titulo[1]}')
 
+    classe = provedores(id_ep_titulo)
+    midia_link = classe.ep_link
 
-    return str(int(ep)+1)
+    if midia_link != False:
+        subprocess.run(f'mpv {midia_link}', shell=True, capture_output=True)
+    else: time.sleep(1)
 
-def getepslist(sopa):
-
-    lista1 = ('"episode-number nowrap" data-raw="', '">')
-
-    eps = list()
-    while sopa.find(lista1[0]) != -1:
-
-        cord1 = sopa.find(lista1[0]) + len(lista1[0])
-        cord2 = sopa[cord1:].find(lista1[1]) + cord1
-        epnum = (sopa[cord1 : cord2])
-        sopa = sopa[cord2:]
-
-        try: int(epnum)
-        except: print('OH SHIT'), exit()
-
-        tx = ''.join(['/episode/', epnum, '">'])
-        cord1 = sopa.find(tx) + len(tx)
-        cord2 = sopa[cord1:].find('</a>') + cord1
-        epname = sopa[cord1 : cord2]
-        epname = epname.replace('&amp;', '&')
-
-        eps.append(' '.join([epnum, '-', epname]))
-
-    return eps
-
-def animefire2(tl, ep):
-
-    link = ''.join(['https://animefire.plus/animes/', tl, '/', str(ep)])
-    sopa = sopapranois(link)[1]
-    if debugin: print(link)
-
-    if sopa.find('https://www.blogger.com/video') == -1:
-        if debugin: print('naotem')
-        return False
-
-    if debugin: print('tem')
-
-    kw = 'src="https://www.blogger.com/video'
-    loc = sopa.find(kw)+5
-    loc2 = loc + sopa[loc:].find('" style="')
-    if debugin: print(loc, loc2)
-    link = sopa[loc : loc2]
-    if debugin: prt(link)
-
-
-    if sopapranois(link)[1].find('<div class="errorMessage">') != -1:
-        return False
+    apagar_linhas(classe.linhas_apagar)
     
-    prt('\n')
-    return playmedia(link, filename=' '.join([tl, 'Episódio', ep]))
-
-def animesonlinecc(tl, ep):
-
-    print('provedor: animesonlinecc.to')
-
-    fnm = ''.join([tl, ' - Episódio ', ep])
-
-    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
-    tl = tl.replace('½', '1/2')
-    tl = processtl(tl)
-    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
-    tl = tl.replace('-daidaidaidaidaisuki-', '-dai-dai-dai-dai-daisuki-')
-    tl = tl.replace('2nd-season', '2')
-    tl = tl.replace('3rd-season', '3')
-
-    link = ''.join(['https://animesonlinecc.to/episodio/', tl, '-episodio-', ep, '/'])
-    sopa = sopapranois(link)[1]
-    if debugin: print(link)
-
-    if sopa.find('https://www.blogger.com/video') == -1:
-        print('anime/episódio não encontrado!')
-        return False
-
-
-
-
-
-    temdub = False
-    temsub = False
-    dubop = None
-
-    if sopa.find('</b> Dublado </a>') != -1: 
-        temdub = True
-        loc = sopa.find('"> <b class="icon-play_arrow"></b> Dublado </a>')
-        dubop = sopa[loc-1:loc]
-
-        linkloc1 = ''.join(['id="option-', dubop])
-        linkloc2 = sopa.find(linkloc1)
-        loc = linkloc2 + sopa[linkloc2:].find('https://www.blogger.com/video')
-
-        linkdub = sopa[loc : sopa[loc:].find('"')+loc]
-        fnmdub = ''.join([fnm, ' (Dublado)'])
-        if debugin: print(link)
-    else:
-        if dubinfo[2]:
-            print('dub NÃO ENCONTRADO!'.lower())
-            return False
-
-    if sopa.find('</b> Legendado </a>') != -1: 
-        temsub = True
-        loc = sopa.find('"> <b class="icon-play_arrow"></b> Legendado </a>')
-        dubop = sopa[loc-1:loc]
-
-        linkloc1 = ''.join(['id="option-', dubop])
-        linkloc2 = sopa.find(linkloc1)
-        loc = linkloc2 + sopa[linkloc2:].find('https://www.blogger.com/video')
-
-        linksub = sopa[loc : sopa[loc:].find('"')+loc]
-        fnmsub = ''.join([fnm, ' (Legendado)'])
-        if debugin: print(link)
-
-
-    if debugin: print(temsub, temdub)
-
-    if temdub and temsub:
-        if dubinfo[0] == False:
-            vaiumadub()
-            temdub = dubinfo[1]
-
-    while temdub:
-        print('BUSCANDO EPISODIO DUBLADO...'.lower())
-        if sopapranois(linkdub)[1].find('<div class="errorMessage">') != -1:
-            print('episódio não encontrado!')
-            break
-        result = playmedia(linkdub, filename=fnmdub)
-        if result == True: return True
-        break
-    while temsub:
-        print('BUSCANDO EPISODIO Legendado...'.lower())
-        if debugin: print(linksub)
-        if sopapranois(linksub)[1].find('<div class="errorMessage">') != -1:
-            print('episódio não encontrado!')
-            break
-        result = playmedia(linksub, filename=fnmsub)
-        if result == True: return True
-        break
-
-
-
-    return False
-
 def processtl(tl, mode=None):
 
     tl = tl.replace('Ü', 'U')
@@ -1122,534 +204,523 @@ def processtl(tl, mode=None):
 
     return ntl
 
-def animesdigitalorg(tl, ep):
-    print('provedor: animesdigital.org')
-
-    temdub=False
-    edub=False
-    ova = False
-
-    ogtl = tl
-
-    if tl.lower().find('one punch man') != -1:
-        print('ANIME NÃO ENCONTRADO!'.lower())
-        return False
-    
-    if int(ep) < 10: ep = ''.join(['0', ep])
-
-    if tl.find('Fullmetal Alchemist: Brotherhood') != -1:
-        if tl == 'Fullmetal Alchemist: Brotherhood Specials': 
-            ova = True
-        tl = 'fullmetal-abb001'
-        
-    if tl == 'Ore dake Level Up na Ken Season 2: Arise from the Shadow': tl = 'solo leveling ii'
-    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
-    tl = processtl(tl)
-    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
-    tl = tl.replace('ranma-2024', 'ranma-½-2024')
-
-
-    sublink = ''.join(['https://animesdigital.org/anime/a/', tl])
-    link = sublink
-    dublink = ''.join([link, '-dublado'])
-    if debugin: print(link)
-    sopa = sopapranois(link)[1]
-
-    if sopa.find('<div class="msg404">') != -1:
-        print('ANIME NÃO ENCONTRADO!'.lower())
-        return False
-    links = (sublink,)
-    if debugin: print(sublink)
-
-    if sopa[sopa.find('<title>') : sopa.find('</title>')].find('Dublado') != -1:
-        edub=True
-    else:
-        if sopapranois(dublink)[1].find('<div class="msg404">') == -1:
-            if debugin: print(dublink)
-            temdub=True
-
-    if dubinfo[2]:
-        if not edub and not temdub:
-            print('dub NÃO ENCONTRADO!'.lower())
-            return False
-        
-
-    if temdub:
-        if not dubinfo[0]:
-            vaiumadub()
-        if dubinfo[1]:
-            links = (dublink, sublink)
 
 
 
-    
-    if ova == True: tx = 'Ova '
-    else: tx = 'Episódio '
-    eploc = tx + str(ep) + '"'
-    if debugin: print(eploc)
 
-    for link in links:
-        defbreak = False
+#classes
 
-        sopa = sopapranois(link)[1]
-        if debugin: print(link)
+class menu():
+    def __init__(self, lista_opts, n_linhas, uma_opt = None):
+        self.cursor = 0
+        self.opt_list = lista_opts
+        self.n_linhas = n_linhas
+        self.uma_opt = uma_opt
 
-        if link == dublink or edub: prt('buscando episódio dublado...')
-        else: prt('buscando episódio legendado...')
+        select = list()
+        for item in lista_opts:
+            if type(item) == tuple or type(item) == list:
+                if uma_opt == True:
+                    select.append(-1)
+                else:
+                    select.append(0)
 
-        page = 1
+        self.select = select
+        self.ciclos = 0
 
-        varalha = False
-        while sopa.find(eploc) == -1:
-            varalha = True
-            if sopa.find('<div class="item_ep b_flex">') == -1:
-                prt('\nepisódio não encontrado!\n')
-                defbreak = True
-                break
-            fep = texto_no_meio(sopa, '<div class="item_ep b_flex">', '<div class="date"')
-            fep = texto_no_meio(fep, 'Episódio ', '"')
-            if debugin: print(fep)
-            try:
-                fep = int(fep)
-            except:
-                prt('\nprovedor indisponivel!\n')
-                return False
-            if fep < int(ep):
-                prt('\nepisódio não encontrado!\n')
-                defbreak = True
-                break
-            page+=1
-            linkus = ''.join([link, '/page/', str(page)])
-            if debugin: print(linkus)
-            prt('.')
-            sopa = sopapranois(linkus)[1]
-        
+    def update(self):
 
-        if defbreak == False:
-            print('')
-            if varalha: link = linkus
+        #if self.ciclos > 0:
+        #    prt('\033[10A \033[J')
 
-            tx = '<div class="item_ep b_flex">'
-            enquanto = True
-            while enquanto:
-                if sopa.find(tx) == -1: break
-                sopa = sopa[sopa.find(tx)+len(tx):]
-                if sopa.find(eploc) == -1:
-                    if debugin: print(link, 'sem eploc')
-                    enquanto = False
-                    break
-                link = texto_no_meio(sopa, 'https://animesdigital.org/video/a/', '"', True)            
-            
-            sopa = sopapranois(link)[1]
-            if debugin: print(link)
+        mtp = 7
 
-            fnm = texto_no_meio(sopa, '<title>', '</title>')
-            if debugin: print(fnm)
+        opt_list = self.opt_list 
 
-            loc = sopa.find('https://api.anivideo.net')
-            if loc == -1:
-                print('falha ao reproduzir episódio!')
-                if debugin: print('SEU MERDA')
-                defbreak = True
-            if not defbreak:
-                link = texto_no_meio(sopa, 'https://api.anivideo.net', '"', True)
-                if debugin: print('link -1 = ' + link)
+        for i in range(0, len(opt_list)):
 
-                sopa = sopapranois(link)[1]
+            item = opt_list[i]
 
-                if sopa == '':
-                    print('falha ao reproduzir episódio!')
-                    return False
+            tipo = type(item)
+
+            if self.cursor == i: cor = colorama.Fore.BLUE
+            else: cor = colorama.Fore.WHITE
+
+            if tipo == tuple or tipo == list:
+
+                prt(f'\n{cor}{item[0]}\t')
+
+                for baboey in range(0, int(1/len(item[0])*mtp)):
+                    #prt(int(1/len(item[0])*mtp))
+                    prt('\t')
+
+                for i2 in range(0, len(item[1])):
+
+                    
+
+                    item2 = item[1][i2]
+
+                    if self.select[i] == i2: cor = colorama.Fore.BLUE
+                    else: cor = colorama.Fore.WHITE
+
+                    if len(item2) < 6: espaco = '\t\t'
+                    else: espaco = '\t'
 
 
-                link = texto_no_meio(sopa, "https://cdn-s", "'", True)
+                    prt(f'{cor}|{item2}{espaco}')
 
-                if debugin and link == '':
-                    print(sopa)
-                    time.sleep(9999)
-
-                if debugin: print('link final = ' + link)
-
-                if playmedia(link, fnm) == True:
-                    return True
-
-
-    return False
-
-def animesorion(tl, ep):
-    print('provedor: animesorionvip.net')
-
-    if tl == 'Bishoujo Senshi Sailor Moon': tl = 'sailor moon'
-    tl = processtl(tl)
-    tl = tl.replace('yuu-yuu-hakusho', 'yu-yu-hakusho')
-
-    link = ''.join(['https://animesorionvip.net/animes/', tl, '-todos-os-episodios'])
-    if debugin: print(link)
-    sopa = sopapranois(link)[1]
-
-    tx = 'https://animesorionvip.net/video/'
-    if sopa.find(tx) == -1:
-        print('ANIME NÃO ENCONTRADO!'.lower())
-        return False
-
-    if sopa.find(''.join(['Episódio ', ep])) == -1:
-        print('episódio não encontrado!')
-        return False
-
-    tempsopa = sopa
-    while True:
-        if tempsopa.find(tx) == -1:
-            print('episódio não encontrado!')
-            return False
-        loc = tempsopa.find(tx)
-        tempsopa = tempsopa[loc : loc + tempsopa[loc:].find('">')]
-        if tempsopa.find(''.join(['Episódio ', ep])) == -1:
-            tempsopa = sopa[sopa.find(tempsopa)+5:]
-        else: 
-            break
-        
-
-    if debugin: print(tempsopa)
-    tx = 'title="'
-    fnm = tempsopa[tempsopa.find(tx)+len(tx) : ]
-    link = tempsopa[:tempsopa.find('"')]
-
-    sopa = sopapranois(link)[1]
-    loc = sopa.find('https://animesorionvip.net/player')
-    link = sopa[loc : loc + sopa[loc:].find('=&')]
-
-    if dubinfo[2]:
-        if fnm.lower().find('dublado') == -1:
-            print('dub NÃO ENCONTRADO!'.lower())
-            return False
-
-    return playmedia(link, fnm)
-
-def q1n(tl, ep):
-
-    print('provedor: q1n.net')
-
-    tl = processtl(tl)
-
-    titulos = list()
-
-    link = ''.join(['https://q1n.net/a/', tl])
-    if debugin: print(link)
-    sopa = sopapranois(link)[1]
-
-    if sopa.find('<body class="error404">') != -1:
-        print('anime não encontrado!')
-        return False
-
-    dubtl = ''
-    link = ''.join(['https://q1n.net/a/', tl, '-Dublado'])
-    sopa = sopapranois(link)[1]
-    if sopa.find('<body class="error404">') == -1:
-        if debugin: print(link)
-        if dubinfo[0] == False:
-            vaiumadub()
-        if dubinfo[1]:
-            dubtl = ''.join([tl, '-dublado'])
-            titulos.append(dubtl)
-    else: 
-        if dubinfo[2]:
-            print('dub não encontrado')
-            return False
-
-    if dubinfo[2] == False: titulos.append(tl)
-
-    for tl in titulos:
-
-        if tl == dubtl: print('buscando episódio dublado...')
-        else: print('buscando episódio legendado...')
-
-        link = ''.join(['https://q1n.net/e/', tl, '-episodio-', ep])
-        if debugin: print(link)
-        sopa = sopapranois(link)[1]
-
-        tx = '"VideoObject","name": "'
-        loc1 = sopa.find(tx) + len(tx)
-        fnm = sopa[loc1 : ]
-        fnm = fnm[ : fnm.find('"')]
-
-        if sopa.find('<body class="error404">') != -1:
-            print('episódio não encontrado!')
-            break
-
-        if sopa.find("https://q1n.net/ao/?id=") != -1:
-            link = sopa[sopa.find('https://q1n.net/ao/?id=') : ]
-            link = link[ : link.find('"')]
-            sopa2 = sopapranois(link)[1]
-            if debugin: print(link)
-            if sopa2.find('secvideo') != -1:
-                if usnm.lower() == 'gahvius':
-                    print(link, '\nEITA POHA\a'), time.sleep(99999), exit()
             else:
-                if debugin == 1231:
-                    sopa2 = sopapranois(link)[1]
-                    link = sopa2[sopa2.find('https://api.q9x.in/') :]
-                    link = link[: link.find('"')]
-                    print(link, sopapranois(link)[1]), exit()
+                prt(f'\n{cor}{item}')
 
-        if sopa.find("https://www.blogger.com/video.g") != -1:
-            link = sopa[sopa.find('https://www.blogger.com/video.g') : ]
-            link = link[ : link.find(';')]
-            if debugin: print(link)
-            if playmedia(link, fnm) == True:
-                return True
+            prt(colorama.Fore.RESET)
 
+        prt('\n')
 
-        print('falha ao reproduzir episódio!')
+    def input(self):
 
+        self.ciclos += 1
+        direct = False
 
-    return False
-    
-def prt(string):
+        cursor = self.cursor
+        select = list(self.select)
+        opt_list = self.opt_list 
 
-    if type(string) == tuple or type(string) == list:
-        for item in string:
-            prt(item)
-            #prt(' ')
-    else:
-        string = str(string)
-        sys.stdout.write(string)
-        sys.stdout.flush()
+        with pynput.keyboard.Listener(on_press=key_press) as Listener:
+            Listener.join()
 
-def spcs(comando):
+        if tecla == 'Key.down': cursor += 1 
+        elif tecla == 'Key.up': cursor -= 1
 
-    volta = None
-    if verifyos() == 1:
-        volta = subprocess.run(comando, capture_output=True, shell=True)
-    elif verifyos() == -1:
-        volta = subprocess.run(comando)
-    elif verifyos() == 2:
-        volta = subprocess.run(comando, shell=True)
+        if cursor > len(opt_list)-1: cursor = len(opt_list)-1
+        if cursor < 0: cursor = 0
 
-    return volta
+        if cursor < len(select):
+            if tecla == 'Key.right':
+                select[cursor] += 1
+                if len(opt_list[cursor][1]) == 2: select[cursor] += 1
+                if select[cursor] > len(opt_list[cursor][1])-1: select[cursor] = len(opt_list[cursor][1])-1
+                else: direct = True
+            if tecla == 'Key.left':
+                select[cursor] -= 1
+                if select[cursor] < -1: direct = True
+                if select[cursor] < 0: select[cursor] = 0
+                else: direct = True
+            
+            
 
-def idtoyt(id, ep):
-
-    link = ''.join(['https://myanimelist.net/anime/', id])
-    sopa = sopapranois(link)[1]
-    sopa = sopa[sopa.find('<div class="external_links">') : ]
-    sopa = sopa[ : sopa.find('<div class="clearfix')]
-
-    if sopa.find('https://www.youtube.com/watch') != -1:
-
-        link = sopa[sopa.find('https://www.youtube.com/watch') : ]
-        link = link[ : link.find('"')]
-        link = link.replace('&amp;', '&')
         
-        return yt_especifico(link)
+
         
-    return False
+        if self.uma_opt == True and direct:
+            change_found = False
+            for n in range(0, len(select)):
+            
+                if select[n] != self.select[n] and not change_found:
+                    self.select[n] = select[n]
+                    change_found = True
+                else:
+                    self.select[n] = -1
+        else: self.select = select
 
-def yt_especifico(link):
+        self.cursor = cursor
 
-    print('provedor: youtube.com')
+        apagar_linhas(self.n_linhas)
 
-    tx = '"title":{"simpleText":"'
-    titulo = sopapranois(link)[1]
-    titulo = titulo[titulo.find(tx)+len(tx) : ]
-    titulo = titulo[ : titulo.find('"},"description"')]
-    titulo = titulo.replace('\\', '')
-    return playmedia(link, titulo)
+class provedores():
+    def __init__(self, lista):
+
+        prt('\n\n')
+
+        self.linhas_apagar = 2
+
+        self.id = lista[0]
+        self.ep = lista[1]
+        self.titulo = lista[2]
+        self.ep_link = False
+        self.quero_dublado = 1
+
+
+        self.animesdigitalorg()
+        if self.ep_link != False: return
+
+    def animesdigitalorg(self):
+
+        prt('provedor: animesdigital.org')
+        self.linhas_apagar += 1
+
+        temp_links = list()
+
+        titulo = processtl(self.titulo)
+        if self.ep < 10:
+            str_ep = f'0{str(self.ep)}'
+        else: str_ep = str(self.ep)
+
+
+
+
+
+
+
+
+        sub_link = f'https://animesdigital.org/anime/a/{titulo}'
         
-    return False
+        if self.quero_dublado > 0:
+            dub_link = sub_link + '-dublado'
+            temp_links.append(dub_link)
 
-def goyabu(tl, ep):
-    
-    prt('provedor: goyabu.to\n')
+        temp_links.append(sub_link)
 
-    tl = processtl(tl)
 
-    link = ''.join(['https://goyabu.to/anime/', tl])
-    sopa = sopapranois(link)[1]
-    dubsopa = sopapranois(''.join([link, '-dublado']))[1]
+        link_list = list(temp_links)
 
-    vrs = list()
 
-    if dubsopa.find('<title>404 Not Found</title>') == -1:
-        vrs.append(dubsopa)
-    else:
-        if dubinfo[2]:
-            print('dub NÃO ENCONTRADO!'.lower())
-            return False
+        for link in temp_links:
 
-    if sopa.find('<title>404 Not Found</title>') == -1:
-        vrs.append(sopa)
-    
-    if len(vrs) == 0:
-        prt('anime não encontrado!\n')
+            if link == sub_link: versao = 'legendado'
+            if link == dub_link: versao = 'dublado'
 
-    if len(vrs) > 1:
-        if not dubinfo[0]:
-            prt('\n')
-            vaiumadub()
-        if not dubinfo[1]:
-            vrs = (sopa,)
+            sopa = sopapranois(link)
 
-    for sopa in vrs:
+            if sopa.find('<div class="msg404">') != -1:
+                prt(f'\nanime {versao} não encontrado!')
+                self.linhas_apagar += 1
+                link_list.remove(link)
+            else:
+                
+                ep_topo = texto_no_meio(sopa, '<div class="title_anime">', '</div>', prsv_final=True)
+                ep_topo = texto_no_meio(ep_topo, 'Episódio ', '</div>')
+                
+                try:
+                    ep_topo = int(ep_topo)
+
+                    if ep_topo < self.ep:
+                        prt(f'\nepisodio {versao} não encontrado!')
+                        self.linhas_apagar += 1
+                        link_list.remove(link)
+
+                except:
+                    prt(f'\n falha ao buscar episodio {versao}!')
+                    self.linhas_apagar += 1
+                    link_list.remove(link)
+ 
+                
+        if len(link_list) < 1: 
+            return
+
+
+        for link in link_list:
+
+            if link == sub_link: versao = 'legendado'
+            if link == dub_link: versao = 'dublado'
+
+            sopa = sopapranois(link)
+
+
+
+            if sopa.find(f'Episódio {str_ep}</div>') == -1:
+                print('\nessa merda tá em outra pagina')
+                exit()
+
+
+
+
+            sopa = sopa[:sopa.find(f'Episódio {str_ep}</div>')]
+            sopa = sopa[sopa.rfind('https://animesdigital.org/video/a/'):]
+            link = sopa[:sopa.find('"')]
+
+
+
+            sopa = sopapranois(link)
+            link = texto_no_meio(sopa, 'https://api.anivideo.net/', '"', prsv_começo=True)
+            link = texto_no_meio(link, 'https://cdn-', '&amp;nocache', True)
+
+
+            prt(f'\nreproduzindo episodio {versao}...')
+            self.linhas_apagar += 1
+            
+
+            break
+
         
-        if sopa == dubsopa:
-            prt('buscando episódio dublado...\n')
-        else:
-            prt('buscando episódio legendado...\n')
-
-        if sopa.find(''.join(['id="ep ', ep, '"'])) == -1:
-            prt('episódio não enontrado!\n')
-
-        else:
-
-            int_point = ''.join(['id="ep ', ep, '">'])
-            file_name = sopa[sopa.find(int_point) + len(int_point) : ]
-            file_name = file_name[ : file_name.find('</a>')]
-
-            int_point = sopa.find(int_point)
-            link = sopa[(sopa[:int_point].rfind('https://goyabu.to/')):]
-            link = link[ : link.find('"')]
-
-            sopa = sopapranois(link)[1]
-
-            link = sopa[sopa.find('https://www.blogger.com/video'):]
-            link = link[ : link.find('"')]
-
-            if playmedia(link, file_name): return True
-
-    return False
-
-def afsearch2(tl, ep):
-    if not afpart2: return False
-    return afsearch(tl, ep, part2=True)
-
-def texto_no_meio(texto, começo, fim, prsv_começo = None):
-
-    loc1 = texto.find(começo)
-    loc2 = loc1 + texto[loc1:].find(fim)
-
-    if prsv_começo != True: loc1 += len(começo)
-
-    return texto[loc1:loc2]
 
 
+        self.ep_link = link
+
+        
 
 
+#imports
 
-# importar os bgl tudo
-
-print('IMPORTANDO EXTENSÕES...')
-
-
-extotal = str(8)
-exnow = 1
-
-print(''.join([str(exnow), '/', extotal]))
-import subprocess, sys
-exnow+=1
-
-print(''.join([str(exnow), '/', extotal]))
-import platform
-exnow+=1
-
-print(''.join([str(exnow), '/', extotal]))
-import time
-exnow+=1
-
-print(''.join([str(exnow), '/', extotal]))
+import requests
+import colorama
+import subprocess
+import sys
+import pynput
+import bs4
 import os
-exnow+=1
-
-print(''.join([str(exnow), '/', extotal]))
+import time
 import re
-exnow+=1
 
-sisop = verifyos()
 
-if sisop != 0:
 
-    print(''.join([str(exnow), '/', extotal]))
+#init
+for bababoey in (1,):
+    debug = False
+
+    colorama.init()
+    tecla = None
+
+    usnm = 'gahvius'
+
+
+
+#listas 
+for bababoey in (1,):
+
+    opt_lista = (
+        ('LISTA', ('todos', 'assistindo', 'completos', 'em espera', 'dropados', 'planejo assistir')), 
+        ('STATUS', ('todos', 'em lançamento', 'terminados', 'não lançados')), 
+        'ORDEM 1',
+        'ORDEM 2', 
+        '\nREPRODUZIR LISTA', 
+        'ABRIR LISTA', 
+        '\nSAIR' 
+    )
+
+    ordem_opt_list = (
+        'TITLE',
+        'END DATE',
+        'START DATE',
+        'SCORE',
+        'LAST UPDATED',
+        'TYPE',
+        
+        'RATING',
+        'REWATCH VALUE',
+        
+        'PRIORITY',
+        'WATCHED EPS',
+        'STORAGE',
+        'AIR START DATE',
+        'AIR END DATE',
+        'STATUS',
+        'MAL SCORE',
+        'SCORE DIFF.',
+        'POPULARITY'
+    )
+
+    outra_lista = list()
+    for item in ordem_opt_list:
+        outra_lista.append((item, ('Asc', 'Desc')))
+    ordem_opt_list = outra_lista
+    ordem_opt_list.append('\nVOLTAR')
+
+
+
+#classes de menu
+for bababoey in (1,):
+    menu1 = menu(opt_lista, 10)
+    menu_ordem1 = menu(ordem_opt_list, 20, True)
+    menu_ordem2 = menu(ordem_opt_list, 20, True)
+
+    lista_menus = list((menu1, menu_ordem1, menu_ordem2))
+
+    filename = f'{os.path.expanduser("~")}/otapy/LastList'
+
     try:
-        import requests
+        with open(filename, 'r') as f:
+            data = list(f.readlines())
+            f.close()
+
+        for i in range(0, 2):
+            for i2 in range(0, len(lista_menus[i].select)-1):
+                lista_menus[i].select[i2] = int(data[i][i2])-1
+
+
     except:
-        spcs(''.join(['python -m pip install requests']))
-        import requests
-    exnow+=1
-
-    print(''.join([str(exnow), '/', extotal]))
-    try:
-        import bs4
-        from bs4 import BeautifulSoup
-    except:
-        spcs(''.join(['python -m pip install bs4']))
-        import bs4
-        from bs4 import BeautifulSoup
-    exnow+=1
-
-    print(''.join([str(exnow), '/', extotal]))
-    try:
-        import inquirer
-    except:
-        spcs(''.join(['python -m pip install inquirer']))
-        import inquirer
-    exnow+=1
-
-# subprocess.run('py -m pip install --upgrade pip')
+        with open(filename, 'w') as f:
+            f.write('')
+            f.close()
 
 
 
 
 
+while run:
+
+    if not run: 
+        break
+
+
+
+    menu1.update()
+    menu1.input()
 
 
 
 
+    #montando o link da lista
+    for bababoey in (1,):
+        if menu1.select[0] == 0: status = 7
+        elif menu1.select[0] == 5: status = 6
+        else: status = menu1.select[0]
+
+        if menu1.select[1] == 0: air_status = ''
+        else: air_status = f'airing_status={menu1.select[1]}&'
+
+        ordens = list()
+        for lista in (menu_ordem1.select, menu_ordem2.select):
+            for n in range(0, len(lista)):
+                if lista[n] > -1:
+                    num = n+1
+                    if lista[n] == 1: num = num*-1
+                    ordens.append(num)
+                    break
+
+        if len(ordens) > 0: ordem1 = f'order={ordens[0]}&'
+        else: ordem1 = ''
+        
+        if len(ordens) > 1: ordem2 = f'order2={ordens[1]}&'
+        else: ordem2 = ''
+
+        lista_link = f'https://myanimelist.net/animelist/{usnm}?{air_status}{ordem1}{ordem2}status={status}'
+
+        if debug: prt(('\033[11B', lista_link, '\033[11A'))
+
+
+
+    if tecla == 'Key.enter':
+
+        data = list()
+        data2 = list()
+
+        for item in lista_menus:
+            data.append(item.select)
+
+        for i in data:
+            linha = ''
+            for i2 in i:
+                linha += str(i2+1)
+            data2.append(linha+'\n')
+
+        with open(filename, 'w') as f:
+            f.writelines(data2)
+            f.close()
+
+
+        if menu1.cursor == 6:
+            run = False
+            break
+        
+        elif menu1.cursor == 2:
+            while True:
+
+                menu_ordem1.update()
+                menu_ordem1.input()
+                
+                if tecla == 'Key.enter':
+                    if menu_ordem1.cursor == 17:
+                        break
+
+        elif menu1.cursor == 3:
+            while True:
+
+                menu_ordem2.update()
+                menu_ordem2.input()
+                
+                if tecla == 'Key.enter':
+                    if menu_ordem2.cursor == 17:
+                        break
+
+        elif menu1.cursor == 4 or menu1.cursor == 5:
+
+            lista_proc = list()
+            t1 = False
+            t2 = False
+
+            prt((
+            '\n', 
+            'carregando lista...'
+            ))
+            sys.stdout.flush()
+            
+            sopa = sopapranois(lista_link)
+            sopa = texto_no_meio(sopa, '<table class="list-table"', '<tr class="list-table-header">')
+            
 
 
 
 
+            if sopa.find('{"status":') != -1:
+
+                referencia = '{"status":'
+                id_flag = '"anime_id":'
+                w_eps_flag = '"num_watched_episodes":'
+
+                print('t2')
+
+            elif sopa.find('&quot;status') != -1: 
+
+                referencia = '&quot;status'
+                id_flag = 'anime_id&quot;:'
+                w_eps_flag = 'num_watched_episodes&quot;:'
+
+                print('t1')
 
 
+            sopa = sopa[sopa.find(referencia) + len(referencia):]
+            
+            while True:
+                
+                a_id = texto_no_meio(sopa, id_flag, ',')
+                w_eps = texto_no_meio(sopa, w_eps_flag, ',')
+
+                try: 
+                    int(a_id)
+                    int(w_eps)
+                except: 
+                    print(a_id)
+                    print(w_eps)
+                    exit()
+
+                lista_proc.append((a_id, w_eps))
+
+                if sopa.find(referencia) == -1: 
+                        if len(lista_proc) == 0: print(lista_proc)
+                        break
+
+                sopa = sopa[sopa.find(referencia) + len(referencia):] 
+
+            apagar_linhas(1)
+
+            if menu1.cursor == 5:
+                temp_list = list()
+                for item in lista_proc:
+                    
+                    tl = get_name_from_file(item[0])
+
+                    temp_list.append((item[0], item[1], tl))
+                lista_proc = temp_list
+
+            elif menu1.cursor == 4:
+
+                for item in lista_proc:
+
+                    lista = list(item)
+
+                    lista[1] = int(item[1])+1
+
+                    lista.append(get_name_from_file(item[0]))
+
+                    play_ep(lista)
+
+                    
+
+                    
+
+                    
+
+                    
+                    
 
 
-# loop que faz a parada funcionar
-
-
-debugin = False
-flags = False
-dbfldrt = 0
-dubs = list()
-
-dubsraw = (
-    'one piece', 
-    'dragon ball', 
-    'one punch man', 
-    'yu yu hakusho', 
-    'Yuu Yuu Hakusho',
-    'saint seiya',
-    'naruto',
-    'sailor moon',
-    'InuYasha',
-    'gokudolls',
-)
-
-id_ep_link = [[11795, [1, ['https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]], 
-            [58507, [1, ['https://youtu.be/sHGcGkaYd38']]], 
-            [8939, [1, ['https://youtu.be/GlxrJVdNyro']]],
-            [56213, [1, ['https://www.youtube.com/watch?v=2zcZbIN3VPE']],
-                    [2, ['https://www.youtube.com/watch?v=3VRuAhF1gLY']],
-                    [3, ['https://www.youtube.com/watch?v=5n6K33W442w']],
-                    [4, ['https://www.youtube.com/watch?v=Gv_lwgPAQsQ']]],
-            [30059, [1, ['https://www.youtube.com/watch?v=mzGU_iUMBi8']]],
-            ]
-
-
-
-
-getusername()
-
-while True:
-    os.system('cls||clear')
-    if debugin and flags: print('LOOP START\n'), time.sleep(dbfldrt)
-    selectlist()
-
-exit()
