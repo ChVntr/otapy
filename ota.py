@@ -10,8 +10,8 @@ def key_press(key):
 
     tecla = str(key)
 
-    #if tecla == 'Key.enter': 
-    #    prt('\033[1A')
+    if tecla == 'Key.enter': 
+        prt('\033[1A')
         
     return False
 
@@ -164,6 +164,8 @@ def get_name_from_file(id):
 
 def play_ep(id_ep_titulo):
     
+    prt('\n')
+
     prt(f'anime: {id_ep_titulo[2]}\nep: {id_ep_titulo[1]}')
 
     classe = provedores(id_ep_titulo)
@@ -291,8 +293,8 @@ class menu():
         if tecla == 'Key.down': cursor += 1 
         elif tecla == 'Key.up': cursor -= 1
 
-        if cursor > len(opt_list)-1: cursor = len(opt_list)-1
-        if cursor < 0: cursor = 0
+        if cursor > len(opt_list)-1: cursor = 0
+        if cursor < 0: cursor = len(opt_list)-1
 
         if cursor < len(select):
             if tecla == 'Key.right':
@@ -465,6 +467,9 @@ import re
 
 #init
 for bababoey in (1,):
+
+    os.makedirs(f'{os.path.expanduser("~")}/otapy/', exist_ok=True)
+
     debug = False
 
     colorama.init()
@@ -500,9 +505,9 @@ for bababoey in (1,):
         
         'PRIORITY',
         'WATCHED EPS',
-        'STORAGE',
+        'STATUS',
         'AIR START DATE',
-        'AIR END DATE',
+        'STORAGE',
         'STATUS',
         'MAL SCORE',
         'SCORE DIFF.',
@@ -532,9 +537,10 @@ for bababoey in (1,):
             data = list(f.readlines())
             f.close()
 
-        for i in range(0, 2):
-            for i2 in range(0, len(lista_menus[i].select)-1):
+        for i in range(0, len(lista_menus)):
+            for i2 in range(0, len(lista_menus[i].select)):
                 lista_menus[i].select[i2] = int(data[i][i2])-1
+
 
 
     except:
@@ -549,6 +555,7 @@ for bababoey in (1,):
 while run:
 
     if not run: 
+        exit()
         break
 
 
@@ -573,6 +580,12 @@ while run:
             for n in range(0, len(lista)):
                 if lista[n] > -1:
                     num = n+1
+                    
+                    if num > 6: num+=1
+                    if num > 9: num+=1
+
+                    if num == 11: num *= -1
+
                     if lista[n] == 1: num = num*-1
                     ordens.append(num)
                     break
@@ -603,6 +616,8 @@ while run:
                 linha += str(i2+1)
             data2.append(linha+'\n')
 
+        
+
         with open(filename, 'w') as f:
             f.writelines(data2)
             f.close()
@@ -610,6 +625,7 @@ while run:
 
         if menu1.cursor == 6:
             run = False
+            exit()
             break
         
         elif menu1.cursor == 2:
@@ -657,33 +673,42 @@ while run:
                 id_flag = '"anime_id":'
                 w_eps_flag = '"num_watched_episodes":'
 
-                print('t2')
-
             elif sopa.find('&quot;status') != -1: 
 
                 referencia = '&quot;status'
                 id_flag = 'anime_id&quot;:'
                 w_eps_flag = 'num_watched_episodes&quot;:'
 
-                print('t1')
 
 
             sopa = sopa[sopa.find(referencia) + len(referencia):]
             
             while True:
+
+                status = int(sopa[sopa.find(',')-1])
                 
-                a_id = texto_no_meio(sopa, id_flag, ',')
-                w_eps = texto_no_meio(sopa, w_eps_flag, ',')
+                if menu1.select[0] == 5: status-=1
 
-                try: 
-                    int(a_id)
-                    int(w_eps)
-                except: 
-                    print(a_id)
-                    print(w_eps)
-                    exit()
+                if menu1.select[0] == 0 or status == menu1.select[0]:
+                    
+                    air_status = sopa[sopa.find('airing_status'):]
+                    air_status = int(air_status[air_status.find(',')-1])
+                    
+                    if menu1.select[1] == 0 or menu1.select[1] == air_status:
 
-                lista_proc.append((a_id, w_eps))
+                        a_id = texto_no_meio(sopa, id_flag, ',')
+                        w_eps = texto_no_meio(sopa, w_eps_flag, ',')
+
+                        try: 
+                            int(a_id)
+                            int(w_eps)
+                        except: 
+                            print(a_id)
+                            print(w_eps)
+                            exit()
+
+                        lista_proc.append((a_id, w_eps))
+
 
                 if sopa.find(referencia) == -1: 
                         if len(lista_proc) == 0: print(lista_proc)
@@ -701,6 +726,11 @@ while run:
 
                     temp_list.append((item[0], item[1], tl))
                 lista_proc = temp_list
+
+                for item in lista_proc:
+                    prt(f'\n{item}')
+
+                exit()
 
             elif menu1.cursor == 4:
 
