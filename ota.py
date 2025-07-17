@@ -168,7 +168,7 @@ def play_ep(id_ep_titulo):
 
     if midia_link != False:
         subprocess.run(f'mpv {midia_link}', shell=True, capture_output=True)
-        apagar_linhas(classe.linhas_apagar)
+        apagar_linhas(classe.linhas_apagar+1)
     else: time.sleep(1)
     
     apagar_linhas(3)
@@ -585,7 +585,7 @@ class provedores():
 
 
             if sopa.find(f'Episódio {str_ep}</div>') == -1:
-                prt('essa merda tá em outra pagina')
+                prt('\nessa merda tá em outra pagina')
                 self.linhas_apagar += 1
                 return
 
