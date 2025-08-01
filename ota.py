@@ -21,8 +21,9 @@ def texto_no_meio(texto, começo, fim, prsv_começo = None, prsv_final = None):
 
     for linha in (começo, fim):
         if texto.find(linha) == -1:
+            if debug: prt(f'"{linha}" não encontrado')
             return False
-            return f'"{linha}" não encontrado'
+            
 
     return texto[loc1:loc2]
 
@@ -91,7 +92,7 @@ def sopapranois(link, t = 4):
 
     if debug: prt(f' {link}')
 
-    if link == False: return False
+    if link == False or link == '': return False
 
     cnctvrf()
 
@@ -176,14 +177,14 @@ def get_name_from_file(id):
 
     return get_name_from_file(id)
 
-def play_ep(id_ep_titulo):
+def play_ep(id, ep):
     
-    id_ep_titulo.append(get_name_from_id(id_ep_titulo[0]))
+    titulo = get_name_from_id(id)
 
     sys.stdout.flush()
-    prt(f'\nanime: {id_ep_titulo[2]}\nep: {id_ep_titulo[1]}')
+    prt(f'\nanime: {titulo}\nep: {ep}')
 
-    classe = provedores(id_ep_titulo)
+    classe = provedores((id, ep, titulo))
     midia_link = classe.ep_link
 
     if midia_link != False:
@@ -202,7 +203,10 @@ def play_ep(id_ep_titulo):
             exit()
 
         apagar_linhas(classe.linhas_apagar+4)
-        get_eps(id_ep_titulo[0], id_ep_titulo[1])
+        if devmode: 
+            play_ep(id, ep+1)
+            return
+        get_eps(id, ep)
         return
     else: 
         #if debug:
@@ -312,7 +316,7 @@ def get_eps(id, atual, cursor = None, offset = 0):
                 return get_eps(id, atual, menu_eps.cursor, +1)
 
             else: 
-                play_ep([id, ep])
+                play_ep(id, ep)
                 return
 
             
@@ -486,8 +490,7 @@ class provedores():
         self.yt_link = None
         self.linhas_apagar = 0
 
-        provs = (self.gdrive, self.animesdigitalorg, self.animefire, self.goyabu, self.q1n, self.animesonlinecc)
-        if debug: provs = [self.animesonlinecc,]
+        provs = (self.animesdigitalorg, self.animefire, self.goyabu, self.q1n, self.animesonlinecc)
 
         yt_list = [[11795, [[1, 'https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]], 
                     [58507, [[1, 'https://youtu.be/sHGcGkaYd38']]], 
@@ -543,10 +546,8 @@ class provedores():
             self.linhas_apagar = 0
             prov()
 
-            if debug: exit()
             if self.ep_link != False: 
                 if self.ep_link.find('lightspeedst.net') == -1:
-
                     if sopapranois(self.ep_link).find('"errorContainer"') != -1: 
                         prt(f'\nfalha ao reproduzir episodio!')
                         self.linhas_apagar += 1
@@ -674,68 +675,57 @@ class provedores():
                     prt(f'\n falha ao buscar episodio {versao}!')
                     self.linhas_apagar += 1
                     link_list.remove(link)
- 
                 
-        if len(link_list) < 1: 
-            return
+        if len(link_list) > 0: 
 
+            for link in link_list:
 
-        for link in link_list:
+                if link == sub_link: versao = 'legendado'
+                elif link == dub_link: 
+                    versao = 'dublado'
+                    if self.quero_dublado == 0: self.escolher_dub()
+                    if self.quero_dublado < 0: continue
 
-            if link == sub_link: versao = 'legendado'
-            elif link == dub_link: 
-                versao = 'dublado'
-                if self.quero_dublado == 0: self.escolher_dub()
-                if self.quero_dublado < 0: continue
-
-            sopa = sopapranois(link)
-
-
-
-            if sopa.find(f'Episódio {str_ep}</div>') == -1:
-
-                ep_topo = texto_no_meio(sopa, '<div class="title_anime">', '</div>', prsv_final=True)
-                ep_topo = texto_no_meio(ep_topo, 'Episódio ', '</div>')
-
-                page = int((int(ep_topo) - self.ep)/50)+1
-
-                link = f'{link}/page/{page}/'
                 sopa = sopapranois(link)
 
-                
-                
+                if sopa != False:
+
+                    if sopa.find(f'Episódio {str_ep}</div>') == -1:
+
+                        ep_topo = texto_no_meio(sopa, '<div class="title_anime">', '</div>', prsv_final=True)
+                        ep_topo = texto_no_meio(ep_topo, 'Episódio ', '</div>')
+
+                        page = int((int(ep_topo) - self.ep)/50)+1
+
+                        link = f'{link}/page/{page}/'
+                        sopa = sopapranois(link)
+
+                    sopa = sopa[:sopa.find(f'Episódio {str_ep}</div>')]
+                    sopa = sopa[sopa.rfind('https://animesdigital.org/video/a/'):]
+                    link = sopa[:sopa.find('"')]
+
+                    
+
+                    sopa = sopapranois(link)
+                    if sopa != False:
+
+                        link = texto_no_meio(sopa, 'https://api.anivideo.net/', '"', prsv_começo=True)
+                        link = texto_no_meio(link, 'https://cdn-', '&amp;nocache', True)
+
+                        self.ep_link = link
+
+                        prt(f'\nreproduzindo episodio {versao}...')
+                        self.linhas_apagar += 1
+                        
+
+                        return
 
 
 
-
-            sopa = sopa[:sopa.find(f'Episódio {str_ep}</div>')]
-            sopa = sopa[sopa.rfind('https://animesdigital.org/video/a/'):]
-            link = sopa[:sopa.find('"')]
-
-
-
-            sopa = sopapranois(link)
-            try:
-                link = texto_no_meio(sopa, 'https://api.anivideo.net/', '"', prsv_começo=True)
-                link = texto_no_meio(link, 'https://cdn-', '&amp;nocache', True)
-            except:
                 if versao == 'legendado' or self.quero_dublado > 0: 
                     prt(f'\nfalha ao reproduzir episodio {versao}!')
                     self.linhas_apagar += 1
                 continue
-
-            
-
-            prt(f'\nreproduzindo episodio {versao}...')
-            self.linhas_apagar += 1
-            
-
-            break
-
-        
-
-
-        self.ep_link = link
 
     def animefire(self):
 
@@ -1050,78 +1040,81 @@ class provedores():
                 tl = tl.lower().replace(item[0], item[1])
         tl = processtl(tl)
 
-        link = f'https://animesonlinecc.to/episodio/{tl}-episodio-{self.ep}/'
+        link = f'https://animesonlinecc.to/episodio/{tl}-episodio-1/'
 
-        if sopapranois(link).find('content="Página não encontrada') == -1:
-
-            sopa = sopapranois(link)
-
-            opts = texto_no_meio(sopa, '<ul class="options">', '</ul>')
-
-            opt_list = list()
-            while True:
-
-                if opts.find('<a class="options"') == -1: break
-
-                opt_list.append(texto_no_meio(opts, '</b> ', ' </a>').lower())
-
-                opts = opts[ opts.find('</li>')+5 : ]
-
-            prioridade = ['dublado', 'fhd', 'fullhd', 'hd', 'legendado']
-            if self.quero_dublado > 1: prioridade = ['dublado',] 
-
-            if usnm.lower() == 'gahvius':
-                for item in opt_list:
-                    if item not in prioridade:
-                        print(f'\n\n{item}\n\n'), exit()
-
-            for item in prioridade:
-                if item not in opt_list:
-                    prioridade.remove(item)
-
-            if len(prioridade) > 0:
-
-                if 'dublado' in prioridade:
-                    if self.quero_dublado == 0: self.escolher_dub()
-                    if self.quero_dublado < 0: prioridade.remove('dublado')
-
-                for i in prioridade:
-                    n=0
-                    for i2 in opt_list:
-                        n+=1
-                        if i2 == i:
-            
-                            link = texto_no_meio(sopa, f'id="option-{n}">', '</div>')
-                            link = texto_no_meio(link, 'src="', '"')
-
-                            if link == False: continue
-
-                            if link.find('.blogger.com') != -1:
-                                if sopapranois(link).find('"errorContainer"') != -1: 
-                                    continue
-
-                            if link.find('.blogger.com') == -1 and link.find('.wixstatic.') == -1:
-                                if usnm.lower() == 'gahvius':
-                                    print(f'\n\n{link}\n\n'), exit() 
-                                continue
-
-                            prt(f'\nreproduzindo episodio {i}...')
-                            self.linhas_apagar += 1
-
-                            self.ep_link = link
-                            return
-
-
-            prt(f'\nfalha ao reproduzir episodio!')
-            self.linhas_apagar += 1
-            
-        else: 
-
-            prt('\nanime/episodio não encontrado!')
-            self.linhas_apagar += 1
-
+        if sopapranois(link).find('content="Página não encontrada') != -1:
             prt('\nanime não encontrado!')
             self.linhas_apagar += 1
+        else:
+            link = f'https://animesonlinecc.to/episodio/{tl}-episodio-{self.ep}/'
+
+            if sopapranois(link).find('content="Página não encontrada') == -1:
+
+                sopa = sopapranois(link)
+
+                opts = texto_no_meio(sopa, '<ul class="options">', '</ul>')
+
+                opt_list = list()
+                while True:
+
+                    if opts.find('<a class="options"') == -1: break
+
+                    opt_list.append(texto_no_meio(opts, '</b> ', ' </a>').lower())
+
+                    opts = opts[ opts.find('</li>')+5 : ]
+
+                prioridade = ['dublado', 'fhd', 'fullhd', 'hd', 'legendado']
+                if self.quero_dublado > 1: prioridade = ['dublado',] 
+
+                if usnm.lower() == 'gahvius':
+                    for item in opt_list:
+                        if item not in prioridade:
+                            print(f'\n\n{item}\n\n'), exit()
+
+                for item in prioridade:
+                    if item not in opt_list:
+                        prioridade.remove(item)
+
+                if len(prioridade) > 0:
+
+                    if 'dublado' in prioridade:
+                        if self.quero_dublado == 0: self.escolher_dub()
+                        if self.quero_dublado < 0: prioridade.remove('dublado')
+
+                    for i in prioridade:
+                        n=0
+                        for i2 in opt_list:
+                            n+=1
+                            if i2 == i:
+                
+                                link = texto_no_meio(sopa, f'id="option-{n}">', '</div>')
+                                link = texto_no_meio(link, 'src="', '"')
+
+                                if link == False: continue
+
+                                if link.find('.blogger.com') != -1:
+                                    if sopapranois(link).find('"errorContainer"') != -1: 
+                                        continue
+
+                                if link.find('.blogger.com') == -1 and link.find('.wixstatic.') == -1:
+                                    if usnm.lower() == 'gahvius':
+                                        print(f'\n\n{link}\n\n'), exit() 
+                                    continue
+
+                                prt(f'\nreproduzindo episodio {i}...')
+                                self.linhas_apagar += 1
+
+                                self.ep_link = link
+                                return
+
+
+                prt(f'\nfalha ao reproduzir episodio!')
+                self.linhas_apagar += 1
+                
+            else: 
+
+                prt('\nepisodio não encontrado!')
+                self.linhas_apagar += 1
 
     def animesbr(self):
         prt('provedor: animesbr.tv')
@@ -1228,6 +1221,9 @@ for bababoey in (1,):
     os.makedirs(f'{os.path.expanduser("~")}/otapy/', exist_ok=True)
 
     debug = False
+    devmode = False
+
+    
 
     colorama.init()
     tecla = None
@@ -1235,6 +1231,7 @@ for bababoey in (1,):
     
     if debug: usnm = 'gahvius'
     else: usnm = getusername()
+    if usnm.lower() == 'gahvius': devmode = True
 
     run = True
 
@@ -1444,13 +1441,16 @@ while run:
 
                     load_lista.add()
                     
-                    if texto_no_meio(sopa, '<div class="js-anime', '<div class="js-anime').find('/anime/genre/12/') != -1: continue
+                    if texto_no_meio(sopa, '<div class="genres js-genre"', '</div>').find('/anime/genre/12/') != -1: continue
 
                     sinop = texto_no_meio(sopa, '<p class="preline">', '</p')
                     if texto_no_meio(sinop, ' ', ' ') in skip_list: continue
                     if sinop[ : sinop.find(' ')] == 'Sequel': continue
 
                     titulo = texto_no_meio(sopa, '', '</a>')
+
+                    if titulo[ find_all(titulo, ' ')[-2] : find_all(titulo, ' ')[-1] ][1:].lower() in skip_list: continue
+                    #if debug: print(f'\n{titulo[ find_all(titulo, ' ')[-2] : find_all(titulo, ' ')[-1] ][1:]}'), exit()
 
                     l_id = texto_no_meio(sopa, '/anime/', '/')
                     
@@ -1580,7 +1580,7 @@ while run:
 
                     #lista.append(get_name_from_file(item[0]))
 
-                    play_ep(lista)
+                    play_ep(lista[0], lista[1])
 
                 #apagar_linhas(3)
 
