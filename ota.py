@@ -91,7 +91,7 @@ def apagar_linhas(n):
     else:
         sys.stdout.write(f"\033[{n}A \r\033[J")
 
-def sopapranois(link, t = 4, load = None, redo = 0, redo_limite = 4):
+def sopapranois(link, t = 4, load = None, redo = 0, redo_limite = 4, return_url = False):
 
     if debug: prt(f' {link}')
 
@@ -109,6 +109,8 @@ def sopapranois(link, t = 4, load = None, redo = 0, redo_limite = 4):
         apagar_linhas(1)
         return retornar
 
+    if return_url: return page.url
+
     soup = bs4.BeautifulSoup(page.text, 'html.parser')    
 
     if str(soup).find('<div id="captcha-container"></div>') != -1:
@@ -118,13 +120,13 @@ def sopapranois(link, t = 4, load = None, redo = 0, redo_limite = 4):
         time.sleep(t)
         return sopapranois(link, t*2, load, redo, redo_limite)
 
+    
+
     return str(soup)
 
 def get_name_from_id(id):
 
-    link = f'https://myanimelist.net/anime/{id}'
-
-    sopa = sopapranois(link)
+    sopa = get_mal_sopa(id)
 
     titulo = texto_no_meio(sopa, '<h1 class="title-name h1_bold_none"><strong>', '</strong>')
 
@@ -227,15 +229,17 @@ def play_ep(id, ep, status = None, air_status = None):
         elif not player_off: get_eps(id, ep)
 
         if menu1.select[0] == 7:
-            webbrowser.open(f'https://myanimelist.net/anime/{id}')
+            #webbrowser.open(f'https://myanimelist.net/anime/{id}')
+            pass
 
         return
     else: 
         if status != 1:
             if air_status != 3:
                 if devmode and not debug and int(id) not in indisponiveis:
-                    prt('\a')
-                    webbrowser.open(f'https://myanimelist.net/anime/{id}')
+                    #prt('\a')
+                    #webbrowser.open(f'https://myanimelist.net/anime/{id}')
+                    pass
         time.sleep(1)
     
     apagar_linhas(classe.linhas_apagar+4)
@@ -381,6 +385,8 @@ def todososids():
         print(f'{data}\n\n{id}')
 
         if id in indisponiveis: continue
+        if id in essamerdaehentai(): continue
+        
         tl = get_name_from_file(id)
         if tl == False: continue
 
@@ -443,9 +449,9 @@ def verificar_inds():
 
         print(tl)
 
-        result = provedores((id, 1, tl), mal_sopa=True, sleep=0)
+        result = provedores((id, 1, tl), mal_sopa=False, sleep=0)
         
-        if result.indisp == True: 
+        if result.ep_link == False: 
             #prt('\a')
             #webbrowser.open(f'https://myanimelist.net/anime/{id}')
             lista.append(str(id) + ',')
@@ -465,31 +471,79 @@ def essamerdaehentai(id = None):
             f.close()
     except:
         with open(filename, 'w') as f:
-            f.write('')
-            f.close()
-
-    if id != None:
-        with open(filename, 'w') as f:
-            f.write(f'{id} ')
+            f.write(' ')
             f.close()
 
     with open(filename, 'r') as f:
-        data = ' ' + f.readlines()[0]
+        data = f.read()
         f.close()
 
+    data = ' ' + data + ' '
     lista = []
 
     while True:
-        bababeba = texto_no_meio(data, ' ', ' ')
+
+        while data.find('  ') != -1: data = data.replace('  ', ' ')
+
+        if data == ' ': break
+
+        bababeba = texto_no_meio(data, ' ', ' ', True, True)
         if bababeba == False: break
 
-        mibu = ' '+bababeba+' '
-
-        data = data.replace(mibu, '') + ' '
+        data = ' ' + data.replace(bababeba, '') + ' '
 
         lista.append(int(bababeba))
+        
+
+    if id != None: lista.append(id)
+
+    with open(filename, 'w') as f:
+        f.write(list_to_string(sorted(lista)))
+        f.close()
 
     return lista
+
+def get_mal_sopa(id, page=1):
+
+    global ram_info
+
+    id = int(id)
+    voltar = False
+    existe = False
+
+    for item in ram_info:
+        if item[0] == id:
+            existe = True
+            voltar = item[page]
+            break 
+            
+    if voltar != False: return voltar
+    
+    if not existe: ram_info.append([id, False, False, False, False, False])   
+    
+    num = 0
+    for i in ram_info:
+        if i[0] == id: break
+        num += 1
+
+    if page == 1:
+
+        link = f'https://myanimelist.net/anime/{id}'
+        sopa = sopapranois(link)
+
+        ram_info[num][page] = sopa
+
+        return sopa
+    
+    elif page == 2:
+
+        link = f'https://myanimelist.net/anime/{id}/blablabla/episode?offset={offset}'
+        sopa = sopapranois(link)
+
+        ram_info[num][page] = sopa
+
+        return sopa
+
 
 
 #classes
@@ -666,9 +720,9 @@ class provedores():
             if item[0] == int(self.id):
                 self.titulo = item[1]
 
-        provs = (self.q1n, self.animesdigitalorg, self.animefire, self.animesonlinecc, self.animesgames, self.goyabu, self.animesorion)
+        provs = (self.q1n, self.animesdigitalorg, self.animefire, self.animesonlinecc, self.animesgames, self.goyabu, self.animesorion, self.animezeira)
 
-
+        #if debug: provs = (self.animezeira,)
 
 
         yt_list = [[11795, [[1, 'https://www.youtube.com/watch?v=dRBP1rpE5y8&t=1s']]], 
@@ -737,7 +791,7 @@ class provedores():
         if self.ep_link == False and int(self.ep) == 1:
             if mal_sopa:
 
-                sopa = sopapranois(f'https://myanimelist.net/anime/{self.id}')
+                sopa = get_mal_sopa(self.id)
 
                 available_at = texto_no_meio(sopa, '<h2>Available At', 'class="pb16"')
                 genres = texto_no_meio(sopa, '>Genre', '</div>')
@@ -788,14 +842,11 @@ class provedores():
         prt('provedor: animesdigital.org')
 
         temp_links = list()
-
+        ep = self.ep
+        aids = self.id
 
         # nomes especificos
         for bababoey in (1,):
-
-            ova_list = (
-                'Fullmetal Alchemist: Brotherhood Specials'
-            )
 
             substituir = (
                 ('Bishoujo Senshi Sailor Moon', 'sailor moon'),
@@ -814,23 +865,30 @@ class provedores():
                 (392, 'Yu Yu Hakusho'),
                 (61322,'dr stone science future 2'),
                 (1254, 'os cavaleiros do zodiaco'),
-                
+                (11491, 'Recorder to Randoseru'),
+                (11617, 'highschool-dxd')
             )
 
-
             tl = self.titulo
-            for item in id_tl_list:
-                if int(self.id) == item[0]: 
-                    tl = item[1]
-                    break
-
-
-            if tl in ova_list: ova = True
-
-
 
             for item in substituir:
                 tl = tl.lower().replace(item[0].lower(), item[1].lower())
+
+            samelist = (
+                (12729, 11617, 12),
+            )
+
+            for item in samelist:
+                if int(self.id) == item[0]:
+                    tl = get_name_from_file(item[1])
+                    ep += item[2]
+                    aids = item[1]
+                    break
+
+            for item in id_tl_list:
+                if int(aids) == item[0]: 
+                    tl = item[1]
+                    break
 
             tl = processtl(tl)
 
@@ -840,9 +898,9 @@ class provedores():
 
         titulo = tl
 
-        if self.ep < 10:
-            str_ep = f'0{str(self.ep)}'
-        else: str_ep = str(self.ep)
+        if ep < 10:
+            str_ep = f'0{str(ep)}'
+        else: str_ep = str(ep)
 
 
 
@@ -884,7 +942,7 @@ class provedores():
             try:
                 ep_topo = int(ep_topo)
 
-                if ep_topo < self.ep:
+                if ep_topo < ep:
                     prt(f'\nepisodio {versao} não encontrado!')
                     self.linhas_apagar += 1
                     continue
@@ -901,7 +959,7 @@ class provedores():
                     ep_topo = texto_no_meio(sopa, '<div class="title_anime">', '</div>', prsv_final=True)
                     ep_topo = texto_no_meio(ep_topo, 'Episódio ', '</div>')
 
-                    page = int((int(ep_topo) - self.ep)/50)+1
+                    page = int((int(ep_topo) - ep)/50)+1
 
                     link = f'{link}/page/{page}/'
                     sopa = sopapranois(link)
@@ -1036,6 +1094,8 @@ class provedores():
 
                 sopa = sopapranois(link)
 
+                videolink = link
+
                 if sopa == False:
                     prt(f'\nfalha ao reproduzir episodio {versao}!')
                     self.linhas_apagar += 1
@@ -1043,6 +1103,8 @@ class provedores():
 
                 sources = texto_no_meio(sopa, '"data":[', ']')
                 sources = sources.replace('\\', '')
+
+                sources_preserv = sources
 
                 while True:
 
@@ -1076,6 +1138,31 @@ class provedores():
                                 self.linhas_apagar += 1
                                 return
                             
+                if sources_preserv != '':
+                    if sources_preserv.find('.googlevideo.') != -1:
+                        link = videolink.replace('/video/', '/animes/')
+                        sopa = sopapranois(link)
+                        link = texto_no_meio(sopa, 'https://www.blogger.com/', '"', True)
+
+                        if link != False:
+                            if sopapranois(link).find('"errorContainer"') == -1:
+
+                                if versao == 'dublado':
+                                    if self.quero_dublado == 0: self.escolher_dub()
+                                    if self.quero_dublado < 0: continue
+
+                                if self.quero_dublado > 1:
+                                    if versao != 'dublado': continue
+                                if self.quero_dublado < 0:
+                                    if versao != 'legendado': continue
+
+                                prt(f'\nreproduzindo episodio {versao}...')
+                                self.linhas_apagar += 1
+
+                                self.ep_link = link
+
+                                return
+
 
                 prt(f'\nfalha ao reproduzir episodio {versao}!')
                 self.linhas_apagar += 1
@@ -1095,16 +1182,31 @@ class provedores():
         )
 
         tl = self.titulo
+        aids = int(self.id)
+        ep = self.ep
 
         for item in substituir:
             tl = tl.lower().replace(item[0].lower(), item[1].lower())
+
+        samelist = (
+            (13055, 11499, 12),
+            (16694, 11499, 14),
+        )
+
+        for item in samelist:
+            if int(self.id) == item[0]:
+                tl = get_name_from_file(item[1])
+                ep += item[2]
+                aids = item[1]
+                break
+
 
         id_tl_list = (
             (530, 'sailor moon'),
         )
 
         for item in id_tl_list:
-            if int(self.id) == item[0]: 
+            if aids == item[0]: 
                 tl = item[1]
                 break
         
@@ -1129,7 +1231,7 @@ class provedores():
                 prt(f'\nanime {versao} não encontrado!')
                 self.linhas_apagar += 1
             else:
-                if sopa.find(f'id="ep {self.ep}"') == -1:
+                if sopa.find(f'id="ep {ep}"') == -1:
                     prt(f'\nepisodio {versao} não encontrado!')
                     self.linhas_apagar += 1
                 else:
@@ -1143,7 +1245,7 @@ class provedores():
                         if self.quero_dublado == 0: self.escolher_dub()
                         if self.quero_dublado < 0: continue
                     
-                    chunk = sopa[ : sopa.rfind(f'id="ep {self.ep}"')]
+                    chunk = sopa[ : sopa.rfind(f'id="ep {ep}"')]
                     num = chunk.rfind('<li>')
                     link = sopa[num:num+200]
                     link = texto_no_meio(link, 'href="', '"')
@@ -1152,7 +1254,7 @@ class provedores():
 
                     link = texto_no_meio(sopa, 'https://www.blogger.com/video', '"', True)
 
-                    if sopapranois(link).find('"errorContainer"') != -1:
+                    if link == False or sopapranois(link).find('"errorContainer"') != -1:
                         prt(f'\nfalha ao reproduzir episodio {versao}!')
                         self.linhas_apagar += 1
                         continue
@@ -1460,8 +1562,17 @@ class provedores():
         prt('provedor: animesonlinecc.to')
 
         tl = self.titulo
+        aids = int(self.id)
+        ep = self.ep
+        tipo = 'episodio'
+
         # nomes especificos
         for bababoey in (1,):
+
+            ova_list = (
+                16694, 13055,
+            )
+
             substituir = (
                 (' season ', ' '),
                 ('yuu yuu hakusho', 'yu yu hakusho'), 
@@ -1469,26 +1580,32 @@ class provedores():
             for item in substituir:
                 tl = tl.lower().replace(item[0], item[1])
         
+            samelist = (
+                (13055, 11499, 0),
+                (16694, 11499, 2),
+            )
+
+            for item in samelist:
+                if int(self.id) == item[0]:
+                    tl = get_name_from_file(item[1])
+                    ep += item[2]
+                    aids = item[1]
+                    break
+
             id_tl_list = (
                 (530, 'sailor moon'),
             )
 
             for item in id_tl_list:
-                if int(self.id) == item[0]: 
+                if aids == item[0]: 
                     tl = item[1]
                     break
         
+            if aids in ova_list: tipo = 'ova'
+
         tl = processtl(tl)
-
-        link = f'https://animesonlinecc.to/episodio/{tl}-episodio-1/'
-
-        if self.sleep > 0:
-            if sopapranois(link).find('content="Página não encontrada') != -1:
-                prt('\nanime não encontrado!')
-                self.linhas_apagar += 1
-                return
                 
-        link = f'https://animesonlinecc.to/episodio/{tl}-episodio-{self.ep}/'
+        link = f'https://animesonlinecc.to/episodio/{tl}-{tipo}-{ep}/'
 
         sopa = sopapranois(link, redo_limite=0)
 
@@ -1630,13 +1747,27 @@ class provedores():
         prt('provedor: animesgames.cc')
 
         tl = self.titulo
+        aids = int(self.id)
+        ova = False
+
+        ova_list = (
+            (13055, 11499, (1, 2)),
+            (16694, 11499, (3,)),
+        )
 
         id_tl_list = (
             (530, 'sailor moon'),
         )
 
+        for i in ova_list:
+            if aids == i[0]:
+                aids = i[1]
+                ova = True
+                ep = i[2][self.ep-1]
+                tl = get_name_from_file(aids)
+
         for item in id_tl_list:
-            if int(self.id) == item[0]: 
+            if aids == item[0]: 
                 tl = item[1]
                 break
 
@@ -1661,12 +1792,15 @@ class provedores():
                 self.linhas_apagar += 1
                 continue
 
-            if sopa.find(f'dio {self.ep}</h3>') == -1:
+            if ova: flag = f'<h3>Ova {ep}</h3>'
+            else: flag = f'dio {self.ep}</h3>'
+
+            if sopa.find(flag) == -1:
                 prt(f'\nepisodio {versao} não encontrado!')
                 self.linhas_apagar += 1
                 continue
 
-            link = sopa[ : sopa.rfind(f'dio {self.ep}</h3>') ]
+            link = sopa[ : sopa.rfind(flag) ]
             link = link[link.rfind('https://animesgames.cc/video/') : ]
             link = link[ : link.find('">')]
             eplink = link
@@ -1731,17 +1865,43 @@ class provedores():
         prt('provedor: animesorionvip.net')
 
         tl = self.titulo
+        aids = int(self.id)
+        ep = self.ep
+
+
 
         id_tl_list = (
             (530, 'sailor moon'),
         )
 
+        ova_list = (
+            16694, 13055,
+        )
+
+        samelist = (
+            (13055, 11499, 0),
+            (16694, 11499, 2),
+        )
+
+
+        if aids in ova_list: ova = True
+        else: ova = False
+
+        for item in samelist:
+            if int(self.id) == item[0]:
+                tl = get_name_from_file(item[1])
+                ep += item[2]
+                aids = item[1]
+                break
+
         for item in id_tl_list:
-            if int(self.id) == item[0]: 
+            if aids == item[0]: 
                 tl = item[1]
                 break
 
         tl = processtl(tl)
+
+
 
         links = [
             [f'https://animesorionvip.net/animes/{tl}-dublado-todos-os-episodios', 'dublado'],
@@ -1762,17 +1922,16 @@ class provedores():
         
             if texto_no_meio(sopa, '<title>', '</title>').find('Dublado') != -1: versao = 'dublado'
 
-            if sopa.find(f'dio {self.ep}" href="') == -1:
+            if sopa.find(f'dio {ep}" href="') == -1:
                 prt(f'\nepisodio {versao} não encontrado!')
                 self.linhas_apagar += 1
                 continue
 
-            if self.quero_dublado > 1:
-                if versao != 'dublado': continue
-            if self.quero_dublado < 0:
-                if versao != 'legendado': continue
+            if ova:
+                ova_eps = find_all(sopa, '<ul class="listaEP">')[1]
+                sopa = sopa[ova_eps:]
 
-            link = texto_no_meio(sopa, f'dio {self.ep}" href="', '"')
+            link = texto_no_meio(sopa, f'dio {ep}" href="', '"')
             sopa = sopapranois(link)
 
             link = texto_no_meio(sopa, 'data-video="', '"')
@@ -1834,6 +1993,79 @@ class provedores():
         prt('provedor: akumanimes.com')
 
         tl = self.titulo
+
+    def animezeira(self):
+
+        prt('provedor: animezeira.net')
+
+        tl = self.titulo
+
+        tl = processtl(tl)
+
+        links = [
+            [f'https://animezeira.net/{tl}-dublado/', f'https://animezeira.net/episodio/{tl}-dublado-episodio-{self.ep}/', 'dublado'],
+            [f'https://animezeira.net/{tl}/', f'https://animezeira.net/episodio/{tl}-episodio-{self.ep}/', 'legendado'],
+        ]
+
+        for item in links:
+
+            versao = item[2]
+            ani_link = item[0]
+            ep_link = item[1]
+
+            sopa = sopapranois(ep_link)
+
+            
+
+            if sopa == False:
+                prt(f'\nfalha ao reproduzir episodio {versao}!')
+                self.linhas_apagar += 1
+                continue
+
+            if sopa.find('<title>Página não encontrada - Animezeira</title>') != -1:
+                if self.sleep > 0:
+                    sopa = sopapranois(ani_link)
+                    if sopa != False:
+                        if sopa.find('<title>Página não encontrada - Animezeira</title>') != -1:
+                            prt(f'\nanime {versao} não encontrado!')
+                            self.linhas_apagar += 1
+                            continue
+                
+                prt(f'\nepisodio {versao} não encontrado!')
+                self.linhas_apagar += 1
+                continue
+
+            link = texto_no_meio(sopa, '<div class="post-video">', '</video>')
+            link = texto_no_meio(link, '<source src="', '"')
+
+            link = sopapranois(link, return_url=True)
+
+            if link == False:
+                prt(f'\nfalha ao reproduzir episodio {versao}!')
+                self.linhas_apagar += 1
+                continue
+
+            if sopapranois(link).find('"errorContainer"') == -1:
+
+                if versao == 'dublado':
+                    if self.quero_dublado == 0: self.escolher_dub()
+                    if self.quero_dublado < 0: continue
+
+                if self.quero_dublado > 1:
+                    if versao != 'dublado': continue
+                if self.quero_dublado < 0:
+                    if versao != 'legendado': continue
+
+                prt(f'\nreproduzindo episodio {versao}...')
+                self.linhas_apagar += 1
+
+                self.ep_link = link
+
+                return
+                
+
+            prt(f'\nfalha ao reproduzir episodio {versao}!')
+            self.linhas_apagar += 1
 
 class load():
 
@@ -1999,6 +2231,8 @@ for bababoey in (1,):
 
         indispo = indispo[ indispo.find(',')+1 : ]
 
+    ram_info = []
+
 
 
 #classes de menu
@@ -2027,6 +2261,8 @@ for bababoey in (1,):
         with open(filename, 'w') as f:
             f.write('')
             f.close()
+
+
 
 
 
@@ -2141,7 +2377,7 @@ while run:
 
             if menu1.select[0] == 6:
                 link1 = 'https://myanimelist.net/anime/season'
-                link2 = f'https://myanimelist.net/animelist/{usnm}?airing_status=1'
+                link2 = f'https://myanimelist.net/animelist/{usnm}?order=14&status=7'
 
                 sopa = sopapranois(link1, load=load_lista)
                 sopa_list = sopapranois(link2, load=load_lista)
