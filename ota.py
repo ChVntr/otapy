@@ -495,7 +495,7 @@ def essamerdaehentai(id = None):
         lista.append(int(bababeba))
         
 
-    if id != None: lista.append(id)
+    if id != None and id not in lista: lista.append(int(id))
 
     with open(filename, 'w') as f:
         f.write(list_to_string(sorted(lista)))
@@ -535,14 +535,6 @@ def get_mal_sopa(id, page=1):
 
         return sopa
     
-    elif page == 2:
-
-        link = f'https://myanimelist.net/anime/{id}/blablabla/episode?offset={offset}'
-        sopa = sopapranois(link)
-
-        ram_info[num][page] = sopa
-
-        return sopa
 
 
 
@@ -928,7 +920,7 @@ class provedores():
 
             sopa = sopapranois(link)
 
-            if sopa.find('<div class="msg404">') != -1:
+            if sopa == False or sopa.find('<div class="msg404">') != -1:
                 prt(f'\nanime {versao} não encontrado!')
                 self.linhas_apagar += 1
                 continue
@@ -1369,7 +1361,7 @@ class provedores():
 
                 ignorar = False
 
-                if trns_sopa.find('speed-src="') == -1: break
+                if trns_sopa == False or trns_sopa.find('speed-src="') == -1: break
 
                 trns = texto_no_meio(trns_sopa, 'speed-src="', '"')
                 og_trns = trns
@@ -2399,7 +2391,10 @@ while run:
 
                     load_lista.add()
                     
-                    if texto_no_meio(sopa, '<div class="genres js-genre"', '</div>').find('/anime/genre/12/') != -1: continue
+                    
+                    if texto_no_meio(sopa, '<div class="genres js-genre"', '</div>').find('/anime/genre/12/') != -1: h = True
+                    else: h = False
+                        
 
                     sinop = texto_no_meio(sopa, '<p class="preline">', '</p')
                     if texto_no_meio(sinop, ' ', ' ') in skip_list: continue
@@ -2411,6 +2406,12 @@ while run:
                     if titulo[find_all(titulo, ' ')[-1] :][1:].lower() == 'season': continue
 
                     l_id = texto_no_meio(sopa, '/anime/', '/')
+
+                    if int(l_id) in essamerdaehentai(): continue
+
+                    if h:
+                        essamerdaehentai(l_id)
+                        continue
                     
                     #if devmode and not indisp and int(l_id) in indisponiveis: continue    
                     
